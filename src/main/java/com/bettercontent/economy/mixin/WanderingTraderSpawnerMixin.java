@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(WanderingTraderSpawner.class)
 public abstract class WanderingTraderSpawnerMixin {
@@ -21,8 +20,8 @@ public abstract class WanderingTraderSpawnerMixin {
     @Final
     private ServerLevelData serverLevelData;
 
-    @Invoker("spawn")
-    protected abstract boolean betterContentEconomy$invokeSpawn(ServerLevel level);
+    @Shadow
+    protected abstract boolean spawn(ServerLevel level);
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true, require = 1)
     private void betterContentEconomy$runRecurringVisitSchedule(
@@ -36,7 +35,7 @@ public abstract class WanderingTraderSpawnerMixin {
         callback.setReturnValue(WanderingTraderVisits.tickScheduledVisit(
                 level,
                 serverLevelData,
-                this::betterContentEconomy$invokeSpawn));
+                this::spawn));
     }
 
     @ModifyConstant(method = "spawn", constant = @Constant(intValue = 10), require = 1)

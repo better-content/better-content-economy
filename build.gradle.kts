@@ -58,6 +58,7 @@ repositories {
 
 dependencies {
     minecraft("net.minecraftforge:forge:${property("minecraft_version")}-${property("forge_version")}")
+    annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
     compileOnly(fg.deobf("curse.maven:hyle-609850:7736352"))
     compileOnly(fg.deobf("curse.maven:thirst-was-taken-679270:6660408"))
     compileOnly(fg.deobf("curse.maven:cold-sweat-506194:7893262"))
@@ -182,6 +183,6 @@ tasks.processResources {
 }
 
 mixin {
+    add(sourceSets.main.get(), "better_content_economy.refmap.json")
     config("better_content_economy.mixins.json")
 }
-
