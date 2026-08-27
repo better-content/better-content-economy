@@ -4,6 +4,7 @@ plugins {
     jacoco
     id("net.minecraftforge.gradle") version "[6.0.24,6.2)"
     id("org.parchmentmc.librarian.forgegradle") version "1.2.0"
+    id("org.spongepowered.mixin") version "0.7.+"
 }
 
 group = "com.bettercontent"
@@ -180,4 +181,7 @@ tasks.processResources {
     }
 }
 
+mixin {
+    config("better_content_economy.mixins.json")
+}
 
