@@ -6,7 +6,10 @@ import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.WanderingTrader;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
+import net.minecraftforge.registries.ForgeRegistries;
 
 @PrefixGameTestTemplate(false)
 public final class WanderingTraderGameTests {
@@ -28,6 +31,20 @@ public final class WanderingTraderGameTests {
         if (!WanderingTraderTheme.QUARTERMASTER.displayName().equals(trader.getCustomName())) {
             helper.fail("Expected the wandering trader to use its localized themed name");
             return;
+        }
+        helper.succeed();
+    }
+
+    @GameTest(templateNamespace = BetterContentEconomy.MOD_ID, template = "empty", timeoutTicks = 100)
+    public static void coinRecipesAreAbsent(final GameTestHelper helper) {
+        for (Recipe<?> recipe : helper.getLevel().getRecipeManager().getRecipes()) {
+            ItemStack result = recipe.getResultItem(helper.getLevel().registryAccess());
+            var id = ForgeRegistries.ITEMS.getKey(result.getItem());
+            if (id != null && "createdeco".equals(id.getNamespace())
+                    && (id.getPath().endsWith("_coin") || id.getPath().endsWith("_coinstack"))) {
+                helper.fail("Coin-producing recipe remained loaded: " + recipe.getId() + " -> " + id);
+                return;
+            }
         }
         helper.succeed();
     }

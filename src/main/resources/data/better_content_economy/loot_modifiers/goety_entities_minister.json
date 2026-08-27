@@ -1,0 +1,11 @@
+{
+  "type": "better_content_economy:emerald_replacement",
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "goety:entities/minister"
+    }
+  ],
+  "coin": "createdeco:brass_coin",
+  "count": 2
+}

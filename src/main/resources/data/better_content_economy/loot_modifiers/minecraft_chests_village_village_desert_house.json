@@ -1,0 +1,11 @@
+{
+  "type": "better_content_economy:emerald_replacement",
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:chests/village/village_desert_house"
+    }
+  ],
+  "coin": "createdeco:copper_coin",
+  "count": 4
+}

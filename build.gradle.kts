@@ -48,6 +48,9 @@ minecraft {
 
 repositories {
     maven("https://maven.minecraftforge.net")
+    maven("https://maven.createmod.net")
+    maven("https://maven.ithundxr.dev/mirror")
+    maven("https://maven.tterrag.com/")
     maven("https://harleyoconnor.com/maven")
     maven("https://repo.spongepowered.org/repository/maven-public/")
     maven("https://maven.llamalad7.mixinextras.org/releases/")
@@ -59,6 +62,11 @@ repositories {
 dependencies {
     minecraft("net.minecraftforge:forge:${property("minecraft_version")}-${property("forge_version")}")
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
+    implementation(fg.deobf("com.simibubi.create:create-${property("minecraft_version")}:${property("create_version")}:slim"))
+    implementation(fg.deobf("net.createmod.ponder:Ponder-Forge-${property("minecraft_version")}:${property("ponder_version")}"))
+    compileOnly(fg.deobf("dev.engine-room.flywheel:flywheel-forge-api-${property("minecraft_version")}:${property("flywheel_version")}"))
+    runtimeOnly(fg.deobf("dev.engine-room.flywheel:flywheel-forge-${property("minecraft_version")}:${property("flywheel_version")}"))
+    implementation(fg.deobf("com.tterrag.registrate:Registrate:${property("registrate_version")}"))
     compileOnly(fg.deobf("curse.maven:hyle-609850:7736352"))
     compileOnly(fg.deobf("curse.maven:thirst-was-taken-679270:6660408"))
     compileOnly(fg.deobf("curse.maven:cold-sweat-506194:7893262"))
@@ -97,6 +105,7 @@ dependencies {
     runtimeOnly(fg.deobf("curse.maven:tinkers-construct-74072:7449219"))
     runtimeOnly(fg.deobf("curse.maven:polymorph-388800:6450982"))
     runtimeOnly(fg.deobf("curse.maven:ars-nouveau-401955:6688854"))
+    runtimeOnly(fg.deobf("curse.maven:create-deco-509285:6373226"))
     runtimeOnly(fg.deobf("curse.maven:realistic-block-physics-375616:6393411"))
     runtimeOnly(fg.deobf("curse.maven:realistic-physics-1030082:6026115"))
     runtimeOnly(fg.deobf("curse.maven:geckolib-388172:7553267"))
