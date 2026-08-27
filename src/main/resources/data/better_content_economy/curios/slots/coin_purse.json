@@ -1,0 +1,8 @@
+{
+  "size": 7,
+  "order": 92,
+  "icon": "curios:slot/empty_curio_slot",
+  "validators": [
+    "better_content_economy:coin_purse"
+  ]
+}
