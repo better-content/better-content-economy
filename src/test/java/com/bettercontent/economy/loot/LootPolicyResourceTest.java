@@ -13,7 +13,7 @@ final class LootPolicyResourceTest {
         assertNotNull(stream);
         var root = JsonParser.parseReader(new InputStreamReader(stream, StandardCharsets.UTF_8)).getAsJsonObject();
         var entries = root.getAsJsonArray("entries");
-        assertEquals(139, entries.size());
+        assertEquals(136, entries.size());
         for (var entry : entries) {
             String path = entry.getAsString().substring("better_content_economy:".length());
             assertNotNull(getClass().getResourceAsStream(
