@@ -1,7 +1,9 @@
 {
+  "curios.identifier.coin_purse": "Coin Purse",
   "entity.better_content_economy.wandering_trader.naturalist": "Wandering Naturalist",
   "entity.better_content_economy.wandering_trader.surveyor": "Wandering Surveyor",
   "entity.better_content_economy.wandering_trader.quartermaster": "Wandering Quartermaster",
   "entity.better_content_economy.wandering_trader.antiquarian": "Wandering Antiquarian",
-  "message.better_content_economy.wandering_trader.arrival": "%1$s has arrived in %2$s at %3$s, %4$s, %5$s."
+  "message.better_content_economy.wandering_trader.arrival": "%1$s has arrived in %2$s at %3$s, %4$s, %5$s.",
+  "gui.better_content_economy.coin_purse": "Purse"
 }

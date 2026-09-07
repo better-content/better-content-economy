@@ -25,3 +25,9 @@ mandatory=true
 versionRange="[5.0,)"
 ordering="AFTER"
 side="BOTH"
+[[dependencies.${mod_id}]]
+modId="createdeco"
+mandatory=true
+versionRange="[2.0.3,)"
+ordering="AFTER"
+side="BOTH"
