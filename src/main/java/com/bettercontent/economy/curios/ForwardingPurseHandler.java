@@ -5,12 +5,13 @@ import java.util.function.Supplier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 /**
  * Keeps the inventory-menu slot layout stable while the client is still waiting for Curios
  * capability synchronization.
  */
-public final class ForwardingPurseHandler implements IItemHandler {
+public final class ForwardingPurseHandler implements IItemHandlerModifiable {
     private final Supplier<Optional<? extends IItemHandler>> delegate;
     private IItemHandler resolved;
 
@@ -51,6 +52,13 @@ public final class ForwardingPurseHandler implements IItemHandler {
     public boolean isItemValid(final int slot, final ItemStack stack) {
         return CoinPurseCurio.isCoin(stack)
                 && current().map(handler -> handler.isItemValid(slot, stack)).orElse(false);
+    }
+
+    @Override
+    public void setStackInSlot(final int slot, final ItemStack stack) {
+        current().filter(IItemHandlerModifiable.class::isInstance)
+                .map(IItemHandlerModifiable.class::cast)
+                .ifPresent(handler -> handler.setStackInSlot(slot, stack));
     }
 
     private Optional<? extends IItemHandler> current() {
