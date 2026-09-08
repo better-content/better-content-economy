@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicInteger;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,11 @@ final class ForwardingPurseHandlerTest {
     @Test
     void exposesStableSlotCountBeforeCapabilityArrivesAndForwardsAfterward() {
         AtomicReference<IItemHandler> delegate = new AtomicReference<>();
-        ForwardingPurseHandler handler = new ForwardingPurseHandler(() -> Optional.ofNullable(delegate.get()));
+        AtomicInteger resolutions = new AtomicInteger();
+        ForwardingPurseHandler handler = new ForwardingPurseHandler(() -> {
+            resolutions.incrementAndGet();
+            return Optional.ofNullable(delegate.get());
+        });
 
         assertEquals(CoinPurseCurio.SLOT_COUNT, handler.getSlots());
         assertEquals(64, handler.getSlotLimit(0));
@@ -27,5 +32,7 @@ final class ForwardingPurseHandlerTest {
         };
         delegate.set(attached);
         assertEquals(17, handler.getSlotLimit(0));
+        assertEquals(17, handler.getSlotLimit(1));
+        assertEquals(2, resolutions.get());
     }
 }

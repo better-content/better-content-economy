@@ -32,12 +32,15 @@ abstract class InventoryMenuMixin extends RecipeBookMenu<CraftingContainer> {
     private void betterContentEconomy$addPurseSlots(
             final Inventory inventory, final boolean active, final Player owner, final CallbackInfo callback) {
         betterContentEconomy$purseStart = slots.size();
-        betterContentEconomy$addPurseSlots(new ForwardingPurseHandler(owner));
+        IItemHandler purse = CoinPurseCurio.stacks(owner)
+                .map(handler -> (IItemHandler) handler)
+                .orElseGet(() -> new ForwardingPurseHandler(owner));
+        betterContentEconomy$addPurseSlots(purse);
         betterContentEconomy$purseEnd = slots.size();
     }
 
     @Unique
-    private void betterContentEconomy$addPurseSlots(final ForwardingPurseHandler handler) {
+    private void betterContentEconomy$addPurseSlots(final IItemHandler handler) {
         for (int slot = 0; slot < CoinPurseCurio.SLOT_COUNT; slot++) {
             int x = 181 + (slot % 2) * 18;
             int y = 27 + (slot / 2) * 18;

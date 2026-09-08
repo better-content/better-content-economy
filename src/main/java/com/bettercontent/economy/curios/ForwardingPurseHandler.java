@@ -12,6 +12,7 @@ import net.minecraftforge.items.IItemHandler;
  */
 public final class ForwardingPurseHandler implements IItemHandler {
     private final Supplier<Optional<? extends IItemHandler>> delegate;
+    private IItemHandler resolved;
 
     public ForwardingPurseHandler(final Player player) {
         this(() -> CoinPurseCurio.stacks(player));
@@ -53,6 +54,10 @@ public final class ForwardingPurseHandler implements IItemHandler {
     }
 
     private Optional<? extends IItemHandler> current() {
-        return delegate.get().filter(handler -> handler.getSlots() >= CoinPurseCurio.SLOT_COUNT);
+        if (resolved != null) return Optional.of(resolved);
+        Optional<? extends IItemHandler> current = delegate.get()
+                .filter(handler -> handler.getSlots() >= CoinPurseCurio.SLOT_COUNT);
+        current.ifPresent(handler -> resolved = handler);
+        return current;
     }
 }
