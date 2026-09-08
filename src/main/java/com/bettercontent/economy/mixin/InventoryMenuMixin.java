@@ -1,6 +1,7 @@
 package com.bettercontent.economy.mixin;
 
 import com.bettercontent.economy.curios.CoinPurseCurio;
+import com.bettercontent.economy.curios.ForwardingPurseHandler;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -10,13 +11,13 @@ import net.minecraft.world.inventory.RecipeBookMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
 
 @Mixin(InventoryMenu.class)
 abstract class InventoryMenuMixin extends RecipeBookMenu<CraftingContainer> {
@@ -31,14 +32,13 @@ abstract class InventoryMenuMixin extends RecipeBookMenu<CraftingContainer> {
     private void betterContentEconomy$addPurseSlots(
             final Inventory inventory, final boolean active, final Player owner, final CallbackInfo callback) {
         betterContentEconomy$purseStart = slots.size();
-        CoinPurseCurio.stacks(owner).ifPresent(this::betterContentEconomy$addPurseSlots);
+        betterContentEconomy$addPurseSlots(new ForwardingPurseHandler(owner));
         betterContentEconomy$purseEnd = slots.size();
     }
 
     @Unique
-    private void betterContentEconomy$addPurseSlots(final IDynamicStackHandler handler) {
-        int count = Math.min(CoinPurseCurio.SLOT_COUNT, handler.getSlots());
-        for (int slot = 0; slot < count; slot++) {
+    private void betterContentEconomy$addPurseSlots(final ForwardingPurseHandler handler) {
+        for (int slot = 0; slot < CoinPurseCurio.SLOT_COUNT; slot++) {
             int x = 181 + (slot % 2) * 18;
             int y = 27 + (slot / 2) * 18;
             addSlot(new PurseSlot(handler, slot, x, y));
@@ -73,7 +73,7 @@ abstract class InventoryMenuMixin extends RecipeBookMenu<CraftingContainer> {
     }
 
     private static final class PurseSlot extends SlotItemHandler {
-        private PurseSlot(IDynamicStackHandler handler, int index, int x, int y) {
+        private PurseSlot(IItemHandler handler, int index, int x, int y) {
             super(handler, index, x, y);
         }
 
