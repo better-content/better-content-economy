@@ -131,4 +131,25 @@ public final class WanderingTraderGameTests {
         }
         helper.succeed();
     }
+
+    @GameTest(templateNamespace = BetterContentEconomy.MOD_ID, template = "empty", timeoutTicks = 100)
+    public static void authoredTradeSignalRequiresCoinPayment(final GameTestHelper helper) {
+        WanderingTrader trader = helper.spawn(EntityType.WANDERING_TRADER, new BlockPos(2, 2, 2));
+        Item copper = ForgeRegistries.ITEMS.getValue(MerchantCurrencyPolicy.COPPER_COIN);
+        if (copper == null) {
+            helper.fail("Create Deco copper coin was not registered");
+            return;
+        }
+        MerchantOffer coinPayment = new MerchantOffer(new ItemStack(copper), new ItemStack(Items.BREAD), 1, 0, 0.0F);
+        MerchantOffer coinResult = new MerchantOffer(new ItemStack(Items.BREAD), new ItemStack(copper), 1, 0, 0.0F);
+        if (!AuthoredTradeSignals.isAuthoredCoinTrade(trader, coinPayment)) {
+            helper.fail("Expected a vanilla wandering-trader coin payment to be authored trade evidence");
+            return;
+        }
+        if (AuthoredTradeSignals.isAuthoredCoinTrade(trader, coinResult)) {
+            helper.fail("A coin result must not be reported as coin spending");
+            return;
+        }
+        helper.succeed();
+    }
 }

@@ -5,6 +5,7 @@ import com.bettercontent.economy.curios.CoinPurseCurio;
 import com.bettercontent.economy.curios.CoinPickupRouter;
 import com.bettercontent.economy.loot.CoinAcquisition;
 import com.bettercontent.economy.loot.EmeraldReplacementLootModifier;
+import com.bettercontent.economy.trader.AuthoredTradeSignals;
 import com.bettercontent.economy.trader.VillagerCatalogue;
 import com.bettercontent.economy.trader.WanderingTraderGameTests;
 import com.bettercontent.economy.trader.WanderingTraderCatalogue;
@@ -39,6 +40,7 @@ public final class BetterContentEconomy {
         MinecraftForge.EVENT_BUS.register(VillagerCatalogue.class);
         MinecraftForge.EVENT_BUS.register(CoinAcquisition.class);
         MinecraftForge.EVENT_BUS.register(CoinPickupRouter.class);
+        MinecraftForge.EVENT_BUS.register(AuthoredTradeSignals.class);
         CoinPurseCurio.registerPredicate();
     }
 

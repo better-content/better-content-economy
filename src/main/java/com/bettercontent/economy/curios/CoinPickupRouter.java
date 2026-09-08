@@ -1,7 +1,9 @@
 package com.bettercontent.economy.curios;
 
+import com.bettercontent.economy.compat.ThreadSignalsBridge;
 import com.bettercontent.economy.mixin.ItemEntityAccessor;
 import java.util.UUID;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -40,5 +42,11 @@ public final class CoinPickupRouter {
         player.awardStat(Stats.ITEM_PICKED_UP.get(item), accepted);
         player.onItemPickup(entity);
         event.setCanceled(true);
+        if (player instanceof ServerPlayer serverPlayer) {
+            ThreadSignalsBridge.coinAcquired(
+                    serverPlayer,
+                    item.builtInRegistryHolder().key().location(),
+                    entity.getUUID());
+        }
     }
 }
