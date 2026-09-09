@@ -1,11 +1,12 @@
 package com.bettercontent.economy.mixin.client;
 
+import com.bettercontent.economy.curios.CoinPurseLayout;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,28 +15,28 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(InventoryScreen.class)
 abstract class InventoryScreenMixin extends EffectRenderingInventoryScreen<InventoryMenu> {
+    private static final ResourceLocation INVENTORY_TEXTURE =
+            new ResourceLocation("minecraft", "textures/gui/container/inventory.png");
+
     protected InventoryScreenMixin() {
         super(null, null, Component.empty());
-    }
-
-    @Inject(method = "<init>", at = @At("RETURN"))
-    private void betterContentEconomy$extendForPurse(final Player player, final CallbackInfo callback) {
-        imageWidth = 226;
     }
 
     @Inject(method = "renderBg", at = @At("TAIL"))
     private void betterContentEconomy$renderPurse(
             final GuiGraphics graphics, final float partialTick, final int mouseX, final int mouseY,
             final CallbackInfo callback) {
-        int left = leftPos + 176;
-        int top = topPos + 17;
-        graphics.fill(left, top, left + 50, top + 83, 0xFF8B8B8B);
-        graphics.fill(left + 1, top + 1, left + 49, top + 82, 0xFFC6C6C6);
-        for (int slot = 0; slot < 8; slot++) {
-            int x = leftPos + 180 + (slot % 2) * 18;
-            int y = topPos + 26 + (slot / 2) * 18;
-            graphics.fill(x, y, x + 18, y + 18, 0xFF373737);
-            graphics.fill(x + 1, y + 1, x + 17, y + 17, slot == 7 ? 0xFF9E9E9E : 0xFF8B8B8B);
+        int top = topPos + CoinPurseLayout.INVENTORY_HEIGHT;
+        graphics.fill(leftPos, top, leftPos + CoinPurseLayout.INVENTORY_WIDTH,
+                top + CoinPurseLayout.STRIP_HEIGHT, 0xFF555555);
+        graphics.fill(leftPos + 1, top, leftPos + CoinPurseLayout.INVENTORY_WIDTH - 1,
+                top + 1, 0xFFFFFFFF);
+        graphics.fill(leftPos + 1, top + 1, leftPos + CoinPurseLayout.INVENTORY_WIDTH - 1,
+                top + CoinPurseLayout.STRIP_HEIGHT - 1, 0xFFC6C6C6);
+        for (int slot = 0; slot < CoinPurseLayout.SLOT_COUNT; slot++) {
+            int x = leftPos + CoinPurseLayout.slotX(slot) - 1;
+            int y = topPos + CoinPurseLayout.SLOT_Y - 1;
+            graphics.blit(INVENTORY_TEXTURE, x, y, 7, 83, 18, 18);
         }
     }
 
@@ -45,8 +46,8 @@ abstract class InventoryScreenMixin extends EffectRenderingInventoryScreen<Inven
         graphics.drawString(
                 Minecraft.getInstance().font,
                 Component.translatable("gui.better_content_economy.coin_purse"),
-                180,
-                18,
+                7,
+                CoinPurseLayout.INVENTORY_HEIGHT + 7,
                 0x404040,
                 false);
     }

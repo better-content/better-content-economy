@@ -1,6 +1,7 @@
 package com.bettercontent.economy.mixin;
 
 import com.bettercontent.economy.curios.CoinPurseCurio;
+import com.bettercontent.economy.curios.CoinPurseLayout;
 import com.bettercontent.economy.curios.ForwardingPurseHandler;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -42,9 +43,7 @@ abstract class InventoryMenuMixin extends RecipeBookMenu<CraftingContainer> {
     @Unique
     private void betterContentEconomy$addPurseSlots(final IItemHandler handler) {
         for (int slot = 0; slot < CoinPurseCurio.SLOT_COUNT; slot++) {
-            int x = 181 + (slot % 2) * 18;
-            int y = 27 + (slot / 2) * 18;
-            addSlot(new PurseSlot(handler, slot, x, y));
+            addSlot(new PurseSlot(handler, slot, CoinPurseLayout.slotX(slot), CoinPurseLayout.SLOT_Y));
         }
     }
 
