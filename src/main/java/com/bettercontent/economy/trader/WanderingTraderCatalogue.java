@@ -1,6 +1,6 @@
 package com.bettercontent.economy.trader;
 
-import java.lang.reflect.Method;
+import com.bettercontent.dimensiondrink.trade.DimensionalFontMapTrades;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -17,6 +17,7 @@ import net.minecraftforge.event.village.WandererTradesEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.fml.ModList;
 
 /** The authoritative coin-only wandering-trader catalogue. */
 public final class WanderingTraderCatalogue {
@@ -92,13 +93,8 @@ public final class WanderingTraderCatalogue {
     }
 
     private static java.util.Optional<VillagerTrades.ItemListing> optionalFontMap() {
-        try {
-            Class<?> type = Class.forName("com.bettercontent.dimensiondrink.trade.DimensionalFontMapTrades");
-            Method method = type.getMethod("wanderingTraderListing", int.class);
-            return java.util.Optional.of((VillagerTrades.ItemListing) method.invoke(null, 0));
-        } catch (ReflectiveOperationException | LinkageError ignored) {
-            return java.util.Optional.empty();
-        }
+        if (!ModList.get().isLoaded("dimension_drink")) return java.util.Optional.empty();
+        return java.util.Optional.of(DimensionalFontMapTrades.wanderingTraderListing(0));
     }
 
     private static VillagerTrades.ItemListing findAgreement(List<VillagerTrades.ItemListing> listings) {

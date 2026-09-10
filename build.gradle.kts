@@ -61,6 +61,7 @@ repositories {
 
 dependencies {
     minecraft("net.minecraftforge:forge:${property("minecraft_version")}-${property("forge_version")}")
+    compileOnly(files("../dimension-drink/build/libs/dimension-drink-1.0.0.jar"))
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
     implementation(fg.deobf("com.simibubi.create:create-${property("minecraft_version")}:${property("create_version")}:slim"))
     implementation(fg.deobf("net.createmod.ponder:Ponder-Forge-${property("minecraft_version")}:${property("ponder_version")}"))

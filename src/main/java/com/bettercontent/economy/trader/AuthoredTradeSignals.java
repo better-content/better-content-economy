@@ -1,6 +1,6 @@
 package com.bettercontent.economy.trader;
 
-import com.bettercontent.economy.compat.ThreadSignalsBridge;
+import com.bettercontent.economy.api.event.AuthoredCoinTradeEvent;
 import com.bettercontent.economy.curios.CoinPurseCurio;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.npc.AbstractVillager;
@@ -9,6 +9,7 @@ import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraftforge.event.entity.player.TradeWithVillagerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.common.MinecraftForge;
 
 /** Emits learning evidence after a successful coin payment against an economy-authored trader. */
 public final class AuthoredTradeSignals {
@@ -18,7 +19,7 @@ public final class AuthoredTradeSignals {
     public static void traded(final TradeWithVillagerEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (!isAuthoredCoinTrade(event.getAbstractVillager(), event.getMerchantOffer())) return;
-        ThreadSignalsBridge.authoredCoinSpent(player);
+        MinecraftForge.EVENT_BUS.post(new AuthoredCoinTradeEvent(player));
     }
 
     static boolean isAuthoredCoinTrade(final AbstractVillager trader, final MerchantOffer offer) {

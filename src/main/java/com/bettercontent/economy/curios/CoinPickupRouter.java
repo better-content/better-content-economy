@@ -1,6 +1,6 @@
 package com.bettercontent.economy.curios;
 
-import com.bettercontent.economy.compat.ThreadSignalsBridge;
+import com.bettercontent.economy.api.event.CoinAcquiredEvent;
 import com.bettercontent.economy.mixin.ItemEntityAccessor;
 import java.util.UUID;
 import net.minecraft.server.level.ServerPlayer;
@@ -13,6 +13,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.common.MinecraftForge;
 
 /** Routes direct-payment coin entities through the purse before the ordinary inventory. */
 public final class CoinPickupRouter {
@@ -43,10 +44,8 @@ public final class CoinPickupRouter {
         player.onItemPickup(entity);
         event.setCanceled(true);
         if (player instanceof ServerPlayer serverPlayer) {
-            ThreadSignalsBridge.coinAcquired(
-                    serverPlayer,
-                    item.builtInRegistryHolder().key().location(),
-                    entity.getUUID());
+            MinecraftForge.EVENT_BUS.post(new CoinAcquiredEvent(
+                    serverPlayer, item.builtInRegistryHolder().key().location(), entity.getUUID()));
         }
     }
 }
