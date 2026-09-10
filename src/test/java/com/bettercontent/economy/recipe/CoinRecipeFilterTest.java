@@ -9,6 +9,7 @@ final class CoinRecipeFilterTest {
     @Test void identifiesPrimitiveAndStructuredCoinOutputsOnly() {
         assertTrue(CoinRecipeFilter.hasCoinOutput(JsonParser.parseString("{\"result\":\"createdeco:copper_coin\"}")));
         assertTrue(CoinRecipeFilter.hasCoinOutput(JsonParser.parseString("{\"results\":[{\"item\":\"createdeco:gold_coinstack\"}]}")));
+        assertTrue(CoinRecipeFilter.hasCoinOutput(JsonParser.parseString("{\"output\":{\"item\":\"malum:arcane_spirit\"}}")));
         assertFalse(CoinRecipeFilter.hasCoinOutput(JsonParser.parseString(
                 "{\"ingredient\":{\"item\":\"createdeco:copper_coin\"},\"result\":{\"item\":\"minecraft:stick\"}}")));
     }

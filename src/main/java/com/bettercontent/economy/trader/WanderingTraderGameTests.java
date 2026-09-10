@@ -1,153 +1,88 @@
 package com.bettercontent.economy.trader;
 
 import com.bettercontent.economy.BetterContentEconomy;
+import com.bettercontent.economy.mixin.FloatingEntityAccessor;
+import com.bettercontent.economy.registry.SpiritProfessions;
+import com.mojang.authlib.GameProfile;
+import com.sammy.malum.common.entity.spirit.SpiritItemEntity;
+import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.WanderingTrader;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.registries.ForgeRegistries;
-import com.bettercontent.economy.curios.CoinPurseCurio;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.common.util.FakePlayerFactory;
 
 @PrefixGameTestTemplate(false)
 public final class WanderingTraderGameTests {
-    private WanderingTraderGameTests() {
-    }
+    private WanderingTraderGameTests() {}
 
     @GameTest(templateNamespace = BetterContentEconomy.MOD_ID, template = "empty", timeoutTicks = 100)
-    public static void themedIdentityIsStoredOnTheTrader(final GameTestHelper helper) {
-        final WanderingTrader trader = helper.spawn(
-                EntityType.WANDERING_TRADER,
-                new BlockPos(2, 2, 2));
-
-        WanderingTraderVisits.applyTheme(trader, WanderingTraderTheme.QUARTERMASTER, true);
-
-        if (!"quartermaster".equals(trader.getPersistentData().getString(WanderingTraderVisits.THEME_TAG))) {
-            helper.fail("Expected the wandering-trader theme to persist in entity data");
-            return;
-        }
-        if (!WanderingTraderTheme.QUARTERMASTER.displayName().equals(trader.getCustomName())) {
-            helper.fail("Expected the wandering trader to use its localized themed name");
+    public static void themedIdentityIsStored(final GameTestHelper helper) {
+        WanderingTrader trader = helper.spawn(EntityType.WANDERING_TRADER, new BlockPos(2, 2, 2));
+        WanderingTraderVisits.applyTheme(trader, WanderingTraderTheme.INFERNAL, true);
+        if (!"infernal".equals(trader.getPersistentData().getString(WanderingTraderVisits.THEME_TAG))) {
+            helper.fail("Expected the spirit theme to persist");
             return;
         }
         helper.succeed();
     }
 
     @GameTest(templateNamespace = BetterContentEconomy.MOD_ID, template = "empty", timeoutTicks = 100)
-    public static void coinRecipesAreAbsent(final GameTestHelper helper) {
-        for (Recipe<?> recipe : helper.getLevel().getRecipeManager().getRecipes()) {
-            ItemStack result = recipe.getResultItem(helper.getLevel().registryAccess());
-            var id = ForgeRegistries.ITEMS.getKey(result.getItem());
-            if (id != null && "createdeco".equals(id.getNamespace())
-                    && (id.getPath().endsWith("_coin") || id.getPath().endsWith("_coinstack"))) {
-                helper.fail("Coin-producing recipe remained loaded: " + recipe.getId() + " -> " + id);
+    public static void everyThemedTraderHasThirteenMatchingGoodsAndEggs(final GameTestHelper helper) {
+        for (WanderingTraderTheme theme : WanderingTraderTheme.values()) {
+            WanderingTrader trader = helper.spawn(EntityType.WANDERING_TRADER, new BlockPos(2, 2, 2));
+            WanderingTraderVisits.applyTheme(trader, theme, false);
+            MerchantOffers offers = trader.getOffers();
+            long eggs = offers.stream().map(MerchantOffer::getResult)
+                    .filter(stack -> stack.is(Items.VILLAGER_SPAWN_EGG)).count();
+            boolean matchingPayment = offers.stream().allMatch(offer ->
+                    offer.getBaseCostA().is(net.minecraftforge.registries.ForgeRegistries.ITEMS.getValue(theme.spirit().itemId())));
+            MerchantOffer eggOffer = offers.stream().filter(offer -> offer.getResult().is(Items.VILLAGER_SPAWN_EGG))
+                    .findFirst().orElse(null);
+            String profession = eggOffer == null ? "" : eggOffer.getResult().getOrCreateTagElement("EntityTag")
+                    .getCompound("VillagerData").getString("profession");
+            String expectedProfession = SpiritProfessions.definition(theme.spirit()).profession().getId().toString();
+            if (offers.size() != 14 || eggs != 1 || !matchingPayment || !expectedProfession.equals(profession)) {
+                helper.fail("Invalid " + theme.id() + " market: offers=" + offers.size()
+                        + " eggs=" + eggs + " payment=" + matchingPayment + " profession=" + profession);
                 return;
             }
+            trader.discard();
         }
         helper.succeed();
     }
 
     @GameTest(templateNamespace = BetterContentEconomy.MOD_ID, template = "empty", timeoutTicks = 100)
-    public static void themedTraderAlwaysHasOneVillageStarterOffer(final GameTestHelper helper) {
-        WanderingTrader trader = helper.spawn(EntityType.WANDERING_TRADER, new BlockPos(2, 2, 2));
-        WanderingTraderVisits.applyTheme(trader, WanderingTraderTheme.NATURALIST, false);
-
-        MerchantOffers offers = trader.getOffers();
-        long matches = offers.stream().filter(VillageStarterOffer::matches).count();
-        long repeatedMatches = trader.getOffers().stream().filter(VillageStarterOffer::matches).count();
-        if (matches != 1 || repeatedMatches != 1) {
-            helper.fail("Expected exactly one stable village-starter offer");
-            return;
-        }
-        MerchantOffer offer = offers.stream().filter(VillageStarterOffer::matches).findFirst().orElseThrow();
-        if (offer.getXp() != 0 || offer.getPriceMultiplier() != 0.0F || offer.getMaxUses() != 1) {
-            helper.fail("Village-starter offer metadata did not match the one-use, zero-XP policy");
-            return;
-        }
-        helper.succeed();
+    public static void creditedKillUsesMalumAnimatedSpiritEntity(final GameTestHelper helper) {
+        ServerPlayer player = FakePlayerFactory.get(helper.getLevel(),
+                new GameProfile(UUID.nameUUIDFromBytes("spirit-economy-gametest".getBytes()), "spirit-economy-test"));
+        var zombie = helper.spawn(EntityType.ZOMBIE, new BlockPos(2, 2, 2));
+        zombie.hurt(helper.getLevel().damageSources().playerAttack(player), 1000.0F);
+        AABB bounds = zombie.getBoundingBox().inflate(6.0D);
+        helper.succeedWhen(() -> {
+            var spirits = helper.getLevel().getEntitiesOfClass(SpiritItemEntity.class, bounds);
+            helper.assertTrue(!spirits.isEmpty(), "Credited hostile kill did not release a Malum SpiritItemEntity");
+            helper.assertTrue(spirits.stream().allMatch(spirit ->
+                            ((FloatingEntityAccessor) spirit).betterContentEconomy$getOwnerUuid().equals(player.getUUID())),
+                    "Released spirit did not target the credited player");
+        });
     }
 
     @GameTest(templateNamespace = BetterContentEconomy.MOD_ID, template = "empty", timeoutTicks = 100)
-    public static void merchantCurrencyNormalizationPreservesOfferMetadata(final GameTestHelper helper) {
-        MerchantOffer source = new MerchantOffer(
-                new ItemStack(Items.EMERALD, 3),
-                new ItemStack(Items.EMERALD, 4),
-                new ItemStack(Items.EMERALD, 5),
-                2,
-                9,
-                7,
-                0.25F,
-                3);
-        source.addToSpecialPriceDiff(2);
+    public static void emeraldOffersAreRemoved(final GameTestHelper helper) {
         MerchantOffers offers = new MerchantOffers();
-        offers.add(source);
-
+        offers.add(new MerchantOffer(new net.minecraft.world.item.ItemStack(Items.EMERALD),
+                new net.minecraft.world.item.ItemStack(Items.BREAD), 1, 0, 0.0F));
         MerchantCurrencyPolicy.normalize(offers);
-        MerchantOffer normalized = offers.get(0);
-        ResourceLocation copper = MerchantCurrencyPolicy.COPPER_COIN;
-        if (!copper.equals(ForgeRegistries.ITEMS.getKey(normalized.getBaseCostA().getItem()))
-                || !copper.equals(ForgeRegistries.ITEMS.getKey(normalized.getCostB().getItem()))
-                || !copper.equals(ForgeRegistries.ITEMS.getKey(normalized.getResult().getItem()))) {
-            helper.fail("Expected emeralds in every offer position to become copper coins");
-            return;
-        }
-        if (normalized.getBaseCostA().getCount() != 3 || normalized.getCostB().getCount() != 4
-                || normalized.getResult().getCount() != 5 || normalized.getUses() != 2
-                || normalized.getMaxUses() != 9 || normalized.getXp() != 7
-                || normalized.getPriceMultiplier() != 0.25F || normalized.getDemand() != 3
-                || normalized.getSpecialPriceDiff() != 2) {
-            helper.fail("Merchant metadata changed during currency normalization");
-            return;
-        }
-        MerchantCurrencyPolicy.normalize(offers);
-        if (!offers.get(0).createTag().equals(normalized.createTag())) {
-            helper.fail("Merchant currency normalization was not idempotent");
-            return;
-        }
-        helper.succeed();
-    }
-
-    @GameTest(templateNamespace = BetterContentEconomy.MOD_ID, template = "empty", timeoutTicks = 100)
-    public static void pickedUpCoinsFillThePurseBeforeInventory(final GameTestHelper helper) {
-        Item copper = ForgeRegistries.ITEMS.getValue(MerchantCurrencyPolicy.COPPER_COIN);
-        if (copper == null) {
-            helper.fail("Create Deco copper coin was not registered");
-            return;
-        }
-        ItemStackHandler purse = new ItemStackHandler(CoinPurseCurio.SLOT_COUNT);
-        ItemStack remainder = CoinPurseCurio.insertInto(purse, new ItemStack(copper, 10));
-        if (!remainder.isEmpty() || purse.getStackInSlot(0).getCount() != 10) {
-            helper.fail("Expected the purse insertion boundary to accept all ten coins before inventory fallback");
-            return;
-        }
-        helper.succeed();
-    }
-
-    @GameTest(templateNamespace = BetterContentEconomy.MOD_ID, template = "empty", timeoutTicks = 100)
-    public static void authoredTradeSignalRequiresCoinPayment(final GameTestHelper helper) {
-        WanderingTrader trader = helper.spawn(EntityType.WANDERING_TRADER, new BlockPos(2, 2, 2));
-        Item copper = ForgeRegistries.ITEMS.getValue(MerchantCurrencyPolicy.COPPER_COIN);
-        if (copper == null) {
-            helper.fail("Create Deco copper coin was not registered");
-            return;
-        }
-        MerchantOffer coinPayment = new MerchantOffer(new ItemStack(copper), new ItemStack(Items.BREAD), 1, 0, 0.0F);
-        MerchantOffer coinResult = new MerchantOffer(new ItemStack(Items.BREAD), new ItemStack(copper), 1, 0, 0.0F);
-        if (!AuthoredTradeSignals.isAuthoredCoinTrade(trader, coinPayment)) {
-            helper.fail("Expected a vanilla wandering-trader coin payment to be authored trade evidence");
-            return;
-        }
-        if (AuthoredTradeSignals.isAuthoredCoinTrade(trader, coinResult)) {
-            helper.fail("A coin result must not be reported as coin spending");
+        if (!offers.isEmpty()) {
+            helper.fail("Emerald offer survived spirit-only normalization");
             return;
         }
         helper.succeed();

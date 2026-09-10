@@ -4,7 +4,7 @@
   "package": "com.bettercontent.economy.mixin",
   "compatibilityLevel": "JAVA_17",
   "refmap": "better_content_economy.refmap.json",
-  "mixins": ["AbstractVillagerMixin", "InventoryMenuMixin", "ItemEntityAccessor", "RecipeManagerMixin", "WanderingTraderSpawnerMixin"],
-  "client": ["client.InventoryScreenMixin"],
+  "mixins": ["AbstractVillagerMixin", "FloatingEntityAccessor", "MalumSpiritHarvestMixin", "RecipeManagerMixin", "SpiritItemEntityMixin", "VillagerProfessionMixin", "WanderingTraderSpawnerMixin"],
+  "client": ["client.WanderingTraderRendererMixin"],
   "injectors": {"defaultRequire": 1}
 }

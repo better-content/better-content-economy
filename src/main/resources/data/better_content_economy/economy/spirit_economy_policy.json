@@ -1,0 +1,3644 @@
+{
+  "schema": "bc.economy_policy.v1",
+  "acquisition": {
+    "creditedPlayerKillsOnly": true,
+    "unmappedHostileSpiritCount": 2,
+    "excludeSpawnerOrigin": true,
+    "excludeEconomyActors": true
+  },
+  "retiredItems": [
+    "createdeco:copper_coin",
+    "createdeco:copper_coinstack",
+    "createdeco:zinc_coin",
+    "createdeco:zinc_coinstack",
+    "createdeco:iron_coin",
+    "createdeco:iron_coinstack",
+    "createdeco:industrial_iron_coin",
+    "createdeco:industrial_iron_coinstack",
+    "createdeco:brass_coin",
+    "createdeco:brass_coinstack",
+    "createdeco:gold_coin",
+    "createdeco:gold_coinstack",
+    "createdeco:netherite_coin",
+    "createdeco:netherite_coinstack",
+    "malum:crude_scythe",
+    "malum:soul_stained_steel_scythe",
+    "malum:soul_stained_steel_knife",
+    "malum:soul_stained_steel_pickaxe",
+    "malum:soul_stained_steel_axe",
+    "malum:soul_stained_steel_shovel",
+    "malum:soul_stained_steel_hoe",
+    "malum:soul_stained_steel_sword",
+    "malum:mnemonic_hex_staff",
+    "malum:staff_of_the_auric_flame"
+  ],
+  "villagerRows": [
+    {
+      "spirit": "aqueous",
+      "level": 1,
+      "cost": 6,
+      "result": {
+        "id": "minecraft:nautilus_shell",
+        "count": 2
+      },
+      "maxUses": 5,
+      "xp": 16
+    },
+    {
+      "spirit": "aqueous",
+      "level": 1,
+      "cost": 8,
+      "result": {
+        "id": "minecraft:trident",
+        "count": 1
+      },
+      "maxUses": 1,
+      "xp": 24
+    },
+    {
+      "spirit": "aqueous",
+      "level": 1,
+      "cost": 8,
+      "result": {
+        "id": "minecraft:conduit",
+        "count": 1
+      },
+      "maxUses": 1,
+      "xp": 24
+    },
+    {
+      "spirit": "aqueous",
+      "level": 1,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:cod",
+        "count": 8
+      },
+      "maxUses": 16,
+      "xp": 2
+    },
+    {
+      "spirit": "aqueous",
+      "level": 1,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:cooked_salmon",
+        "count": 6
+      },
+      "maxUses": 12,
+      "xp": 6
+    },
+    {
+      "spirit": "aqueous",
+      "level": 1,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:kelp",
+        "count": 16
+      },
+      "maxUses": 12,
+      "xp": 6
+    },
+    {
+      "spirit": "aqueous",
+      "level": 1,
+      "cost": 5,
+      "result": {
+        "id": "starcatcher:murkwater_bait",
+        "count": 4
+      },
+      "maxUses": 6,
+      "xp": 10
+    },
+    {
+      "spirit": "aqueous",
+      "level": 2,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:nautilus_shell",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 10
+    },
+    {
+      "spirit": "aqueous",
+      "level": 2,
+      "cost": 6,
+      "result": {
+        "id": "starcatcher:fish_radar",
+        "count": 1
+      },
+      "maxUses": 3,
+      "xp": 16
+    },
+    {
+      "spirit": "aqueous",
+      "level": 2,
+      "cost": 6,
+      "result": {
+        "id": "starcatcher:waterlogged_satchel",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 16
+    },
+    {
+      "spirit": "aqueous",
+      "level": 2,
+      "cost": 8,
+      "result": {
+        "id": "minecraft:trident",
+        "count": 1
+      },
+      "maxUses": 1,
+      "xp": 24
+    },
+    {
+      "spirit": "aqueous",
+      "level": 2,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:apple",
+        "count": 4
+      },
+      "maxUses": 8,
+      "xp": 6
+    },
+    {
+      "spirit": "aqueous",
+      "level": 2,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:arrow",
+        "count": 16
+      },
+      "maxUses": 8,
+      "xp": 9
+    },
+    {
+      "spirit": "aqueous",
+      "level": 2,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:potato",
+        "count": 12
+      },
+      "maxUses": 8,
+      "xp": 12
+    },
+    {
+      "spirit": "aqueous",
+      "level": 3,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:bookshelf",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 15
+    },
+    {
+      "spirit": "aqueous",
+      "level": 3,
+      "cost": 2,
+      "result": {
+        "id": "minecraft:apple",
+        "count": 4
+      },
+      "maxUses": 8,
+      "xp": 6
+    },
+    {
+      "spirit": "aqueous",
+      "level": 3,
+      "cost": 2,
+      "result": {
+        "id": "minecraft:arrow",
+        "count": 16
+      },
+      "maxUses": 8,
+      "xp": 9
+    },
+    {
+      "spirit": "aqueous",
+      "level": 3,
+      "cost": 2,
+      "result": {
+        "id": "minecraft:potato",
+        "count": 12
+      },
+      "maxUses": 8,
+      "xp": 12
+    },
+    {
+      "spirit": "aqueous",
+      "level": 3,
+      "cost": 2,
+      "result": {
+        "id": "minecraft:bookshelf",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 15
+    },
+    {
+      "spirit": "aqueous",
+      "level": 3,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:apple",
+        "count": 4
+      },
+      "maxUses": 8,
+      "xp": 6
+    },
+    {
+      "spirit": "aqueous",
+      "level": 3,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:arrow",
+        "count": 16
+      },
+      "maxUses": 8,
+      "xp": 9
+    },
+    {
+      "spirit": "aqueous",
+      "level": 4,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:potato",
+        "count": 12
+      },
+      "maxUses": 8,
+      "xp": 12
+    },
+    {
+      "spirit": "aqueous",
+      "level": 4,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:bookshelf",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 15
+    },
+    {
+      "spirit": "aqueous",
+      "level": 4,
+      "cost": 6,
+      "result": {
+        "id": "minecraft:heart_of_the_sea",
+        "count": 1
+      },
+      "maxUses": 3,
+      "xp": 18
+    },
+    {
+      "spirit": "aqueous",
+      "level": 4,
+      "cost": 1,
+      "result": {
+        "id": "starcatcher:starcatcher_rod",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 2
+    },
+    {
+      "spirit": "aqueous",
+      "level": 4,
+      "cost": 1,
+      "result": {
+        "id": "starcatcher:worm",
+        "count": 8
+      },
+      "maxUses": 12,
+      "xp": 2
+    },
+    {
+      "spirit": "aqueous",
+      "level": 4,
+      "cost": 1,
+      "result": {
+        "id": "starcatcher:starcatcher_twine",
+        "count": 2
+      },
+      "maxUses": 8,
+      "xp": 2
+    },
+    {
+      "spirit": "aqueous",
+      "level": 4,
+      "cost": 3,
+      "result": {
+        "id": "starcatcher:bobber",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 6
+    },
+    {
+      "spirit": "aqueous",
+      "level": 5,
+      "cost": 3,
+      "result": {
+        "id": "starcatcher:hook",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 6
+    },
+    {
+      "spirit": "aqueous",
+      "level": 5,
+      "cost": 5,
+      "result": {
+        "id": "starcatcher:steady_bobber",
+        "count": 1
+      },
+      "maxUses": 5,
+      "xp": 10
+    },
+    {
+      "spirit": "aqueous",
+      "level": 5,
+      "cost": 5,
+      "result": {
+        "id": "starcatcher:stone_hook",
+        "count": 1
+      },
+      "maxUses": 5,
+      "xp": 10
+    },
+    {
+      "spirit": "aqueous",
+      "level": 5,
+      "cost": 5,
+      "result": {
+        "id": "create:copper_diving_helmet",
+        "count": 1
+      },
+      "maxUses": 2,
+      "xp": 10
+    },
+    {
+      "spirit": "aqueous",
+      "level": 5,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:heart_of_the_sea",
+        "count": 1
+      },
+      "maxUses": 2,
+      "xp": 16
+    },
+    {
+      "spirit": "aqueous",
+      "level": 5,
+      "cost": 1,
+      "result": {
+        "id": "cold_sweat:filled_waterskin",
+        "count": 1
+      },
+      "maxUses": 6,
+      "xp": 3
+    },
+    {
+      "spirit": "aqueous",
+      "level": 5,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:bread",
+        "count": 4
+      },
+      "maxUses": 8,
+      "xp": 3
+    },
+    {
+      "spirit": "arcane",
+      "level": 1,
+      "cost": 8,
+      "result": {
+        "id": "minecraft:enchanted_book",
+        "count": 1
+      },
+      "maxUses": 2,
+      "xp": 24
+    },
+    {
+      "spirit": "arcane",
+      "level": 1,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:lapis_lazuli",
+        "count": 8
+      },
+      "maxUses": 12,
+      "xp": 3
+    },
+    {
+      "spirit": "arcane",
+      "level": 1,
+      "cost": 5,
+      "result": {
+        "id": "bloodmagic:blankslate",
+        "count": 1
+      },
+      "maxUses": 6,
+      "xp": 10
+    },
+    {
+      "spirit": "arcane",
+      "level": 1,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:amethyst_shard",
+        "count": 8
+      },
+      "maxUses": 8,
+      "xp": 14
+    },
+    {
+      "spirit": "arcane",
+      "level": 1,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:book",
+        "count": 3
+      },
+      "maxUses": 16,
+      "xp": 2
+    },
+    {
+      "spirit": "arcane",
+      "level": 1,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:bookshelf",
+        "count": 2
+      },
+      "maxUses": 10,
+      "xp": 2
+    },
+    {
+      "spirit": "arcane",
+      "level": 1,
+      "cost": 8,
+      "result": {
+        "id": "minecraft:enchanted_book",
+        "count": 1
+      },
+      "maxUses": 2,
+      "xp": 24
+    },
+    {
+      "spirit": "arcane",
+      "level": 2,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:string",
+        "count": 8
+      },
+      "maxUses": 8,
+      "xp": 15
+    },
+    {
+      "spirit": "arcane",
+      "level": 2,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:lantern",
+        "count": 2
+      },
+      "maxUses": 8,
+      "xp": 3
+    },
+    {
+      "spirit": "arcane",
+      "level": 2,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:shears",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 6
+    },
+    {
+      "spirit": "arcane",
+      "level": 2,
+      "cost": 2,
+      "result": {
+        "id": "minecraft:string",
+        "count": 8
+      },
+      "maxUses": 8,
+      "xp": 15
+    },
+    {
+      "spirit": "arcane",
+      "level": 2,
+      "cost": 2,
+      "result": {
+        "id": "minecraft:lantern",
+        "count": 2
+      },
+      "maxUses": 8,
+      "xp": 3
+    },
+    {
+      "spirit": "arcane",
+      "level": 2,
+      "cost": 2,
+      "result": {
+        "id": "minecraft:shears",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 6
+    },
+    {
+      "spirit": "arcane",
+      "level": 2,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:string",
+        "count": 8
+      },
+      "maxUses": 8,
+      "xp": 15
+    },
+    {
+      "spirit": "arcane",
+      "level": 3,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:lantern",
+        "count": 2
+      },
+      "maxUses": 8,
+      "xp": 3
+    },
+    {
+      "spirit": "arcane",
+      "level": 3,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:shears",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 6
+    },
+    {
+      "spirit": "arcane",
+      "level": 3,
+      "cost": 4,
+      "result": {
+        "id": "create:clipboard",
+        "count": 1
+      },
+      "maxUses": 6,
+      "xp": 8
+    },
+    {
+      "spirit": "arcane",
+      "level": 3,
+      "cost": 4,
+      "result": {
+        "id": "create:display_link",
+        "count": 1
+      },
+      "maxUses": 5,
+      "xp": 10
+    },
+    {
+      "spirit": "arcane",
+      "level": 3,
+      "cost": 4,
+      "result": {
+        "id": "create:display_board",
+        "count": 2
+      },
+      "maxUses": 5,
+      "xp": 10
+    },
+    {
+      "spirit": "arcane",
+      "level": 3,
+      "cost": 4,
+      "result": {
+        "id": "create:content_observer",
+        "count": 1
+      },
+      "maxUses": 5,
+      "xp": 10
+    },
+    {
+      "spirit": "arcane",
+      "level": 3,
+      "cost": 4,
+      "result": {
+        "id": "minecraft:glowstone_dust",
+        "count": 12
+      },
+      "maxUses": 8,
+      "xp": 10
+    },
+    {
+      "spirit": "arcane",
+      "level": 4,
+      "cost": 6,
+      "result": {
+        "id": "minecraft:ender_pearl",
+        "count": 4
+      },
+      "maxUses": 5,
+      "xp": 18
+    },
+    {
+      "spirit": "arcane",
+      "level": 4,
+      "cost": 6,
+      "result": {
+        "id": "minecraft:blaze_rod",
+        "count": 4
+      },
+      "maxUses": 4,
+      "xp": 18
+    },
+    {
+      "spirit": "arcane",
+      "level": 4,
+      "cost": 8,
+      "result": {
+        "id": "minecraft:ghast_tear",
+        "count": 2
+      },
+      "maxUses": 2,
+      "xp": 24
+    },
+    {
+      "spirit": "arcane",
+      "level": 4,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:glowstone_dust",
+        "count": 8
+      },
+      "maxUses": 10,
+      "xp": 6
+    },
+    {
+      "spirit": "arcane",
+      "level": 4,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:ender_pearl",
+        "count": 2
+      },
+      "maxUses": 6,
+      "xp": 12
+    },
+    {
+      "spirit": "arcane",
+      "level": 4,
+      "cost": 6,
+      "result": {
+        "id": "minecraft:ghast_tear",
+        "count": 2
+      },
+      "maxUses": 4,
+      "xp": 18
+    },
+    {
+      "spirit": "arcane",
+      "level": 4,
+      "cost": 8,
+      "result": {
+        "id": "minecraft:blaze_rod",
+        "count": 4
+      },
+      "maxUses": 4,
+      "xp": 18
+    },
+    {
+      "spirit": "arcane",
+      "level": 5,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:name_tag",
+        "count": 1
+      },
+      "maxUses": 6,
+      "xp": 6
+    },
+    {
+      "spirit": "arcane",
+      "level": 5,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:lantern",
+        "count": 4
+      },
+      "maxUses": 10,
+      "xp": 6
+    },
+    {
+      "spirit": "arcane",
+      "level": 5,
+      "cost": 5,
+      "result": {
+        "id": "oc2r:manual",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 12
+    },
+    {
+      "spirit": "arcane",
+      "level": 5,
+      "cost": 8,
+      "result": {
+        "id": "ae2:certus_quartz_crystal",
+        "count": 4
+      },
+      "maxUses": 4,
+      "xp": 18
+    },
+    {
+      "spirit": "arcane",
+      "level": 5,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:writable_book",
+        "count": 2
+      },
+      "maxUses": 8,
+      "xp": 6
+    },
+    {
+      "spirit": "arcane",
+      "level": 5,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:torch",
+        "count": 16
+      },
+      "maxUses": 8,
+      "xp": 9
+    },
+    {
+      "spirit": "arcane",
+      "level": 5,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:stick",
+        "count": 32
+      },
+      "maxUses": 8,
+      "xp": 12
+    },
+    {
+      "spirit": "aerial",
+      "level": 1,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:compass",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 15
+    },
+    {
+      "spirit": "aerial",
+      "level": 1,
+      "cost": 2,
+      "result": {
+        "id": "minecraft:compass",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 15
+    },
+    {
+      "spirit": "aerial",
+      "level": 1,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:compass",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 15
+    },
+    {
+      "spirit": "aerial",
+      "level": 1,
+      "cost": 4,
+      "result": {
+        "id": "create:track",
+        "count": 24
+      },
+      "maxUses": 6,
+      "xp": 8
+    },
+    {
+      "spirit": "aerial",
+      "level": 1,
+      "cost": 4,
+      "result": {
+        "id": "create:controller_rail",
+        "count": 8
+      },
+      "maxUses": 6,
+      "xp": 8
+    },
+    {
+      "spirit": "aerial",
+      "level": 1,
+      "cost": 4,
+      "result": {
+        "id": "create:track_signal",
+        "count": 2
+      },
+      "maxUses": 6,
+      "xp": 10
+    },
+    {
+      "spirit": "aerial",
+      "level": 1,
+      "cost": 4,
+      "result": {
+        "id": "create:track_observer",
+        "count": 2
+      },
+      "maxUses": 6,
+      "xp": 10
+    },
+    {
+      "spirit": "aerial",
+      "level": 2,
+      "cost": 4,
+      "result": {
+        "id": "create:track_station",
+        "count": 1
+      },
+      "maxUses": 5,
+      "xp": 10
+    },
+    {
+      "spirit": "aerial",
+      "level": 2,
+      "cost": 4,
+      "result": {
+        "id": "minecraft:spectral_arrow",
+        "count": 8
+      },
+      "maxUses": 8,
+      "xp": 6
+    },
+    {
+      "spirit": "aerial",
+      "level": 2,
+      "cost": 6,
+      "result": {
+        "id": "minecraft:tipped_arrow",
+        "count": 16
+      },
+      "maxUses": 5,
+      "xp": 16
+    },
+    {
+      "spirit": "aerial",
+      "level": 2,
+      "cost": 6,
+      "result": {
+        "id": "minecraft:recovery_compass",
+        "count": 1
+      },
+      "maxUses": 3,
+      "xp": 18
+    },
+    {
+      "spirit": "aerial",
+      "level": 2,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:arrow",
+        "count": 16
+      },
+      "maxUses": 16,
+      "xp": 2
+    },
+    {
+      "spirit": "aerial",
+      "level": 2,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:spectral_arrow",
+        "count": 8
+      },
+      "maxUses": 8,
+      "xp": 6
+    },
+    {
+      "spirit": "aerial",
+      "level": 2,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:tipped_arrow",
+        "count": 8
+      },
+      "maxUses": 6,
+      "xp": 14
+    },
+    {
+      "spirit": "aerial",
+      "level": 3,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:map",
+        "count": 2
+      },
+      "maxUses": 12,
+      "xp": 2
+    },
+    {
+      "spirit": "aerial",
+      "level": 3,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:compass",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 2
+    },
+    {
+      "spirit": "aerial",
+      "level": 3,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:filled_map",
+        "count": 1
+      },
+      "maxUses": 6,
+      "xp": 6
+    },
+    {
+      "spirit": "aerial",
+      "level": 3,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:spyglass",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 10
+    },
+    {
+      "spirit": "aerial",
+      "level": 3,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:recovery_compass",
+        "count": 1
+      },
+      "maxUses": 3,
+      "xp": 12
+    },
+    {
+      "spirit": "aerial",
+      "level": 3,
+      "cost": 6,
+      "result": {
+        "id": "naturescompass:naturescompass",
+        "count": 1
+      },
+      "maxUses": 3,
+      "xp": 14
+    },
+    {
+      "spirit": "aerial",
+      "level": 3,
+      "cost": 5,
+      "result": {
+        "id": "create:track_signal",
+        "count": 4
+      },
+      "maxUses": 5,
+      "xp": 16
+    },
+    {
+      "spirit": "aerial",
+      "level": 4,
+      "cost": 8,
+      "result": {
+        "id": "create:track_station",
+        "count": 1
+      },
+      "maxUses": 2,
+      "xp": 22
+    },
+    {
+      "spirit": "aerial",
+      "level": 4,
+      "cost": 8,
+      "result": {
+        "id": "create:controller_rail",
+        "count": 8
+      },
+      "maxUses": 2,
+      "xp": 24
+    },
+    {
+      "spirit": "aerial",
+      "level": 4,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:glass",
+        "count": 8
+      },
+      "maxUses": 8,
+      "xp": 12
+    },
+    {
+      "spirit": "aerial",
+      "level": 4,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:map",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 3
+    },
+    {
+      "spirit": "aerial",
+      "level": 4,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:rail",
+        "count": 16
+      },
+      "maxUses": 8,
+      "xp": 9
+    },
+    {
+      "spirit": "aerial",
+      "level": 4,
+      "cost": 2,
+      "result": {
+        "id": "minecraft:torch",
+        "count": 16
+      },
+      "maxUses": 8,
+      "xp": 9
+    },
+    {
+      "spirit": "aerial",
+      "level": 4,
+      "cost": 2,
+      "result": {
+        "id": "minecraft:glass",
+        "count": 8
+      },
+      "maxUses": 8,
+      "xp": 12
+    },
+    {
+      "spirit": "aerial",
+      "level": 5,
+      "cost": 2,
+      "result": {
+        "id": "minecraft:map",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 3
+    },
+    {
+      "spirit": "aerial",
+      "level": 5,
+      "cost": 2,
+      "result": {
+        "id": "minecraft:rail",
+        "count": 16
+      },
+      "maxUses": 8,
+      "xp": 9
+    },
+    {
+      "spirit": "aerial",
+      "level": 5,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:torch",
+        "count": 16
+      },
+      "maxUses": 8,
+      "xp": 9
+    },
+    {
+      "spirit": "aerial",
+      "level": 5,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:glass",
+        "count": 8
+      },
+      "maxUses": 8,
+      "xp": 12
+    },
+    {
+      "spirit": "aerial",
+      "level": 5,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:map",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 3
+    },
+    {
+      "spirit": "aerial",
+      "level": 5,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:rail",
+        "count": 16
+      },
+      "maxUses": 8,
+      "xp": 9
+    },
+    {
+      "spirit": "aerial",
+      "level": 5,
+      "cost": 4,
+      "result": {
+        "id": "create:redstone_link",
+        "count": 2
+      },
+      "maxUses": 5,
+      "xp": 14
+    },
+    {
+      "spirit": "earthen",
+      "level": 1,
+      "cost": 4,
+      "result": {
+        "id": "create:cut_limestone",
+        "count": 16
+      },
+      "maxUses": 8,
+      "xp": 8
+    },
+    {
+      "spirit": "earthen",
+      "level": 1,
+      "cost": 4,
+      "result": {
+        "id": "additionalweaponry:wrench",
+        "count": 1
+      },
+      "maxUses": 6,
+      "xp": 6
+    },
+    {
+      "spirit": "earthen",
+      "level": 1,
+      "cost": 6,
+      "result": {
+        "id": "minecraft:obsidian",
+        "count": 8
+      },
+      "maxUses": 5,
+      "xp": 16
+    },
+    {
+      "spirit": "earthen",
+      "level": 1,
+      "cost": 6,
+      "result": {
+        "id": "minecraft:crying_obsidian",
+        "count": 4
+      },
+      "maxUses": 4,
+      "xp": 18
+    },
+    {
+      "spirit": "earthen",
+      "level": 1,
+      "cost": 8,
+      "result": {
+        "id": "ae2:sky_stone_block",
+        "count": 16
+      },
+      "maxUses": 2,
+      "xp": 22
+    },
+    {
+      "spirit": "earthen",
+      "level": 1,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:bricks",
+        "count": 8
+      },
+      "maxUses": 16,
+      "xp": 2
+    },
+    {
+      "spirit": "earthen",
+      "level": 1,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:cobblestone_wall",
+        "count": 16
+      },
+      "maxUses": 16,
+      "xp": 2
+    },
+    {
+      "spirit": "earthen",
+      "level": 2,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:stonecutter",
+        "count": 1
+      },
+      "maxUses": 6,
+      "xp": 6
+    },
+    {
+      "spirit": "earthen",
+      "level": 2,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:stone_bricks",
+        "count": 16
+      },
+      "maxUses": 8,
+      "xp": 10
+    },
+    {
+      "spirit": "earthen",
+      "level": 2,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:mossy_stone_bricks",
+        "count": 16
+      },
+      "maxUses": 8,
+      "xp": 10
+    },
+    {
+      "spirit": "earthen",
+      "level": 2,
+      "cost": 6,
+      "result": {
+        "id": "minecraft:obsidian",
+        "count": 8
+      },
+      "maxUses": 4,
+      "xp": 16
+    },
+    {
+      "spirit": "earthen",
+      "level": 2,
+      "cost": 8,
+      "result": {
+        "id": "minecraft:crying_obsidian",
+        "count": 4
+      },
+      "maxUses": 3,
+      "xp": 20
+    },
+    {
+      "spirit": "earthen",
+      "level": 2,
+      "cost": 8,
+      "result": {
+        "id": "ae2:sky_stone_block",
+        "count": 16
+      },
+      "maxUses": 2,
+      "xp": 22
+    },
+    {
+      "spirit": "earthen",
+      "level": 2,
+      "cost": 1,
+      "result": {
+        "id": "tconstruct:repair_kit",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 3
+    },
+    {
+      "spirit": "earthen",
+      "level": 3,
+      "cost": 6,
+      "result": {
+        "id": "additionalweaponry:wrench",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 16
+    },
+    {
+      "spirit": "earthen",
+      "level": 3,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:leather",
+        "count": 4
+      },
+      "maxUses": 8,
+      "xp": 3
+    },
+    {
+      "spirit": "earthen",
+      "level": 3,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:bucket",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 15
+    },
+    {
+      "spirit": "earthen",
+      "level": 3,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:cooked_beef",
+        "count": 4
+      },
+      "maxUses": 8,
+      "xp": 6
+    },
+    {
+      "spirit": "earthen",
+      "level": 3,
+      "cost": 2,
+      "result": {
+        "id": "minecraft:stick",
+        "count": 32
+      },
+      "maxUses": 8,
+      "xp": 12
+    },
+    {
+      "spirit": "earthen",
+      "level": 3,
+      "cost": 2,
+      "result": {
+        "id": "minecraft:leather",
+        "count": 4
+      },
+      "maxUses": 8,
+      "xp": 3
+    },
+    {
+      "spirit": "earthen",
+      "level": 3,
+      "cost": 2,
+      "result": {
+        "id": "minecraft:bucket",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 15
+    },
+    {
+      "spirit": "earthen",
+      "level": 4,
+      "cost": 2,
+      "result": {
+        "id": "minecraft:cooked_beef",
+        "count": 4
+      },
+      "maxUses": 8,
+      "xp": 6
+    },
+    {
+      "spirit": "earthen",
+      "level": 4,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:stick",
+        "count": 32
+      },
+      "maxUses": 8,
+      "xp": 12
+    },
+    {
+      "spirit": "earthen",
+      "level": 4,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:leather",
+        "count": 4
+      },
+      "maxUses": 8,
+      "xp": 3
+    },
+    {
+      "spirit": "earthen",
+      "level": 4,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:bucket",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 15
+    },
+    {
+      "spirit": "earthen",
+      "level": 4,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:cooked_beef",
+        "count": 4
+      },
+      "maxUses": 8,
+      "xp": 6
+    },
+    {
+      "spirit": "earthen",
+      "level": 4,
+      "cost": 4,
+      "result": {
+        "id": "create:cut_scoria",
+        "count": 16
+      },
+      "maxUses": 8,
+      "xp": 8
+    },
+    {
+      "spirit": "earthen",
+      "level": 4,
+      "cost": 4,
+      "result": {
+        "id": "create:cut_ochrum",
+        "count": 16
+      },
+      "maxUses": 8,
+      "xp": 8
+    },
+    {
+      "spirit": "earthen",
+      "level": 5,
+      "cost": 4,
+      "result": {
+        "id": "create:super_glue",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 6
+    },
+    {
+      "spirit": "earthen",
+      "level": 5,
+      "cost": 4,
+      "result": {
+        "id": "create:belt_connector",
+        "count": 16
+      },
+      "maxUses": 8,
+      "xp": 8
+    },
+    {
+      "spirit": "earthen",
+      "level": 5,
+      "cost": 4,
+      "result": {
+        "id": "create:depot",
+        "count": 2
+      },
+      "maxUses": 8,
+      "xp": 8
+    },
+    {
+      "spirit": "earthen",
+      "level": 5,
+      "cost": 4,
+      "result": {
+        "id": "create:chute",
+        "count": 4
+      },
+      "maxUses": 8,
+      "xp": 8
+    },
+    {
+      "spirit": "earthen",
+      "level": 5,
+      "cost": 4,
+      "result": {
+        "id": "create:andesite_funnel",
+        "count": 2
+      },
+      "maxUses": 6,
+      "xp": 10
+    },
+    {
+      "spirit": "earthen",
+      "level": 5,
+      "cost": 4,
+      "result": {
+        "id": "create:andesite_tunnel",
+        "count": 2
+      },
+      "maxUses": 6,
+      "xp": 10
+    },
+    {
+      "spirit": "earthen",
+      "level": 5,
+      "cost": 4,
+      "result": {
+        "id": "create:portable_storage_interface",
+        "count": 1
+      },
+      "maxUses": 5,
+      "xp": 10
+    },
+    {
+      "spirit": "infernal",
+      "level": 1,
+      "cost": 4,
+      "result": {
+        "id": "minecraft:tnt",
+        "count": 3
+      },
+      "maxUses": 6,
+      "xp": 10
+    },
+    {
+      "spirit": "infernal",
+      "level": 1,
+      "cost": 6,
+      "result": {
+        "id": "minecraft:golden_apple",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 18
+    },
+    {
+      "spirit": "infernal",
+      "level": 1,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:tnt",
+        "count": 4
+      },
+      "maxUses": 6,
+      "xp": 10
+    },
+    {
+      "spirit": "infernal",
+      "level": 1,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:fire_charge",
+        "count": 8
+      },
+      "maxUses": 8,
+      "xp": 10
+    },
+    {
+      "spirit": "infernal",
+      "level": 1,
+      "cost": 6,
+      "result": {
+        "id": "minecraft:golden_apple",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 16
+    },
+    {
+      "spirit": "infernal",
+      "level": 1,
+      "cost": 6,
+      "result": {
+        "id": "create:empty_blaze_burner",
+        "count": 1
+      },
+      "maxUses": 3,
+      "xp": 18
+    },
+    {
+      "spirit": "infernal",
+      "level": 1,
+      "cost": 6,
+      "result": {
+        "id": "minecraft:diamond_boots",
+        "count": 1
+      },
+      "maxUses": 2,
+      "xp": 18
+    },
+    {
+      "spirit": "infernal",
+      "level": 2,
+      "cost": 6,
+      "result": {
+        "id": "minecraft:diamond_helmet",
+        "count": 1
+      },
+      "maxUses": 2,
+      "xp": 18
+    },
+    {
+      "spirit": "infernal",
+      "level": 2,
+      "cost": 8,
+      "result": {
+        "id": "minecraft:diamond_chestplate",
+        "count": 1
+      },
+      "maxUses": 1,
+      "xp": 24
+    },
+    {
+      "spirit": "infernal",
+      "level": 2,
+      "cost": 8,
+      "result": {
+        "id": "minecraft:diamond_leggings",
+        "count": 1
+      },
+      "maxUses": 1,
+      "xp": 24
+    },
+    {
+      "spirit": "infernal",
+      "level": 2,
+      "cost": 5,
+      "result": {
+        "id": "farmersdelight:nether_salad",
+        "count": 4
+      },
+      "maxUses": 3,
+      "xp": 20
+    },
+    {
+      "spirit": "infernal",
+      "level": 2,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:shield",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 3
+    },
+    {
+      "spirit": "infernal",
+      "level": 2,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:chainmail_boots",
+        "count": 1
+      },
+      "maxUses": 6,
+      "xp": 2
+    },
+    {
+      "spirit": "infernal",
+      "level": 2,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:chainmail_leggings",
+        "count": 1
+      },
+      "maxUses": 6,
+      "xp": 6
+    },
+    {
+      "spirit": "infernal",
+      "level": 3,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:chainmail_helmet",
+        "count": 1
+      },
+      "maxUses": 6,
+      "xp": 6
+    },
+    {
+      "spirit": "infernal",
+      "level": 3,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:chainmail_chestplate",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 10
+    },
+    {
+      "spirit": "infernal",
+      "level": 3,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:iron_chestplate",
+        "count": 1
+      },
+      "maxUses": 3,
+      "xp": 10
+    },
+    {
+      "spirit": "infernal",
+      "level": 3,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:diamond_helmet",
+        "count": 1
+      },
+      "maxUses": 2,
+      "xp": 16
+    },
+    {
+      "spirit": "infernal",
+      "level": 3,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:diamond_boots",
+        "count": 1
+      },
+      "maxUses": 2,
+      "xp": 16
+    },
+    {
+      "spirit": "infernal",
+      "level": 3,
+      "cost": 8,
+      "result": {
+        "id": "minecraft:diamond_chestplate",
+        "count": 1
+      },
+      "maxUses": 1,
+      "xp": 22
+    },
+    {
+      "spirit": "infernal",
+      "level": 3,
+      "cost": 8,
+      "result": {
+        "id": "minecraft:diamond_leggings",
+        "count": 1
+      },
+      "maxUses": 1,
+      "xp": 22
+    },
+    {
+      "spirit": "infernal",
+      "level": 4,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:crossbow",
+        "count": 1
+      },
+      "maxUses": 6,
+      "xp": 6
+    },
+    {
+      "spirit": "infernal",
+      "level": 4,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:gunpowder",
+        "count": 8
+      },
+      "maxUses": 10,
+      "xp": 6
+    },
+    {
+      "spirit": "infernal",
+      "level": 4,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:paper",
+        "count": 16
+      },
+      "maxUses": 8,
+      "xp": 6
+    },
+    {
+      "spirit": "infernal",
+      "level": 4,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:carrot",
+        "count": 12
+      },
+      "maxUses": 8,
+      "xp": 9
+    },
+    {
+      "spirit": "infernal",
+      "level": 4,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:bone_meal",
+        "count": 16
+      },
+      "maxUses": 8,
+      "xp": 12
+    },
+    {
+      "spirit": "infernal",
+      "level": 4,
+      "cost": 2,
+      "result": {
+        "id": "minecraft:bread",
+        "count": 4
+      },
+      "maxUses": 8,
+      "xp": 3
+    },
+    {
+      "spirit": "infernal",
+      "level": 4,
+      "cost": 2,
+      "result": {
+        "id": "minecraft:paper",
+        "count": 16
+      },
+      "maxUses": 8,
+      "xp": 6
+    },
+    {
+      "spirit": "infernal",
+      "level": 5,
+      "cost": 2,
+      "result": {
+        "id": "minecraft:carrot",
+        "count": 12
+      },
+      "maxUses": 8,
+      "xp": 9
+    },
+    {
+      "spirit": "infernal",
+      "level": 5,
+      "cost": 2,
+      "result": {
+        "id": "minecraft:bone_meal",
+        "count": 16
+      },
+      "maxUses": 8,
+      "xp": 12
+    },
+    {
+      "spirit": "infernal",
+      "level": 5,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:bread",
+        "count": 4
+      },
+      "maxUses": 8,
+      "xp": 3
+    },
+    {
+      "spirit": "infernal",
+      "level": 5,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:paper",
+        "count": 16
+      },
+      "maxUses": 8,
+      "xp": 6
+    },
+    {
+      "spirit": "infernal",
+      "level": 5,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:carrot",
+        "count": 12
+      },
+      "maxUses": 8,
+      "xp": 9
+    },
+    {
+      "spirit": "infernal",
+      "level": 5,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:bone_meal",
+        "count": 16
+      },
+      "maxUses": 8,
+      "xp": 12
+    },
+    {
+      "spirit": "infernal",
+      "level": 5,
+      "cost": 4,
+      "result": {
+        "id": "minecraft:target",
+        "count": 4
+      },
+      "maxUses": 8,
+      "xp": 10
+    },
+    {
+      "spirit": "sacred",
+      "level": 1,
+      "cost": 6,
+      "result": {
+        "id": "farmersdelight:gleaming_salad_block",
+        "count": 1
+      },
+      "maxUses": 3,
+      "xp": 16
+    },
+    {
+      "spirit": "sacred",
+      "level": 1,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:bread",
+        "count": 6
+      },
+      "maxUses": 16,
+      "xp": 2
+    },
+    {
+      "spirit": "sacred",
+      "level": 1,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:apple",
+        "count": 4
+      },
+      "maxUses": 12,
+      "xp": 2
+    },
+    {
+      "spirit": "sacred",
+      "level": 1,
+      "cost": 5,
+      "result": {
+        "id": "farmersdelight:honey_glazed_ham_block",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 12
+    },
+    {
+      "spirit": "sacred",
+      "level": 1,
+      "cost": 6,
+      "result": {
+        "id": "farmersdelight:stuffed_pumpkin_block",
+        "count": 1
+      },
+      "maxUses": 3,
+      "xp": 16
+    },
+    {
+      "spirit": "sacred",
+      "level": 1,
+      "cost": 6,
+      "result": {
+        "id": "farmersdelight:steak_and_potatoes",
+        "count": 4
+      },
+      "maxUses": 5,
+      "xp": 16
+    },
+    {
+      "spirit": "sacred",
+      "level": 1,
+      "cost": 6,
+      "result": {
+        "id": "minecraft:globe_banner_pattern",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 16
+    },
+    {
+      "spirit": "sacred",
+      "level": 2,
+      "cost": 8,
+      "result": {
+        "id": "minecraft:totem_of_undying",
+        "count": 1
+      },
+      "maxUses": 1,
+      "xp": 24
+    },
+    {
+      "spirit": "sacred",
+      "level": 2,
+      "cost": 8,
+      "result": {
+        "id": "minecraft:decorated_pot",
+        "count": 4
+      },
+      "maxUses": 4,
+      "xp": 20
+    },
+    {
+      "spirit": "sacred",
+      "level": 2,
+      "cost": 1,
+      "result": {
+        "id": "farmersdelight:cabbage",
+        "count": 4
+      },
+      "maxUses": 12,
+      "xp": 2
+    },
+    {
+      "spirit": "sacred",
+      "level": 2,
+      "cost": 1,
+      "result": {
+        "id": "farmersdelight:onion",
+        "count": 4
+      },
+      "maxUses": 12,
+      "xp": 2
+    },
+    {
+      "spirit": "sacred",
+      "level": 2,
+      "cost": 3,
+      "result": {
+        "id": "farmersdelight:cooking_pot",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 8
+    },
+    {
+      "spirit": "sacred",
+      "level": 2,
+      "cost": 3,
+      "result": {
+        "id": "farmersdelight:skillet",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 8
+    },
+    {
+      "spirit": "sacred",
+      "level": 2,
+      "cost": 5,
+      "result": {
+        "id": "farmersdelight:tomato_sauce",
+        "count": 3
+      },
+      "maxUses": 8,
+      "xp": 8
+    },
+    {
+      "spirit": "sacred",
+      "level": 3,
+      "cost": 5,
+      "result": {
+        "id": "farmersdelight:roast_chicken_block",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 12
+    },
+    {
+      "spirit": "sacred",
+      "level": 3,
+      "cost": 5,
+      "result": {
+        "id": "farmersdelight:shepherds_pie_block",
+        "count": 1
+      },
+      "maxUses": 3,
+      "xp": 16
+    },
+    {
+      "spirit": "sacred",
+      "level": 3,
+      "cost": 5,
+      "result": {
+        "id": "farmersdelight:rice_roll_medley_block",
+        "count": 1
+      },
+      "maxUses": 3,
+      "xp": 16
+    },
+    {
+      "spirit": "sacred",
+      "level": 3,
+      "cost": 6,
+      "result": {
+        "id": "farmersdelight:stuffed_pumpkin_block",
+        "count": 1
+      },
+      "maxUses": 2,
+      "xp": 20
+    },
+    {
+      "spirit": "sacred",
+      "level": 3,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:cooked_porkchop",
+        "count": 4
+      },
+      "maxUses": 12,
+      "xp": 2
+    },
+    {
+      "spirit": "sacred",
+      "level": 3,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:cooked_beef",
+        "count": 4
+      },
+      "maxUses": 12,
+      "xp": 2
+    },
+    {
+      "spirit": "sacred",
+      "level": 3,
+      "cost": 3,
+      "result": {
+        "id": "farmersdelight:smoked_ham",
+        "count": 2
+      },
+      "maxUses": 8,
+      "xp": 6
+    },
+    {
+      "spirit": "sacred",
+      "level": 4,
+      "cost": 3,
+      "result": {
+        "id": "farmersdelight:minced_beef",
+        "count": 6
+      },
+      "maxUses": 8,
+      "xp": 6
+    },
+    {
+      "spirit": "sacred",
+      "level": 4,
+      "cost": 5,
+      "result": {
+        "id": "farmersdelight:bacon_sandwich",
+        "count": 2
+      },
+      "maxUses": 6,
+      "xp": 10
+    },
+    {
+      "spirit": "sacred",
+      "level": 4,
+      "cost": 5,
+      "result": {
+        "id": "farmersdelight:mutton_wrap",
+        "count": 2
+      },
+      "maxUses": 6,
+      "xp": 10
+    },
+    {
+      "spirit": "sacred",
+      "level": 4,
+      "cost": 5,
+      "result": {
+        "id": "farmersdelight:beef_stew",
+        "count": 2
+      },
+      "maxUses": 5,
+      "xp": 14
+    },
+    {
+      "spirit": "sacred",
+      "level": 4,
+      "cost": 5,
+      "result": {
+        "id": "farmersdelight:roasted_mutton_chops",
+        "count": 2
+      },
+      "maxUses": 5,
+      "xp": 14
+    },
+    {
+      "spirit": "sacred",
+      "level": 4,
+      "cost": 8,
+      "result": {
+        "id": "minecraft:totem_of_undying",
+        "count": 1
+      },
+      "maxUses": 1,
+      "xp": 24
+    },
+    {
+      "spirit": "sacred",
+      "level": 4,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:white_wool",
+        "count": 8
+      },
+      "maxUses": 16,
+      "xp": 2
+    },
+    {
+      "spirit": "sacred",
+      "level": 5,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:white_bed",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 2
+    },
+    {
+      "spirit": "sacred",
+      "level": 5,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:leather",
+        "count": 6
+      },
+      "maxUses": 12,
+      "xp": 6
+    },
+    {
+      "spirit": "sacred",
+      "level": 5,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:white_banner",
+        "count": 2
+      },
+      "maxUses": 8,
+      "xp": 6
+    },
+    {
+      "spirit": "sacred",
+      "level": 5,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:painting",
+        "count": 3
+      },
+      "maxUses": 8,
+      "xp": 10
+    },
+    {
+      "spirit": "sacred",
+      "level": 5,
+      "cost": 5,
+      "result": {
+        "id": "procedural_bouquets:bouquet_grid",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 10
+    },
+    {
+      "spirit": "sacred",
+      "level": 5,
+      "cost": 5,
+      "result": {
+        "id": "procedural_bouquets:potted_bouquet",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 10
+    },
+    {
+      "spirit": "sacred",
+      "level": 5,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:flower_banner_pattern",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 14
+    },
+    {
+      "spirit": "wicked",
+      "level": 1,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:crossbow",
+        "count": 1
+      },
+      "maxUses": 6,
+      "xp": 6
+    },
+    {
+      "spirit": "wicked",
+      "level": 1,
+      "cost": 4,
+      "result": {
+        "id": "create:copper_backtank",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 10
+    },
+    {
+      "spirit": "wicked",
+      "level": 1,
+      "cost": 4,
+      "result": {
+        "id": "create:copper_diving_helmet",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 10
+    },
+    {
+      "spirit": "wicked",
+      "level": 1,
+      "cost": 4,
+      "result": {
+        "id": "create:copper_diving_boots",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 10
+    },
+    {
+      "spirit": "wicked",
+      "level": 1,
+      "cost": 6,
+      "result": {
+        "id": "sophisticatedbackpacks:magnet_upgrade",
+        "count": 1
+      },
+      "maxUses": 3,
+      "xp": 16
+    },
+    {
+      "spirit": "wicked",
+      "level": 1,
+      "cost": 6,
+      "result": {
+        "id": "sophisticatedbackpacks:refill_upgrade",
+        "count": 1
+      },
+      "maxUses": 3,
+      "xp": 16
+    },
+    {
+      "spirit": "wicked",
+      "level": 1,
+      "cost": 6,
+      "result": {
+        "id": "sophisticatedbackpacks:restock_upgrade",
+        "count": 1
+      },
+      "maxUses": 3,
+      "xp": 16
+    },
+    {
+      "spirit": "wicked",
+      "level": 2,
+      "cost": 8,
+      "result": {
+        "id": "sophisticatedbackpacks:advanced_pickup_upgrade",
+        "count": 1
+      },
+      "maxUses": 2,
+      "xp": 22
+    },
+    {
+      "spirit": "wicked",
+      "level": 2,
+      "cost": 8,
+      "result": {
+        "id": "sophisticatedbackpacks:advanced_magnet_upgrade",
+        "count": 1
+      },
+      "maxUses": 2,
+      "xp": 22
+    },
+    {
+      "spirit": "wicked",
+      "level": 2,
+      "cost": 8,
+      "result": {
+        "id": "minecraft:lodestone",
+        "count": 1
+      },
+      "maxUses": 2,
+      "xp": 24
+    },
+    {
+      "spirit": "wicked",
+      "level": 2,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:bow",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 2
+    },
+    {
+      "spirit": "wicked",
+      "level": 2,
+      "cost": 5,
+      "result": {
+        "id": "rehooked:wood_hook",
+        "count": 1
+      },
+      "maxUses": 5,
+      "xp": 10
+    },
+    {
+      "spirit": "wicked",
+      "level": 2,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:target",
+        "count": 4
+      },
+      "maxUses": 8,
+      "xp": 10
+    },
+    {
+      "spirit": "wicked",
+      "level": 2,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:globe_banner_pattern",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 14
+    },
+    {
+      "spirit": "wicked",
+      "level": 3,
+      "cost": 8,
+      "result": {
+        "id": "minecraft:decorated_pot",
+        "count": 4
+      },
+      "maxUses": 4,
+      "xp": 20
+    },
+    {
+      "spirit": "wicked",
+      "level": 3,
+      "cost": 1,
+      "result": {
+        "id": "sophisticatedbackpacks:backpack",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 4
+    },
+    {
+      "spirit": "wicked",
+      "level": 3,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:leather_boots",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 2
+    },
+    {
+      "spirit": "wicked",
+      "level": 3,
+      "cost": 3,
+      "result": {
+        "id": "sophisticatedbackpacks:pickup_upgrade",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 8
+    },
+    {
+      "spirit": "wicked",
+      "level": 3,
+      "cost": 3,
+      "result": {
+        "id": "farmersdelight:rope",
+        "count": 8
+      },
+      "maxUses": 8,
+      "xp": 6
+    },
+    {
+      "spirit": "wicked",
+      "level": 3,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:lead",
+        "count": 2
+      },
+      "maxUses": 6,
+      "xp": 8
+    },
+    {
+      "spirit": "wicked",
+      "level": 3,
+      "cost": 5,
+      "result": {
+        "id": "cold_sweat:sewing_table",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 8
+    },
+    {
+      "spirit": "wicked",
+      "level": 4,
+      "cost": 5,
+      "result": {
+        "id": "cold_sweat:goat_fur",
+        "count": 4
+      },
+      "maxUses": 6,
+      "xp": 10
+    },
+    {
+      "spirit": "wicked",
+      "level": 4,
+      "cost": 5,
+      "result": {
+        "id": "cold_sweat:hoglin_hide",
+        "count": 2
+      },
+      "maxUses": 4,
+      "xp": 10
+    },
+    {
+      "spirit": "wicked",
+      "level": 4,
+      "cost": 6,
+      "result": {
+        "id": "sophisticatedbackpacks:magnet_upgrade",
+        "count": 1
+      },
+      "maxUses": 3,
+      "xp": 16
+    },
+    {
+      "spirit": "wicked",
+      "level": 4,
+      "cost": 8,
+      "result": {
+        "id": "sophisticatedbackpacks:advanced_pickup_upgrade",
+        "count": 1
+      },
+      "maxUses": 2,
+      "xp": 22
+    },
+    {
+      "spirit": "wicked",
+      "level": 4,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:terracotta",
+        "count": 8
+      },
+      "maxUses": 16,
+      "xp": 2
+    },
+    {
+      "spirit": "wicked",
+      "level": 4,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:ladder",
+        "count": 16
+      },
+      "maxUses": 16,
+      "xp": 2
+    },
+    {
+      "spirit": "wicked",
+      "level": 4,
+      "cost": 1,
+      "result": {
+        "id": "wares:cardboard_box",
+        "count": 4
+      },
+      "maxUses": 12,
+      "xp": 2
+    },
+    {
+      "spirit": "wicked",
+      "level": 5,
+      "cost": 3,
+      "result": {
+        "id": "minecraft:barrel",
+        "count": 2
+      },
+      "maxUses": 8,
+      "xp": 6
+    },
+    {
+      "spirit": "wicked",
+      "level": 5,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:cauldron",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 10
+    },
+    {
+      "spirit": "wicked",
+      "level": 5,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:quartz_block",
+        "count": 8
+      },
+      "maxUses": 8,
+      "xp": 10
+    },
+    {
+      "spirit": "wicked",
+      "level": 5,
+      "cost": 5,
+      "result": {
+        "id": "create:brass_sheet",
+        "count": 4
+      },
+      "maxUses": 4,
+      "xp": 16
+    },
+    {
+      "spirit": "wicked",
+      "level": 5,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:lantern",
+        "count": 8
+      },
+      "maxUses": 6,
+      "xp": 16
+    },
+    {
+      "spirit": "wicked",
+      "level": 5,
+      "cost": 5,
+      "result": {
+        "id": "minecraft:chain",
+        "count": 16
+      },
+      "maxUses": 6,
+      "xp": 16
+    },
+    {
+      "spirit": "wicked",
+      "level": 5,
+      "cost": 1,
+      "result": {
+        "id": "minecraft:flint_and_steel",
+        "count": 1
+      },
+      "maxUses": 8,
+      "xp": 2
+    }
+  ],
+  "wanderingRows": [
+    {
+      "spirit": "sacred",
+      "cost": 1,
+      "result": {
+        "id": "minecraft:bread",
+        "count": 8
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "sacred",
+      "cost": 3,
+      "result": {
+        "id": "minecraft:golden_carrot",
+        "count": 4
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "sacred",
+      "cost": 2,
+      "result": {
+        "id": "minecraft:honey_bottle",
+        "count": 4
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "sacred",
+      "cost": 3,
+      "result": {
+        "id": "minecraft:milk_bucket",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "sacred",
+      "cost": 2,
+      "result": {
+        "id": "minecraft:glow_berries",
+        "count": 8
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "sacred",
+      "cost": 3,
+      "result": {
+        "id": "minecraft:amethyst_shard",
+        "count": 8
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "sacred",
+      "cost": 5,
+      "result": {
+        "id": "minecraft:experience_bottle",
+        "count": 4
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "sacred",
+      "cost": 5,
+      "result": {
+        "id": "minecraft:ghast_tear",
+        "count": 2
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "sacred",
+      "cost": 6,
+      "result": {
+        "id": "minecraft:golden_apple",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "sacred",
+      "cost": 8,
+      "result": {
+        "id": "minecraft:enchanted_golden_apple",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "sacred",
+      "cost": 8,
+      "result": {
+        "id": "minecraft:totem_of_undying",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "sacred",
+      "cost": 7,
+      "result": {
+        "id": "minecraft:heart_of_the_sea",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "sacred",
+      "cost": 6,
+      "result": {
+        "id": "minecraft:recovery_compass",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "wicked",
+      "cost": 1,
+      "result": {
+        "id": "minecraft:spider_eye",
+        "count": 8
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "wicked",
+      "cost": 2,
+      "result": {
+        "id": "minecraft:fermented_spider_eye",
+        "count": 4
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "wicked",
+      "cost": 1,
+      "result": {
+        "id": "minecraft:poisonous_potato",
+        "count": 8
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "wicked",
+      "cost": 1,
+      "result": {
+        "id": "minecraft:bone",
+        "count": 16
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "wicked",
+      "cost": 2,
+      "result": {
+        "id": "minecraft:gunpowder",
+        "count": 12
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "wicked",
+      "cost": 3,
+      "result": {
+        "id": "minecraft:magma_cream",
+        "count": 4
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "wicked",
+      "cost": 4,
+      "result": {
+        "id": "minecraft:ender_pearl",
+        "count": 2
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "wicked",
+      "cost": 4,
+      "result": {
+        "id": "minecraft:phantom_membrane",
+        "count": 2
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "wicked",
+      "cost": 5,
+      "result": {
+        "id": "minecraft:ghast_tear",
+        "count": 2
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "wicked",
+      "cost": 2,
+      "result": {
+        "id": "minecraft:soul_sand",
+        "count": 16
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "wicked",
+      "cost": 3,
+      "result": {
+        "id": "minecraft:soul_lantern",
+        "count": 4
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "wicked",
+      "cost": 6,
+      "result": {
+        "id": "minecraft:echo_shard",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "wicked",
+      "cost": 8,
+      "result": {
+        "id": "minecraft:wither_skeleton_skull",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "arcane",
+      "cost": 1,
+      "result": {
+        "id": "minecraft:paper",
+        "count": 16
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "arcane",
+      "cost": 2,
+      "result": {
+        "id": "minecraft:book",
+        "count": 8
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "arcane",
+      "cost": 2,
+      "result": {
+        "id": "minecraft:bookshelf",
+        "count": 4
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "arcane",
+      "cost": 2,
+      "result": {
+        "id": "minecraft:lapis_lazuli",
+        "count": 16
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "arcane",
+      "cost": 2,
+      "result": {
+        "id": "minecraft:redstone",
+        "count": 16
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "arcane",
+      "cost": 3,
+      "result": {
+        "id": "minecraft:glowstone_dust",
+        "count": 12
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "arcane",
+      "cost": 3,
+      "result": {
+        "id": "minecraft:quartz",
+        "count": 16
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "arcane",
+      "cost": 3,
+      "result": {
+        "id": "minecraft:amethyst_shard",
+        "count": 12
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "arcane",
+      "cost": 4,
+      "result": {
+        "id": "minecraft:name_tag",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "arcane",
+      "cost": 4,
+      "result": {
+        "id": "minecraft:clock",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "arcane",
+      "cost": 4,
+      "result": {
+        "id": "minecraft:compass",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "arcane",
+      "cost": 5,
+      "result": {
+        "id": "minecraft:experience_bottle",
+        "count": 6
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "arcane",
+      "cost": 8,
+      "result": {
+        "id": "minecraft:enchanted_book",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aerial",
+      "cost": 1,
+      "result": {
+        "id": "minecraft:feather",
+        "count": 16
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aerial",
+      "cost": 1,
+      "result": {
+        "id": "minecraft:paper",
+        "count": 16
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aerial",
+      "cost": 1,
+      "result": {
+        "id": "minecraft:bamboo",
+        "count": 16
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aerial",
+      "cost": 2,
+      "result": {
+        "id": "minecraft:scaffolding",
+        "count": 32
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aerial",
+      "cost": 3,
+      "result": {
+        "id": "minecraft:lead",
+        "count": 4
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aerial",
+      "cost": 4,
+      "result": {
+        "id": "minecraft:saddle",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aerial",
+      "cost": 4,
+      "result": {
+        "id": "minecraft:compass",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aerial",
+      "cost": 4,
+      "result": {
+        "id": "minecraft:spyglass",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aerial",
+      "cost": 3,
+      "result": {
+        "id": "minecraft:firework_rocket",
+        "count": 16
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aerial",
+      "cost": 5,
+      "result": {
+        "id": "minecraft:phantom_membrane",
+        "count": 4
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aerial",
+      "cost": 5,
+      "result": {
+        "id": "minecraft:firework_star",
+        "count": 8
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aerial",
+      "cost": 6,
+      "result": {
+        "id": "minecraft:recovery_compass",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aerial",
+      "cost": 8,
+      "result": {
+        "id": "minecraft:elytra",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aqueous",
+      "cost": 1,
+      "result": {
+        "id": "minecraft:kelp",
+        "count": 24
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aqueous",
+      "cost": 1,
+      "result": {
+        "id": "minecraft:seagrass",
+        "count": 16
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aqueous",
+      "cost": 2,
+      "result": {
+        "id": "minecraft:sea_pickle",
+        "count": 8
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aqueous",
+      "cost": 3,
+      "result": {
+        "id": "minecraft:cod_bucket",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aqueous",
+      "cost": 3,
+      "result": {
+        "id": "minecraft:salmon_bucket",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aqueous",
+      "cost": 4,
+      "result": {
+        "id": "minecraft:pufferfish_bucket",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aqueous",
+      "cost": 4,
+      "result": {
+        "id": "minecraft:tropical_fish_bucket",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aqueous",
+      "cost": 6,
+      "result": {
+        "id": "minecraft:axolotl_bucket",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aqueous",
+      "cost": 4,
+      "result": {
+        "id": "minecraft:nautilus_shell",
+        "count": 2
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aqueous",
+      "cost": 3,
+      "result": {
+        "id": "minecraft:prismarine_shard",
+        "count": 12
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aqueous",
+      "cost": 5,
+      "result": {
+        "id": "minecraft:sponge",
+        "count": 2
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aqueous",
+      "cost": 7,
+      "result": {
+        "id": "minecraft:heart_of_the_sea",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "aqueous",
+      "cost": 8,
+      "result": {
+        "id": "minecraft:trident",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "earthen",
+      "cost": 1,
+      "result": {
+        "id": "minecraft:clay",
+        "count": 16
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "earthen",
+      "cost": 1,
+      "result": {
+        "id": "minecraft:mud",
+        "count": 16
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "earthen",
+      "cost": 2,
+      "result": {
+        "id": "minecraft:terracotta",
+        "count": 16
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "earthen",
+      "cost": 2,
+      "result": {
+        "id": "minecraft:red_sand",
+        "count": 24
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "earthen",
+      "cost": 2,
+      "result": {
+        "id": "minecraft:calcite",
+        "count": 16
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "earthen",
+      "cost": 2,
+      "result": {
+        "id": "minecraft:tuff",
+        "count": 24
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "earthen",
+      "cost": 2,
+      "result": {
+        "id": "minecraft:dripstone_block",
+        "count": 16
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "earthen",
+      "cost": 2,
+      "result": {
+        "id": "minecraft:pointed_dripstone",
+        "count": 12
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "earthen",
+      "cost": 3,
+      "result": {
+        "id": "minecraft:bricks",
+        "count": 16
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "earthen",
+      "cost": 4,
+      "result": {
+        "id": "minecraft:obsidian",
+        "count": 8
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "earthen",
+      "cost": 4,
+      "result": {
+        "id": "minecraft:blue_ice",
+        "count": 8
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "earthen",
+      "cost": 7,
+      "result": {
+        "id": "minecraft:diamond",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "earthen",
+      "cost": 8,
+      "result": {
+        "id": "minecraft:netherite_scrap",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "infernal",
+      "cost": 1,
+      "result": {
+        "id": "minecraft:coal",
+        "count": 16
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "infernal",
+      "cost": 2,
+      "result": {
+        "id": "minecraft:fire_charge",
+        "count": 8
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "infernal",
+      "cost": 2,
+      "result": {
+        "id": "minecraft:magma_block",
+        "count": 16
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "infernal",
+      "cost": 2,
+      "result": {
+        "id": "minecraft:blackstone",
+        "count": 24
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "infernal",
+      "cost": 2,
+      "result": {
+        "id": "minecraft:basalt",
+        "count": 24
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "infernal",
+      "cost": 3,
+      "result": {
+        "id": "minecraft:nether_wart",
+        "count": 12
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "infernal",
+      "cost": 3,
+      "result": {
+        "id": "minecraft:glowstone",
+        "count": 8
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "infernal",
+      "cost": 3,
+      "result": {
+        "id": "minecraft:quartz",
+        "count": 16
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "infernal",
+      "cost": 3,
+      "result": {
+        "id": "minecraft:magma_cream",
+        "count": 6
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "infernal",
+      "cost": 4,
+      "result": {
+        "id": "minecraft:blaze_powder",
+        "count": 8
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "infernal",
+      "cost": 5,
+      "result": {
+        "id": "minecraft:blaze_rod",
+        "count": 4
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "infernal",
+      "cost": 5,
+      "result": {
+        "id": "minecraft:lava_bucket",
+        "count": 1
+      },
+      "maxUses": 4,
+      "xp": 2
+    },
+    {
+      "spirit": "infernal",
+      "cost": 7,
+      "result": {
+        "id": "minecraft:crying_obsidian",
+        "count": 4
+      },
+      "maxUses": 4,
+      "xp": 2
+    }
+  ]
+}

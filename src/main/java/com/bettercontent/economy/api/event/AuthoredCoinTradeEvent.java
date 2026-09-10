@@ -5,7 +5,8 @@ import net.minecraftforge.eventbus.api.Event;
 
 import java.util.Objects;
 
-/** Posted after a completed trade consumes a coin through an economy-authored trader. */
+/** Retained binary API for old consumers; the spirit economy never posts this event. */
+@Deprecated(forRemoval = false)
 public final class AuthoredCoinTradeEvent extends Event {
     private final ServerPlayer player;
 

@@ -1,28 +1,29 @@
 package com.bettercontent.economy.recipe;
 
+import com.bettercontent.economy.config.EconomyPolicy;
+import com.bettercontent.economy.spirit.SpiritKind;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import net.minecraft.resources.ResourceLocation;
 
-/** Removes every recipe whose output is a coin or coin stack; coin tiers never convert or craft. */
+/** Removes retired coin and superseded Malum equipment recipes at the reload boundary. */
 public final class CoinRecipeFilter {
-    private static final Set<String> OUTPUTS = Set.of(
-            "createdeco:copper_coin", "createdeco:iron_coin", "createdeco:industrial_iron_coin",
-            "createdeco:brass_coin", "createdeco:gold_coin", "createdeco:zinc_coin",
-            "createdeco:netherite_coin", "createdeco:copper_coinstack", "createdeco:iron_coinstack",
-            "createdeco:industrial_iron_coinstack", "createdeco:brass_coinstack",
-            "createdeco:gold_coinstack", "createdeco:zinc_coinstack", "createdeco:netherite_coinstack");
+    private static final java.util.Set<ResourceLocation> RETIRED_RECIPES = java.util.Set.of(
+            id("malum:crude_scythe"), id("malum:soul_stained_steel_axe"),
+            id("malum:soul_stained_steel_hoe"), id("malum:soul_stained_steel_pickaxe"),
+            id("malum:soul_stained_steel_shovel"), id("malum:soul_stained_steel_sword"),
+            id("malum:malum/soul_stained_steel_knife"), id("malum:spirit_infusion/soul_stained_steel_scythe"),
+            id("malum:spirit_infusion/mnemonic_hex_staff"), id("malum:spirit_infusion/staff_of_the_auric_flame"));
 
     private CoinRecipeFilter() {}
 
     public static Map<ResourceLocation, JsonElement> filter(Map<ResourceLocation, JsonElement> recipes) {
         Map<ResourceLocation, JsonElement> filtered = new LinkedHashMap<>();
         recipes.forEach((id, json) -> {
-            if (!hasCoinOutput(json)) filtered.put(id, json);
+            if (!RETIRED_RECIPES.contains(id) && !hasCoinOutput(json)) filtered.put(id, json);
         });
         return filtered;
     }
@@ -35,7 +36,11 @@ public final class CoinRecipeFilter {
 
     private static boolean matchesOutput(JsonElement element) {
         if (element == null || element.isJsonNull()) return false;
-        if (element.isJsonPrimitive()) return OUTPUTS.contains(element.getAsString());
+        if (element.isJsonPrimitive()) {
+            ResourceLocation id = ResourceLocation.tryParse(element.getAsString());
+            return id != null && (EconomyPolicy.isRetired(id)
+                    || java.util.Arrays.stream(SpiritKind.values()).anyMatch(kind -> kind.itemId().equals(id)));
+        }
         if (element.isJsonArray()) {
             for (JsonElement child : element.getAsJsonArray()) if (matchesOutput(child)) return true;
             return false;
@@ -46,4 +51,6 @@ public final class CoinRecipeFilter {
         }
         return false;
     }
+
+    private static ResourceLocation id(String value) { return new ResourceLocation(value); }
 }

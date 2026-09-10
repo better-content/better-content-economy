@@ -3,12 +3,16 @@ package com.bettercontent.economy.trader;
 import java.util.Locale;
 import java.util.UUID;
 import net.minecraft.network.chat.Component;
+import com.bettercontent.economy.spirit.SpiritKind;
 
 public enum WanderingTraderTheme {
-    NATURALIST,
-    SURVEYOR,
-    QUARTERMASTER,
-    ANTIQUARIAN;
+    SACRED,
+    WICKED,
+    ARCANE,
+    AERIAL,
+    AQUEOUS,
+    EARTHEN,
+    INFERNAL;
 
     private static final WanderingTraderTheme[] VALUES = values();
 
@@ -39,5 +43,9 @@ public enum WanderingTraderTheme {
 
     public WanderingTraderTheme next() {
         return fromIndex(ordinal() + 1);
+    }
+
+    public SpiritKind spirit() {
+        return SpiritKind.fromId(id());
     }
 }

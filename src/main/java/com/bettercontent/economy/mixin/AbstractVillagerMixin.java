@@ -3,6 +3,7 @@ package com.bettercontent.economy.mixin;
 import com.bettercontent.economy.trader.MerchantCurrencyPolicy;
 import com.bettercontent.economy.trader.VillageStarterOffer;
 import com.bettercontent.economy.trader.WanderingTraderVisits;
+import com.bettercontent.economy.trader.WanderingTraderCatalogue;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.item.trading.MerchantOffers;
@@ -17,12 +18,11 @@ abstract class AbstractVillagerMixin {
     private void betterContentEconomy$applyTradePolicy(final CallbackInfoReturnable<MerchantOffers> callback) {
         AbstractVillager merchant = (AbstractVillager) (Object) this;
         MerchantOffers offers = callback.getReturnValue();
-        if (MerchantCurrencyPolicy.isExternalMerchantType(merchant)) {
-            MerchantCurrencyPolicy.normalize(offers);
-        }
+        MerchantCurrencyPolicy.normalize(offers);
         if (merchant instanceof WanderingTrader trader
                 && trader.getPersistentData().contains(WanderingTraderVisits.THEME_TAG)) {
-            VillageStarterOffer.ensurePresent(offers);
+            WanderingTraderCatalogue.ensureThemedOffers(trader, offers);
+            VillageStarterOffer.ensurePresent(trader, offers);
         }
     }
 }

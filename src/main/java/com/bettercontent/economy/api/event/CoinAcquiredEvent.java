@@ -7,7 +7,8 @@ import net.minecraftforge.eventbus.api.Event;
 import java.util.Objects;
 import java.util.UUID;
 
-/** Posted after a coin entity has been accepted into the player's purse or inventory. */
+/** Retained binary API for old consumers; the spirit economy never posts this event. */
+@Deprecated(forRemoval = false)
 public final class CoinAcquiredEvent extends Event {
     private final ServerPlayer player;
     private final ResourceLocation denomination;

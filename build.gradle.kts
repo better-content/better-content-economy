@@ -61,7 +61,6 @@ repositories {
 
 dependencies {
     minecraft("net.minecraftforge:forge:${property("minecraft_version")}-${property("forge_version")}")
-    compileOnly(files("../dimension-drink/build/libs/dimension-drink-1.0.0.jar"))
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
     implementation(fg.deobf("com.simibubi.create:create-${property("minecraft_version")}:${property("create_version")}:slim"))
     implementation(fg.deobf("net.createmod.ponder:Ponder-Forge-${property("minecraft_version")}:${property("ponder_version")}"))
@@ -95,9 +94,12 @@ dependencies {
     compileOnly(fg.deobf("curse.maven:rehooked-1096531:6341096"))
     testRuntimeOnly(fg.deobf("curse.maven:rehooked-1096531:6341096"))
     compileOnly(fg.deobf("curse.maven:patchouli-306770:7731017"))
+    compileOnly(fg.deobf("curse.maven:lodestone-616457:6213794"))
+    compileOnly(fg.deobf("curse.maven:malum-484064:6646111"))
     compileOnly("org.valkyrienskies.core:api:1.1.0+cf208d8b56")
     runtimeOnly(fg.deobf("curse.maven:curios-api-309927:6418456"))
-    runtimeOnly(fg.deobf("curse.maven:create-deco-509285:6373226"))
+    runtimeOnly(fg.deobf("curse.maven:lodestone-616457:6213794"))
+    runtimeOnly(fg.deobf("curse.maven:malum-484064:6646111"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
     testImplementation("com.google.code.gson:gson:2.10.1")
 }
