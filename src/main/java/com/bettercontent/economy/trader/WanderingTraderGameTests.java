@@ -11,6 +11,7 @@ import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
@@ -55,6 +56,22 @@ public final class WanderingTraderGameTests {
                 return;
             }
             trader.discard();
+        }
+        helper.succeed();
+    }
+
+    @GameTest(templateNamespace = BetterContentEconomy.MOD_ID, template = "empty", timeoutTicks = 100)
+    public static void spiritVillagersHaveReadableNames(final GameTestHelper helper) {
+        for (WanderingTraderTheme theme : WanderingTraderTheme.values()) {
+            Villager villager = helper.spawn(EntityType.VILLAGER, new BlockPos(2, 2, 2));
+            villager.setVillagerData(villager.getVillagerData()
+                    .setProfession(SpiritProfessions.definition(theme.spirit()).profession().get()));
+            String expectedName = SpiritProfessions.definition(theme.spirit()).fallbackName();
+            if (!expectedName.equals(villager.getName().getString())) {
+                helper.fail("Unreadable " + theme.id() + " villager name: " + villager.getName().getString());
+                return;
+            }
+            villager.discard();
         }
         helper.succeed();
     }

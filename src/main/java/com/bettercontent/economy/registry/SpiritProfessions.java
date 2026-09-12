@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableSet;
 import java.util.EnumMap;
 import java.util.Map;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.npc.VillagerProfession;
@@ -33,13 +34,13 @@ public final class SpiritProfessions {
     private static final Map<SpiritKind, Definition> DEFINITIONS = new EnumMap<>(SpiritKind.class);
 
     static {
-        define(SpiritKind.SACRED, "sacred_reliquary", "sacred_caretaker", SoundEvents.VILLAGER_WORK_CLERIC);
-        define(SpiritKind.WICKED, "wicked_effigy", "wicked_hexbinder", SoundEvents.VILLAGER_WORK_WEAPONSMITH);
-        define(SpiritKind.ARCANE, "arcane_scriptorium", "arcane_runescribe", SoundEvents.VILLAGER_WORK_LIBRARIAN);
-        define(SpiritKind.AERIAL, "aerial_waypost", "aerial_courier", SoundEvents.VILLAGER_WORK_CARTOGRAPHER);
-        define(SpiritKind.AQUEOUS, "aqueous_font", "aqueous_tidekeeper", SoundEvents.VILLAGER_WORK_FISHERMAN);
-        define(SpiritKind.EARTHEN, "earthen_workbench", "earthen_stonewarden", SoundEvents.VILLAGER_WORK_MASON);
-        define(SpiritKind.INFERNAL, "infernal_kiln", "infernal_stoker", SoundEvents.VILLAGER_WORK_ARMORER);
+        define(SpiritKind.SACRED, "sacred_reliquary", "sacred_caretaker", "Sacred Caretaker", SoundEvents.VILLAGER_WORK_CLERIC);
+        define(SpiritKind.WICKED, "wicked_effigy", "wicked_hexbinder", "Wicked Hexbinder", SoundEvents.VILLAGER_WORK_WEAPONSMITH);
+        define(SpiritKind.ARCANE, "arcane_scriptorium", "arcane_runescribe", "Arcane Runescribe", SoundEvents.VILLAGER_WORK_LIBRARIAN);
+        define(SpiritKind.AERIAL, "aerial_waypost", "aerial_courier", "Aerial Courier", SoundEvents.VILLAGER_WORK_CARTOGRAPHER);
+        define(SpiritKind.AQUEOUS, "aqueous_font", "aqueous_tidekeeper", "Aqueous Tidekeeper", SoundEvents.VILLAGER_WORK_FISHERMAN);
+        define(SpiritKind.EARTHEN, "earthen_workbench", "earthen_stonewarden", "Earthen Stonewarden", SoundEvents.VILLAGER_WORK_MASON);
+        define(SpiritKind.INFERNAL, "infernal_kiln", "infernal_stoker", "Infernal Stoker", SoundEvents.VILLAGER_WORK_ARMORER);
     }
 
     private SpiritProfessions() {}
@@ -67,10 +68,17 @@ public final class SpiritProfessions {
         return kindOf(profession) != null;
     }
 
+    public static Component displayName(final SpiritKind kind) {
+        Definition definition = definition(kind);
+        String translationKey = "entity.minecraft.villager." + BetterContentEconomy.MOD_ID + "." + definition.professionName();
+        return Component.translatableWithFallback(translationKey, definition.fallbackName());
+    }
+
     private static void define(
             final SpiritKind kind,
             final String stationName,
             final String professionName,
+            final String fallbackName,
             final net.minecraft.sounds.SoundEvent workSound) {
         RegistryObject<Block> block = BLOCKS.register(stationName,
                 () -> new Block(BlockBehaviour.Properties.copy(Blocks.LECTERN).strength(2.5F).noOcclusion()));
@@ -86,7 +94,7 @@ public final class SpiritProfessions {
                         ImmutableSet.of(),
                         ImmutableSet.of(),
                         workSound));
-        DEFINITIONS.put(kind, new Definition(block, item, poi, profession));
+        DEFINITIONS.put(kind, new Definition(block, item, poi, profession, professionName, fallbackName));
     }
 
     private static void rewriteCreativeTab(final BuildCreativeModeTabContentsEvent event) {
@@ -104,5 +112,7 @@ public final class SpiritProfessions {
             RegistryObject<Block> block,
             RegistryObject<Item> item,
             RegistryObject<PoiType> poi,
-            RegistryObject<VillagerProfession> profession) {}
+            RegistryObject<VillagerProfession> profession,
+            String professionName,
+            String fallbackName) {}
 }
