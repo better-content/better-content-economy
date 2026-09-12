@@ -45,6 +45,9 @@ public final class SpiritAcquisition {
         var capability = MalumLivingEntityDataCapability.getCapability(victim);
         if (capability.soulData.spawnerSpawned || capability.soulData.soulless) return;
 
+        var bounds = victim.getBoundingBox().inflate(8);
+        var before = level.getEntitiesOfClass(com.sammy.malum.common.entity.spirit.SpiritItemEntity.class, bounds)
+                .stream().map(Entity::getUUID).collect(java.util.stream.Collectors.toSet());
         if (SpiritHarvestHandler.getSpiritData(victim).isPresent()) {
             SpiritHarvestHandler.spawnSpirits(victim, recipient, ItemStack.EMPTY);
         } else if (victim instanceof Enemy || victim.getType().getCategory() == net.minecraft.world.entity.MobCategory.MONSTER) {
@@ -57,6 +60,13 @@ public final class SpiritAcquisition {
             SpiritHarvestHandler.spawnItemsAsSpirits(fallback, victim, recipient);
         }
         capability.soulData.soulless = true;
+        for (var released : level.getEntitiesOfClass(com.sammy.malum.common.entity.spirit.SpiritItemEntity.class, bounds)) {
+            if (before.contains(released.getUUID())) continue;
+            var stack = released.getItem();
+            var id = ForgeRegistries.ITEMS.getKey(stack.getItem());
+            if (id != null && !stack.isEmpty()) net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(
+                    new com.bettercontent.economy.api.event.SpiritReleasedEvent(recipient, id, stack.getCount(), released.getUUID()));
+        }
     }
 
     private static boolean isEconomyActor(final LivingEntity entity) {
