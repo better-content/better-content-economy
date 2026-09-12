@@ -27,8 +27,9 @@ public final class AuthoredTradeSignals {
                 player, spirit, event.getMerchantOffer().getCostA().getCount(), merchant));
     }
 
-    private static boolean isAuthored(final AbstractVillager trader) {
-        return trader instanceof Villager || trader instanceof WanderingTrader;
+    static boolean isAuthored(final AbstractVillager trader) {
+        return trader instanceof Villager || trader instanceof WanderingTrader
+                || PlagueDoctorCatalogue.isPlagueDoctor(trader);
     }
 
     private static ResourceLocation paidSpirit(final MerchantOffer offer) {

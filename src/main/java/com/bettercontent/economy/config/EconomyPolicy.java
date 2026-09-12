@@ -15,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 
 /** The one loaded and validated authority for acquisition, commerce rows, and retired surfaces. */
 public final class EconomyPolicy {
-    public static final String SCHEMA = "bc.economy_policy.v1";
+    public static final String SCHEMA = "bc.economy_policy.v2";
     private static final Document DOCUMENT = load();
     private static final Set<ResourceLocation> RETIRED = DOCUMENT.retiredItems().stream()
             .map(ResourceLocation::new).collect(Collectors.toUnmodifiableSet());
@@ -29,8 +29,10 @@ public final class EconomyPolicy {
     public static boolean isRetired(final ResourceLocation id) { return RETIRED.contains(id); }
     public static List<VillagerRow> villagerRows(final SpiritKind spirit) { return VILLAGERS.get(spirit); }
     public static List<WanderingRow> wanderingRows(final SpiritKind spirit) { return WANDERERS.get(spirit); }
+    public static List<PlagueDoctorRow> plagueDoctorRows() { return DOCUMENT.plagueDoctorRows(); }
     public static int villagerRowCount() { return DOCUMENT.villagerRows().size(); }
     public static int wanderingRowCount() { return DOCUMENT.wanderingRows().size(); }
+    public static int plagueDoctorRowCount() { return DOCUMENT.plagueDoctorRows().size(); }
 
     private static Document load() {
         var stream = EconomyPolicy.class.getResourceAsStream(
@@ -61,6 +63,9 @@ public final class EconomyPolicy {
         if (document.wanderingRows() == null || document.wanderingRows().size() != 91) {
             throw new IllegalArgumentException("Economy policy must contain exactly 91 wandering goods");
         }
+        if (document.plagueDoctorRows() == null || document.plagueDoctorRows().size() != 42) {
+            throw new IllegalArgumentException("Economy policy must contain exactly 42 plague doctor oddities");
+        }
         for (SpiritKind spirit : SpiritKind.values()) {
             List<VillagerRow> villagers = document.villagerRows().stream().filter(row -> row.kind() == spirit).toList();
             if (villagers.size() != 35) throw new IllegalArgumentException(spirit.id() + " must have 35 villager rows");
@@ -72,9 +77,13 @@ public final class EconomyPolicy {
             }
             List<WanderingRow> wanderers = document.wanderingRows().stream().filter(row -> row.kind() == spirit).toList();
             if (wanderers.size() != 13) throw new IllegalArgumentException(spirit.id() + " must have 13 wandering goods");
+            List<PlagueDoctorRow> oddities = document.plagueDoctorRows().stream()
+                    .filter(row -> row.kind() == spirit).toList();
+            if (oddities.size() != 6) throw new IllegalArgumentException(spirit.id() + " must have six plague doctor oddities");
         }
         document.villagerRows().forEach(EconomyPolicy::validateRow);
         document.wanderingRows().forEach(EconomyPolicy::validateRow);
+        document.plagueDoctorRows().forEach(EconomyPolicy::validatePlagueDoctorRow);
     }
 
     private static void validateRow(final TradeRow row) {
@@ -82,6 +91,21 @@ public final class EconomyPolicy {
                 || row.result().id() == null || row.result().id().isBlank() || row.result().count() < 1
                 || row.maxUses() < 1 || row.xp() < 0) throw new IllegalArgumentException("Invalid spirit trade row");
         new ResourceLocation(row.result().id());
+    }
+
+    private static void validatePlagueDoctorRow(final PlagueDoctorRow row) {
+        validateRow(row);
+        if (row.result().count() != 1 || row.maxUses() != plagueDoctorMaxUses(row.cost())
+                || row.xp() != row.cost() * 2) {
+            throw new IllegalArgumentException("Invalid plague doctor stock policy for " + row.result().id());
+        }
+    }
+
+    public static int plagueDoctorMaxUses(final int cost) {
+        if (cost <= 2) return 6;
+        if (cost <= 4) return 3;
+        if (cost <= 6) return 2;
+        return 1;
     }
 
     private static Map<SpiritKind, List<VillagerRow>> groupVillagers() {
@@ -116,6 +140,9 @@ public final class EconomyPolicy {
             implements TradeRow {}
     public record WanderingRow(String spirit, int cost, StackSpec result, int maxUses, int xp)
             implements TradeRow {}
+    public record PlagueDoctorRow(String spirit, int cost, StackSpec result, int maxUses, int xp)
+            implements TradeRow {}
     private record Document(String schema, Acquisition acquisition, List<String> retiredItems,
-                            List<VillagerRow> villagerRows, List<WanderingRow> wanderingRows) {}
+                            List<VillagerRow> villagerRows, List<WanderingRow> wanderingRows,
+                            List<PlagueDoctorRow> plagueDoctorRows) {}
 }

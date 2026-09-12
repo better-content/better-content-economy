@@ -1,6 +1,7 @@
 package com.bettercontent.economy.mixin;
 
 import com.bettercontent.economy.trader.MerchantCurrencyPolicy;
+import com.bettercontent.economy.trader.PlagueDoctorCatalogue;
 import com.bettercontent.economy.trader.VillageStarterOffer;
 import com.bettercontent.economy.trader.WanderingTraderVisits;
 import com.bettercontent.economy.trader.WanderingTraderCatalogue;
@@ -19,6 +20,9 @@ abstract class AbstractVillagerMixin {
         AbstractVillager merchant = (AbstractVillager) (Object) this;
         MerchantOffers offers = callback.getReturnValue();
         MerchantCurrencyPolicy.normalize(offers);
+        if (PlagueDoctorCatalogue.isPlagueDoctor(merchant)) {
+            PlagueDoctorCatalogue.ensureOffers(merchant, offers);
+        }
         if (merchant instanceof WanderingTrader trader
                 && trader.getPersistentData().contains(WanderingTraderVisits.THEME_TAG)) {
             WanderingTraderCatalogue.ensureThemedOffers(trader, offers);

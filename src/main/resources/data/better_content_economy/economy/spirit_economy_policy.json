@@ -1,5 +1,5 @@
 {
-  "schema": "bc.economy_policy.v1",
+  "schema": "bc.economy_policy.v2",
   "acquisition": {
     "creditedPlayerKillsOnly": true,
     "unmappedHostileSpiritCount": 2,
@@ -3640,5 +3640,55 @@
       "maxUses": 4,
       "xp": 2
     }
+  ],
+  "plagueDoctorRows": [
+    {"spirit":"sacred","cost":2,"result":{"id":"rats:herb_bundle","count":1},"maxUses":6,"xp":4},
+    {"spirit":"sacred","cost":2,"result":{"id":"rats:treacle","count":1},"maxUses":6,"xp":4},
+    {"spirit":"sacred","cost":3,"result":{"id":"rats:plague_stew","count":1},"maxUses":3,"xp":6},
+    {"spirit":"sacred","cost":4,"result":{"id":"rats:purifying_liquid","count":1},"maxUses":3,"xp":8},
+    {"spirit":"sacred","cost":5,"result":{"id":"aether:skyroot_remedy_bucket","count":1},"maxUses":2,"xp":10},
+    {"spirit":"sacred","cost":1,"result":{"id":"supplementaries:soap","count":1},"maxUses":6,"xp":2},
+
+    {"spirit":"wicked","cost":3,"result":{"id":"rats:plague_leech","count":1},"maxUses":3,"xp":6},
+    {"spirit":"wicked","cost":1,"result":{"id":"rats:contaminated_food","count":1},"maxUses":6,"xp":2},
+    {"spirit":"wicked","cost":1,"result":{"id":"born_in_chaos_v1:corpse_maggot","count":1},"maxUses":6,"xp":2},
+    {"spirit":"wicked","cost":2,"result":{"id":"the_flesh_that_hates:rotten_eye","count":1},"maxUses":6,"xp":4},
+    {"spirit":"wicked","cost":4,"result":{"id":"the_flesh_that_hates:pus_bucket","count":1},"maxUses":3,"xp":8},
+    {"spirit":"wicked","cost":1,"result":{"id":"fallout_wastelands_:radroach_meat","count":1},"maxUses":6,"xp":2},
+
+    {"spirit":"arcane","cost":8,"result":{"id":"rats:plague_tome","count":1},"maxUses":1,"xp":16},
+    {"spirit":"arcane","cost":5,"result":{"id":"rats:plague_doctor_mask","count":1},"maxUses":2,"xp":10},
+    {"spirit":"arcane","cost":5,"result":{"id":"alexscaves:gazing_pearl","count":1},"maxUses":2,"xp":10},
+    {"spirit":"arcane","cost":3,"result":{"id":"goety:empty_soul_jar","count":1},"maxUses":3,"xp":6},
+    {"spirit":"arcane","cost":3,"result":{"id":"hexerei:quicksilver_bottle","count":1},"maxUses":3,"xp":6},
+    {"spirit":"arcane","cost":6,"result":{"id":"rats:psionic_rat_brain","count":1},"maxUses":2,"xp":12},
+
+    {"spirit":"aerial","cost":2,"result":{"id":"quark:bottled_cloud","count":1},"maxUses":6,"xp":4},
+    {"spirit":"aerial","cost":2,"result":{"id":"supplementaries:bubble_blower","count":1},"maxUses":6,"xp":4},
+    {"spirit":"aerial","cost":2,"result":{"id":"supplementaries:confetti_popper","count":1},"maxUses":6,"xp":4},
+    {"spirit":"aerial","cost":2,"result":{"id":"supplementaries:tater_in_a_jar","count":1},"maxUses":6,"xp":4},
+    {"spirit":"aerial","cost":2,"result":{"id":"alexscaves:vesper_wing","count":1},"maxUses":6,"xp":4},
+    {"spirit":"aerial","cost":3,"result":{"id":"rats:feathery_wing","count":1},"maxUses":3,"xp":6},
+
+    {"spirit":"aqueous","cost":3,"result":{"id":"alexscaves:sea_pig_bucket","count":1},"maxUses":3,"xp":6},
+    {"spirit":"aqueous","cost":3,"result":{"id":"alexscaves:gossamer_worm_bucket","count":1},"maxUses":3,"xp":6},
+    {"spirit":"aqueous","cost":3,"result":{"id":"thalassophobia:blobfish_bucket","count":1},"maxUses":3,"xp":6},
+    {"spirit":"aqueous","cost":4,"result":{"id":"thalassophobia:leech_bucket","count":1},"maxUses":3,"xp":8},
+    {"spirit":"aqueous","cost":4,"result":{"id":"thalassophobia:sea_sludge_bucket","count":1},"maxUses":3,"xp":8},
+    {"spirit":"aqueous","cost":4,"result":{"id":"thalassophobia:cookie_cutter_shark_bucket","count":1},"maxUses":3,"xp":8},
+
+    {"spirit":"earthen","cost":2,"result":{"id":"alexscaves:bone_worms","count":1},"maxUses":6,"xp":4},
+    {"spirit":"earthen","cost":3,"result":{"id":"alexscaves:cave_painting_mystery_1","count":1},"maxUses":3,"xp":6},
+    {"spirit":"earthen","cost":3,"result":{"id":"goety:crypt_urn","count":1},"maxUses":3,"xp":6},
+    {"spirit":"earthen","cost":2,"result":{"id":"goety:spider_egg","count":1},"maxUses":6,"xp":4},
+    {"spirit":"earthen","cost":2,"result":{"id":"the_flesh_that_hates:nervous_system","count":1},"maxUses":6,"xp":4},
+    {"spirit":"earthen","cost":2,"result":{"id":"the_flesh_that_hates:spinal_cord","count":1},"maxUses":6,"xp":4},
+
+    {"spirit":"infernal","cost":2,"result":{"id":"hexerei:blood_bottle","count":1},"maxUses":6,"xp":4},
+    {"spirit":"infernal","cost":2,"result":{"id":"alexscaves:toxic_paste","count":1},"maxUses":6,"xp":4},
+    {"spirit":"infernal","cost":3,"result":{"id":"fallout_wastelands_:human_brain","count":1},"maxUses":3,"xp":6},
+    {"spirit":"infernal","cost":3,"result":{"id":"the_flesh_that_hates:flesh_heart","count":1},"maxUses":3,"xp":6},
+    {"spirit":"infernal","cost":2,"result":{"id":"born_in_chaos_v1:bloody_gadfly_eye","count":1},"maxUses":6,"xp":4},
+    {"spirit":"infernal","cost":1,"result":{"id":"fallout_wastelands_:strange_meat_patty","count":1},"maxUses":6,"xp":2}
   ]
 }

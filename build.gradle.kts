@@ -97,6 +97,8 @@ dependencies {
     runtimeOnly(fg.deobf("curse.maven:curios-api-309927:6418456"))
     runtimeOnly(fg.deobf("curse.maven:lodestone-616457:6213794"))
     runtimeOnly(fg.deobf("curse.maven:malum-484064:6646111"))
+    runtimeOnly(fg.deobf("curse.maven:rats-323596:5904296"))
+    runtimeOnly(fg.deobf("curse.maven:citadel-331936:7476570"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
     testImplementation("com.google.code.gson:gson:2.10.1")
 }

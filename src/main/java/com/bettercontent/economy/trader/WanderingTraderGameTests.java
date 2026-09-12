@@ -11,6 +11,8 @@ import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.item.Items;
@@ -19,6 +21,7 @@ import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraftforge.registries.ForgeRegistries;
 
 @PrefixGameTestTemplate(false)
 public final class WanderingTraderGameTests {
@@ -103,5 +106,51 @@ public final class WanderingTraderGameTests {
             return;
         }
         helper.succeed();
+    }
+
+    @GameTest(templateNamespace = BetterContentEconomy.MOD_ID, template = "empty", timeoutTicks = 100)
+    public static void plagueDoctorUsesDailySpiritOddities(final GameTestHelper helper) {
+        EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(PlagueDoctorCatalogue.PLAGUE_DOCTOR);
+        if (type == null) {
+            helper.fail("Rats Plague Doctor was not available in the GameTest runtime");
+            return;
+        }
+        Entity created = type.create(helper.getLevel());
+        if (!(created instanceof AbstractVillager doctor)) {
+            helper.fail("Rats Plague Doctor was not an AbstractVillager");
+            return;
+        }
+        doctor.moveTo(helper.absolutePos(new BlockPos(2, 2, 2)), 0.0F, 0.0F);
+        helper.getLevel().addFreshEntity(doctor);
+        MerchantOffers offers = doctor.getOffers();
+        boolean spiritPayments = offers.stream().allMatch(offer -> {
+            var id = ForgeRegistries.ITEMS.getKey(offer.getBaseCostA().getItem());
+            return id != null && "malum".equals(id.getNamespace()) && id.getPath().endsWith("_spirit");
+        });
+        long uniqueResults = offers.stream().map(offer -> ForgeRegistries.ITEMS.getKey(offer.getResult().getItem()))
+                .distinct().count();
+        if (offers.size() != 8 || uniqueResults != 8 || !spiritPayments || !AuthoredTradeSignals.isAuthored(doctor)) {
+            helper.fail("Invalid plague doctor catalogue: offers=" + offers.size()
+                    + " unique=" + uniqueResults + " spiritPayments=" + spiritPayments);
+            return;
+        }
+
+        MerchantOffer exhausted = offers.get(0);
+        while (!exhausted.isOutOfStock()) exhausted.increaseUses();
+        long currentDay = doctor.getPersistentData().getLong(PlagueDoctorCatalogue.DAY_TAG);
+        helper.runAfterDelay(5, () -> {
+            if (!exhausted.isOutOfStock()) {
+                helper.fail("Rats native restock refreshed an authored offer during the same day");
+                return;
+            }
+            PlagueDoctorCatalogue.ensureOffers(doctor, offers, currentDay + 1L);
+            if (offers.size() != 8 || offers.stream().anyMatch(MerchantOffer::isOutOfStock)
+                    || doctor.getPersistentData().getLong(PlagueDoctorCatalogue.DAY_TAG) != currentDay + 1L) {
+                helper.fail("Plague Doctor did not receive fresh stock for the next day");
+                return;
+            }
+            doctor.discard();
+            helper.succeed();
+        });
     }
 }
