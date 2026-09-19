@@ -4,6 +4,7 @@ import com.bettercontent.economy.BetterContentEconomy;
 import com.bettercontent.economy.mixin.FloatingEntityAccessor;
 import com.bettercontent.economy.registry.SpiritProfessions;
 import com.bettercontent.economy.registry.CurrencyItems;
+import com.bettercontent.economy.spirit.SpiritCreditData;
 import com.mojang.authlib.GameProfile;
 import com.sammy.malum.common.entity.spirit.SpiritItemEntity;
 import java.util.UUID;
@@ -81,7 +82,7 @@ public final class WanderingTraderGameTests {
     }
 
     @GameTest(templateNamespace = BetterContentEconomy.MOD_ID, template = "empty", timeoutTicks = 100)
-    public static void creditedKillUsesMalumAnimatedSpiritEntity(final GameTestHelper helper) {
+    public static void creditedKillQueuesDurableCreditBeforeRelease(final GameTestHelper helper) {
         ServerPlayer player = FakePlayerFactory.get(helper.getLevel(),
                 new GameProfile(UUID.nameUUIDFromBytes("spirit-economy-gametest".getBytes()), "spirit-economy-test"));
         var zombie = helper.spawn(EntityType.ZOMBIE, new BlockPos(2, 2, 2));
@@ -89,10 +90,9 @@ public final class WanderingTraderGameTests {
         AABB bounds = zombie.getBoundingBox().inflate(6.0D);
         helper.succeedWhen(() -> {
             var spirits = helper.getLevel().getEntitiesOfClass(SpiritItemEntity.class, bounds);
-            helper.assertTrue(!spirits.isEmpty(), "Credited hostile kill did not release a Malum SpiritItemEntity");
-            helper.assertTrue(spirits.stream().allMatch(spirit ->
-                            ((FloatingEntityAccessor) spirit).betterContentEconomy$getOwnerUuid().equals(player.getUUID())),
-                    "Released spirit did not target the credited player");
+            var pending = SpiritCreditData.get(helper.getLevel().getServer().overworld()).ledger(player.getUUID()).pending();
+            helper.assertTrue(!pending.isEmpty(), "Credited hostile kill did not persist pending currency credit");
+            helper.assertTrue(spirits.isEmpty(), "FakePlayer must not receive an early physical release outside online-player scheduling");
         });
     }
 
