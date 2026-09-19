@@ -1,6 +1,7 @@
 package com.bettercontent.economy.trader;
 
 import com.bettercontent.economy.api.event.AuthoredSpiritTradeEvent;
+import com.bettercontent.economy.ops.ObservationalEconomyData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.npc.AbstractVillager;
@@ -22,6 +23,8 @@ public final class AuthoredTradeSignals {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         SpiritPayment payment = paidSpirit(event.getMerchantOffer());
         if (payment == null || !isAuthored(event.getAbstractVillager())) return;
+        ObservationalEconomyData.get(player.server.overworld()).recordPurchase(
+                com.bettercontent.economy.spirit.CurrencyIdentity.fromItemId(payment.spirit()), payment.count());
         ResourceLocation merchant = ForgeRegistries.ENTITY_TYPES.getKey(event.getAbstractVillager().getType());
         MinecraftForge.EVENT_BUS.post(new AuthoredSpiritTradeEvent(
                 player, payment.spirit(), payment.count(), merchant));

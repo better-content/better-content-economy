@@ -28,12 +28,13 @@ public final class ObservationalExportCommand {
         }
         var server = source.getServer();
         SpiritCreditData data = SpiritCreditData.get(server.overworld());
+        var observations = ObservationalEconomyData.get(server.overworld());
         var snapshots = new ArrayList<ObservationalSpiritExport.CreditSnapshot>();
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             SpiritCreditLedger ledger = data.ledger(player.getUUID());
             snapshots.add(new ObservationalSpiritExport.CreditSnapshot(ledger.issued(), ledger.pending()));
         }
-        String json = ObservationalSpiritExport.json(true, 2, snapshots, java.util.List.of());
+        String json = ObservationalSpiritExport.json(true, 2, snapshots, java.util.List.of(), observations.regional(), observations.purchases());
         source.sendSuccess(() -> Component.literal(json), true);
         return snapshots.size();
     }

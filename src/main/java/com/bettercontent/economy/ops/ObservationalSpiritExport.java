@@ -56,13 +56,20 @@ public final class ObservationalSpiritExport {
 
     public static String json(boolean enabled, int permission, List<CreditSnapshot> credits,
                               List<Exchange> exchanges) {
+        return json(enabled, permission, credits, exchanges, Map.of(), Map.of());
+    }
+    public static String json(boolean enabled, int permission, List<CreditSnapshot> credits,
+                              List<Exchange> exchanges, Map<String, Map<CurrencyIdentity,Integer>> regional,
+                              Map<CurrencyIdentity,Integer> purchases) {
         if (!allowed(enabled, permission) || !bounded(credits, exchanges)) return "";
         long issued = credits.stream().mapToLong(c -> total(c.issued())).sum();
         long pending = credits.stream().mapToLong(c -> total(c.pending())).sum();
         StringBuilder out = new StringBuilder("{\"activity\":").append(credits.size())
                 .append(",\"issued\":").append(issued)
                 .append(",\"pending\":").append(pending)
-                .append(",\"regionalMix\":\"unknown\",\"purchases\":\"unknown\",\"exchanges\":[");
+                .append(",\"regionalMix\":").append(regional.isEmpty() ? "\"unknown\"" : regional.toString().replace('=', ':'))
+                .append(",\"purchases\":").append(purchases.isEmpty() ? "\"unknown\"" : purchases.toString().replace('=', ':'))
+                .append(",\"exchanges\":[");
         for (int i = 0; i < exchanges.size(); i++) {
             if (i > 0) out.append(',');
             Exchange e = exchanges.get(i);

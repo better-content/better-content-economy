@@ -3,6 +3,7 @@ package com.bettercontent.economy.spirit;
 import com.bettercontent.economy.BetterContentEconomy;
 import com.bettercontent.economy.config.EconomyPolicy;
 import com.bettercontent.economy.config.EconomyConfig;
+import com.bettercontent.economy.ops.ObservationalEconomyData;
 import com.bettercontent.economy.registry.CurrencyItems;
 import com.mojang.logging.LogUtils;
 import com.sammy.malum.common.capability.MalumLivingEntityDataCapability;
@@ -62,6 +63,7 @@ public final class SpiritAcquisition {
 
         Map<CurrencyIdentity, Integer> credits = SpiritCreditAllocation.fromNative(nativeDrops, victim.getUUID(),
                 recipient.getUUID(), regionSeed(victim));
+        ObservationalEconomyData.get(recipient.server.overworld()).recordRegion(regionKey(victim), credits);
         List<ItemStack> exotic = nativeDrops.stream().filter(stack -> {
             ResourceLocation id = ForgeRegistries.ITEMS.getKey(stack.getItem());
             return id == null || CurrencyIdentity.fromLegacyNativeSpirit(id) == null;
@@ -168,6 +170,10 @@ public final class SpiritAcquisition {
         seed = seed * 31L + pos.getZ() / 16;
         var biome = victim.level().getBiome(pos).unwrapKey();
         return seed * 31L + (biome.isPresent() ? biome.get().location().hashCode() : 0L);
+    }
+    private static String regionKey(final LivingEntity victim) {
+        var biome = victim.level().getBiome(victim.blockPosition()).unwrapKey();
+        return victim.level().dimension().location() + ":" + biome.map(k -> k.location().toString()).orElse("unknown");
     }
 
     // Accept direct, projectile, and spell-projectile kills while excluding OwnableEntity mobs.
