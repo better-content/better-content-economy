@@ -20,11 +20,11 @@ public final class AuthoredTradeSignals {
     @SubscribeEvent
     public static void traded(final TradeWithVillagerEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
-        ResourceLocation spirit = paidSpirit(event.getMerchantOffer());
-        if (spirit == null || !isAuthored(event.getAbstractVillager())) return;
+        SpiritPayment payment = paidSpirit(event.getMerchantOffer());
+        if (payment == null || !isAuthored(event.getAbstractVillager())) return;
         ResourceLocation merchant = ForgeRegistries.ENTITY_TYPES.getKey(event.getAbstractVillager().getType());
         MinecraftForge.EVENT_BUS.post(new AuthoredSpiritTradeEvent(
-                player, spirit, event.getMerchantOffer().getCostA().getCount(), merchant));
+                player, payment.spirit(), payment.count(), merchant));
     }
 
     static boolean isAuthored(final AbstractVillager trader) {
@@ -32,13 +32,17 @@ public final class AuthoredTradeSignals {
                 || PlagueDoctorCatalogue.isPlagueDoctor(trader);
     }
 
-    private static ResourceLocation paidSpirit(final MerchantOffer offer) {
+    static SpiritPayment paidSpirit(final MerchantOffer offer) {
         ResourceLocation first = spiritId(offer.getCostA());
-        return first != null ? first : spiritId(offer.getCostB());
+        if (first != null) return new SpiritPayment(first, offer.getCostA().getCount());
+        ResourceLocation second = spiritId(offer.getCostB());
+        return second == null ? null : new SpiritPayment(second, offer.getCostB().getCount());
     }
 
     private static ResourceLocation spiritId(final ItemStack stack) {
         ResourceLocation id = ForgeRegistries.ITEMS.getKey(stack.getItem());
         return id != null && "malum".equals(id.getNamespace()) && id.getPath().endsWith("_spirit") ? id : null;
     }
+
+    record SpiritPayment(ResourceLocation spirit, int count) {}
 }

@@ -3,6 +3,7 @@ package com.bettercontent.economy.trader;
 import com.bettercontent.economy.BetterContentEconomy;
 import com.bettercontent.economy.mixin.FloatingEntityAccessor;
 import com.bettercontent.economy.registry.SpiritProfessions;
+import com.bettercontent.economy.spirit.SpiritKind;
 import com.mojang.authlib.GameProfile;
 import com.sammy.malum.common.entity.spirit.SpiritItemEntity;
 import java.util.UUID;
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.phys.AABB;
@@ -105,6 +107,24 @@ public final class WanderingTraderGameTests {
             helper.fail("Emerald offer survived spirit-only normalization");
             return;
         }
+        helper.succeed();
+    }
+
+    @GameTest(templateNamespace = BetterContentEconomy.MOD_ID, template = "empty", timeoutTicks = 100)
+    public static void tradeSignalUsesTheActualSpiritPaymentSlot(final GameTestHelper helper) {
+        var spirit = ForgeRegistries.ITEMS.getValue(SpiritKind.AERIAL.itemId());
+        helper.assertTrue(spirit != null && spirit != Items.AIR, "Native spirit item must resolve");
+        MerchantOffer secondSlot = new MerchantOffer(new ItemStack(Items.EMERALD, 1),
+                new ItemStack(spirit, 3), new ItemStack(Items.BREAD), 1, 0, 0.0F);
+        var payment = AuthoredTradeSignals.paidSpirit(secondSlot);
+        helper.assertTrue(payment != null && payment.spirit().equals(SpiritKind.AERIAL.itemId())
+                        && payment.count() == 3,
+                "Observed trade cost must come from the spirit-bearing second slot");
+        MerchantOffer firstSlot = new MerchantOffer(new ItemStack(spirit, 2),
+                new ItemStack(Items.EMERALD, 1), new ItemStack(Items.BREAD), 1, 0, 0.0F);
+        var first = AuthoredTradeSignals.paidSpirit(firstSlot);
+        helper.assertTrue(first != null && first.count() == 2,
+                "Observed trade cost must still use the first slot when it bears spirits");
         helper.succeed();
     }
 
