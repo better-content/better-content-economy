@@ -138,16 +138,25 @@ public final class EconomyPolicy {
     }
 
     private static List<VillagerRow> tempoVillagerRows() {
+        String[] results = {"minecraft:clock", "minecraft:compass", "minecraft:repeater", "minecraft:comparator", "minecraft:redstone", "minecraft:redstone_torch", "minecraft:daylight_detector", "minecraft:observer", "minecraft:piston", "minecraft:sticky_piston", "minecraft:slime_ball", "minecraft:honey_bottle", "minecraft:sugar", "minecraft:rabbit_foot", "minecraft:feather", "minecraft:ender_pearl", "minecraft:chorus_fruit", "minecraft:firework_rocket", "minecraft:oak_boat", "minecraft:minecart", "minecraft:rail", "minecraft:powered_rail", "minecraft:detector_rail", "minecraft:activator_rail", "minecraft:tripwire_hook", "minecraft:lead", "minecraft:saddle", "minecraft:carrot_on_a_stick", "minecraft:warped_fungus_on_a_stick", "minecraft:map", "minecraft:recovery_compass", "minecraft:spyglass", "minecraft:lightning_rod", "minecraft:amethyst_shard", "minecraft:echo_shard"};
+        java.util.concurrent.atomic.AtomicInteger index = new java.util.concurrent.atomic.AtomicInteger();
         return DOCUMENT.villagerRows().stream().filter(row -> row.kind() == SpiritKind.ARCANE)
-                .map(row -> new VillagerRow("tempo", row.level(), row.cost(), row.result(), row.maxUses(), row.xp())).toList();
+                .map(row -> new VillagerRow("tempo", row.level(), row.cost(),
+                        new StackSpec(results[index.getAndIncrement()], row.result().count()), row.maxUses(), row.xp())).toList();
     }
     private static List<WanderingRow> tempoWanderingRows() {
+        String[] results = {"minecraft:clock", "minecraft:repeater", "minecraft:comparator", "minecraft:observer", "minecraft:slime_ball", "minecraft:ender_pearl", "minecraft:chorus_fruit", "minecraft:firework_rocket", "minecraft:rail", "minecraft:powered_rail", "minecraft:lead", "minecraft:saddle", "minecraft:spyglass"};
+        java.util.concurrent.atomic.AtomicInteger index = new java.util.concurrent.atomic.AtomicInteger();
         return DOCUMENT.wanderingRows().stream().filter(row -> row.kind() == SpiritKind.ARCANE)
-                .map(row -> new WanderingRow("tempo", row.cost(), row.result(), row.maxUses(), row.xp())).toList();
+                .map(row -> new WanderingRow("tempo", row.cost(),
+                        new StackSpec(results[index.getAndIncrement()], row.result().count()), row.maxUses(), row.xp())).toList();
     }
     private static List<PlagueDoctorRow> tempoDoctorRows() {
+        String[] results = {"minecraft:rabbit_foot", "minecraft:chorus_fruit", "minecraft:ender_pearl", "minecraft:echo_shard", "minecraft:recovery_compass", "minecraft:clock"};
+        java.util.concurrent.atomic.AtomicInteger index = new java.util.concurrent.atomic.AtomicInteger();
         return DOCUMENT.plagueDoctorRows().stream().filter(row -> row.kind() == SpiritKind.ARCANE)
-                .map(row -> new PlagueDoctorRow("tempo", row.cost(), row.result(), row.maxUses(), row.xp())).toList();
+                .map(row -> new PlagueDoctorRow("tempo", row.cost(),
+                        new StackSpec(results[index.getAndIncrement()], 1), row.maxUses(), row.xp())).toList();
     }
 
     private interface TradeRow {
