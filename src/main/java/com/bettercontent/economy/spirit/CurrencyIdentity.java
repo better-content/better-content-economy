@@ -40,4 +40,12 @@ public enum CurrencyIdentity {
         }
         return null;
     }
+
+    public static CurrencyIdentity fromItemId(final ResourceLocation id) {
+        if (id == null || !BetterContentEconomy.MOD_ID.equals(id.getNamespace())) return null;
+        for (CurrencyIdentity identity : values()) {
+            if (identity.itemId().equals(id)) return identity;
+        }
+        return null;
+    }
 }
