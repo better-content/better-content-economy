@@ -40,4 +40,12 @@ public enum CurrencyIdentity {
         }
         return null;
     }
+
+    public static CurrencyIdentity fromItemId(final ResourceLocation id) {
+        if (id == null) return null;
+        for (CurrencyIdentity identity : values()) {
+            if (id.equals(identity.itemId())) return identity;
+        }
+        return null;
+    }
 }
