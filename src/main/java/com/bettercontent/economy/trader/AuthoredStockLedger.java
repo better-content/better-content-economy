@@ -26,6 +26,7 @@ public final class AuthoredStockLedger {
     }
 
     public int remaining(final String offer) { return remaining.getOrDefault(offer, 0); }
+    public boolean contains(final String offer) { return remaining.containsKey(offer); }
 
     public CompoundTag save() {
         CompoundTag tag = new CompoundTag();

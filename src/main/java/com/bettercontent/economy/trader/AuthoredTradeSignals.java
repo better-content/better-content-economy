@@ -22,11 +22,6 @@ public final class AuthoredTradeSignals {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         SpiritPayment payment = paidSpirit(event.getMerchantOffer());
         if (payment == null || !isAuthored(event.getAbstractVillager())) return;
-        var stock = AuthoredStockLedger.load(event.getAbstractVillager().getPersistentData().getCompound("BetterContentAuthoredStock"));
-        String key = AuthoredOfferStock.key(event.getMerchantOffer());
-        if (stock.remaining(key) == 0) stock.seed(key, event.getMerchantOffer().getMaxUses());
-        stock.purchase(key, 1);
-        event.getAbstractVillager().getPersistentData().put("BetterContentAuthoredStock", stock.save());
         ResourceLocation merchant = ForgeRegistries.ENTITY_TYPES.getKey(event.getAbstractVillager().getType());
         MinecraftForge.EVENT_BUS.post(new AuthoredSpiritTradeEvent(
                 player, payment.spirit(), payment.count(), merchant));

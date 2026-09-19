@@ -13,6 +13,7 @@ final class AuthoredStockLedgerTest {
         assertFalse(ledger.purchase("diamond", 2));
         AuthoredStockLedger reloaded = AuthoredStockLedger.load(ledger.save());
         assertEquals(1, reloaded.remaining("diamond"));
+        assertTrue(reloaded.contains("diamond"));
     }
 
     @Test void rejectedPurchaseDoesNotMutateAndExplicitReplenishmentRestoresStock() {
@@ -22,5 +23,15 @@ final class AuthoredStockLedgerTest {
         assertEquals(1, ledger.remaining("netherite"));
         ledger.replenish("netherite", 2);
         assertEquals(3, ledger.remaining("netherite"));
+    }
+
+    @Test void exhaustedOfferRemainsExhaustedAfterReload() {
+        AuthoredStockLedger ledger = new AuthoredStockLedger();
+        ledger.seed("netherite", 1);
+        assertTrue(ledger.purchase("netherite", 1));
+        AuthoredStockLedger reloaded = AuthoredStockLedger.load(ledger.save());
+        assertTrue(reloaded.contains("netherite"));
+        assertEquals(0, reloaded.remaining("netherite"));
+        assertFalse(reloaded.purchase("netherite", 1));
     }
 }
