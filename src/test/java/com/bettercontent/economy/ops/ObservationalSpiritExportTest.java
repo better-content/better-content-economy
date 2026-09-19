@@ -27,4 +27,13 @@ final class ObservationalSpiritExportTest {
         assertFalse(csv.contains("motive"));
         assertFalse(csv.contains("private"));
     }
+
+    @Test void nonemptyRegionalAndPurchaseDataIsValidJson() {
+        String json = ObservationalSpiritExport.json(true, 2, List.of(), List.of(),
+                Map.of("minecraft:plains", Map.of(CurrencyIdentity.IMPACT, 4)),
+                Map.of(CurrencyIdentity.WORK, 2));
+        var parsed = com.google.gson.JsonParser.parseString(json).getAsJsonObject();
+        assertEquals(4, parsed.getAsJsonObject("regionalMix").getAsJsonObject("minecraft:plains").get("impact").getAsInt());
+        assertEquals(2, parsed.getAsJsonObject("purchases").get("work").getAsInt());
+    }
 }

@@ -67,8 +67,13 @@ public final class ObservationalSpiritExport {
         StringBuilder out = new StringBuilder("{\"activity\":").append(credits.size())
                 .append(",\"issued\":").append(issued)
                 .append(",\"pending\":").append(pending)
-                .append(",\"regionalMix\":").append(regional.isEmpty() ? "\"unknown\"" : regional.toString().replace('=', ':'))
-                .append(",\"purchases\":").append(purchases.isEmpty() ? "\"unknown\"" : purchases.toString().replace('=', ':'))
+                .append(",\"regionalMix\":");
+        if (regional.isEmpty()) out.append("\"unknown\""); else {
+            out.append('{'); int regions = 0;
+            for (var entry : regional.entrySet()) { if (regions++ >= 64) break; if (regions > 1) out.append(','); out.append('"').append(json(entry.getKey())).append("\":").append(valuesJson(entry.getValue())); }
+            out.append('}');
+        }
+        out.append(",\"purchases\":").append(purchases.isEmpty() ? "\"unknown\"" : valuesJson(purchases))
                 .append(",\"exchanges\":[");
         for (int i = 0; i < exchanges.size(); i++) {
             if (i > 0) out.append(',');
@@ -91,4 +96,12 @@ public final class ObservationalSpiritExport {
     }
     private static String csv(String value) { return value.contains(",") || value.contains("\"") ? "\"" + value.replace("\"", "\"\"") + "\"" : value; }
     private static String json(String value) { return value.replace("\\", "\\\\").replace("\"", "\\\""); }
+    private static String valuesJson(Map<CurrencyIdentity, Integer> values) {
+        StringBuilder out = new StringBuilder("{"); int count = 0;
+        for (CurrencyIdentity identity : CurrencyIdentity.values()) {
+            Integer value = values.get(identity); if (value == null || value <= 0) continue;
+            if (count++ > 0) out.append(','); out.append('"').append(identity.id()).append("\":").append(Math.min(value, Integer.MAX_VALUE));
+        }
+        return out.append('}').toString();
+    }
 }
