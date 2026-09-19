@@ -21,6 +21,8 @@ import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.AreaEffectCloud;
+import net.minecraft.world.entity.projectile.EvokerFangs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -181,6 +183,10 @@ public final class SpiritAcquisition {
     private static ServerPlayer playerSource(final Entity entity) {
         if (entity instanceof ServerPlayer player) return player;
         if (entity instanceof Projectile projectile && projectile.getOwner() instanceof ServerPlayer player) return player;
+        // Deliberately mapped passive effects whose owner is explicit in vanilla.  Tamable or
+        // arbitrary owned mobs are not followed, preventing unattended farming attribution.
+        if (entity instanceof AreaEffectCloud cloud && cloud.getOwner() instanceof ServerPlayer player) return player;
+        if (entity instanceof EvokerFangs fangs && fangs.getOwner() instanceof ServerPlayer player) return player;
         return null;
     }
 
