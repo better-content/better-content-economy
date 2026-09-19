@@ -13,7 +13,8 @@ class ProfessionTextureResourceTest {
             "aerial_courier",
             "aqueous_tidekeeper",
             "earthen_stonewarden",
-            "infernal_stoker"
+            "infernal_stoker",
+            "tempo_clocksmith"
     );
 
     @Test
