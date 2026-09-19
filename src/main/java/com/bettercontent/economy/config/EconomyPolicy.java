@@ -1,7 +1,6 @@
 package com.bettercontent.economy.config;
 
 import com.bettercontent.economy.spirit.SpiritKind;
-import com.bettercontent.economy.spirit.CurrencyIdentity;
 import com.google.gson.Gson;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -16,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 
 /** The one loaded and validated authority for acquisition, commerce rows, and retired surfaces. */
 public final class EconomyPolicy {
-    public static final String SCHEMA = "bc.economy_policy.v4";
+    public static final String SCHEMA = "bc.economy_policy.v2";
     private static final Document DOCUMENT = load();
     private static final Set<ResourceLocation> RETIRED = DOCUMENT.retiredItems().stream()
             .map(ResourceLocation::new).collect(Collectors.toUnmodifiableSet());
@@ -30,10 +29,10 @@ public final class EconomyPolicy {
     public static boolean isRetired(final ResourceLocation id) { return RETIRED.contains(id); }
     public static List<VillagerRow> villagerRows(final SpiritKind spirit) { return VILLAGERS.get(spirit); }
     public static List<WanderingRow> wanderingRows(final SpiritKind spirit) { return WANDERERS.get(spirit); }
-    public static List<PlagueDoctorRow> plagueDoctorRows() { return java.util.stream.Stream.concat(DOCUMENT.plagueDoctorRows().stream(), tempoDoctorRows().stream()).toList(); }
-    public static int villagerRowCount() { return 280; }
-    public static int wanderingRowCount() { return 104; }
-    public static int plagueDoctorRowCount() { return 48; }
+    public static List<PlagueDoctorRow> plagueDoctorRows() { return DOCUMENT.plagueDoctorRows(); }
+    public static int villagerRowCount() { return DOCUMENT.villagerRows().size(); }
+    public static int wanderingRowCount() { return DOCUMENT.wanderingRows().size(); }
+    public static int plagueDoctorRowCount() { return DOCUMENT.plagueDoctorRows().size(); }
 
     private static Document load() {
         var stream = EconomyPolicy.class.getResourceAsStream(
@@ -49,16 +48,6 @@ public final class EconomyPolicy {
 
     private static void validate(final Document document) {
         if (document == null || !SCHEMA.equals(document.schema())) throw new IllegalArgumentException("Unsupported economy policy schema");
-        if (document.legacyCurrencyMapping() == null || document.legacyCurrencyMapping().size() != 7) {
-            throw new IllegalArgumentException("Economy policy must map the seven legacy native spirits once");
-        }
-        for (CurrencyIdentity identity : CurrencyIdentity.values()) {
-            if (identity.legacyNativeSpirit() == null) continue;
-            String mapped = document.legacyCurrencyMapping().get(identity.legacyNativeSpirit().toString());
-            if (!identity.id().equals(mapped)) {
-                throw new IllegalArgumentException("Incorrect legacy currency mapping for " + identity.legacyNativeSpirit());
-            }
-        }
         if (document.acquisition() == null || !document.acquisition().creditedPlayerKillsOnly()
                 || !document.acquisition().excludeSpawnerOrigin() || !document.acquisition().excludeEconomyActors()
                 || document.acquisition().unmappedHostileSpiritCount() != 2) {
@@ -78,7 +67,6 @@ public final class EconomyPolicy {
             throw new IllegalArgumentException("Economy policy must contain exactly 42 plague doctor oddities");
         }
         for (SpiritKind spirit : SpiritKind.values()) {
-            if (spirit == SpiritKind.TEMPO) continue;
             List<VillagerRow> villagers = document.villagerRows().stream().filter(row -> row.kind() == spirit).toList();
             if (villagers.size() != 35) throw new IllegalArgumentException(spirit.id() + " must have 35 villager rows");
             for (int level = 1; level <= 5; level++) {
@@ -89,7 +77,8 @@ public final class EconomyPolicy {
             }
             List<WanderingRow> wanderers = document.wanderingRows().stream().filter(row -> row.kind() == spirit).toList();
             if (wanderers.size() != 13) throw new IllegalArgumentException(spirit.id() + " must have 13 wandering goods");
-            List<PlagueDoctorRow> oddities = document.plagueDoctorRows().stream().filter(row -> row.kind() == spirit).toList();
+            List<PlagueDoctorRow> oddities = document.plagueDoctorRows().stream()
+                    .filter(row -> row.kind() == spirit).toList();
             if (oddities.size() != 6) throw new IllegalArgumentException(spirit.id() + " must have six plague doctor oddities");
         }
         document.villagerRows().forEach(EconomyPolicy::validateRow);
@@ -122,8 +111,7 @@ public final class EconomyPolicy {
     private static Map<SpiritKind, List<VillagerRow>> groupVillagers() {
         Map<SpiritKind, List<VillagerRow>> rows = new EnumMap<>(SpiritKind.class);
         for (SpiritKind kind : SpiritKind.values()) {
-            rows.put(kind, kind == SpiritKind.TEMPO ? tempoVillagerRows()
-                    : DOCUMENT.villagerRows().stream().filter(row -> row.kind() == kind).toList());
+            rows.put(kind, DOCUMENT.villagerRows().stream().filter(row -> row.kind() == kind).toList());
         }
         return Map.copyOf(rows);
     }
@@ -131,32 +119,9 @@ public final class EconomyPolicy {
     private static Map<SpiritKind, List<WanderingRow>> groupWanderers() {
         Map<SpiritKind, List<WanderingRow>> rows = new EnumMap<>(SpiritKind.class);
         for (SpiritKind kind : SpiritKind.values()) {
-            rows.put(kind, kind == SpiritKind.TEMPO ? tempoWanderingRows()
-                    : DOCUMENT.wanderingRows().stream().filter(row -> row.kind() == kind).toList());
+            rows.put(kind, DOCUMENT.wanderingRows().stream().filter(row -> row.kind() == kind).toList());
         }
         return Map.copyOf(rows);
-    }
-
-    private static List<VillagerRow> tempoVillagerRows() {
-        String[] results = {"minecraft:clock", "minecraft:compass", "minecraft:repeater", "minecraft:comparator", "minecraft:redstone", "minecraft:redstone_torch", "minecraft:daylight_detector", "minecraft:observer", "minecraft:piston", "minecraft:sticky_piston", "minecraft:slime_ball", "minecraft:honey_bottle", "minecraft:sugar", "minecraft:rabbit_foot", "minecraft:feather", "minecraft:ender_pearl", "minecraft:chorus_fruit", "minecraft:firework_rocket", "minecraft:oak_boat", "minecraft:minecart", "minecraft:rail", "minecraft:powered_rail", "minecraft:detector_rail", "minecraft:activator_rail", "minecraft:tripwire_hook", "minecraft:lead", "minecraft:saddle", "minecraft:carrot_on_a_stick", "minecraft:warped_fungus_on_a_stick", "minecraft:map", "minecraft:recovery_compass", "minecraft:spyglass", "minecraft:lightning_rod", "minecraft:amethyst_shard", "minecraft:echo_shard"};
-        java.util.concurrent.atomic.AtomicInteger index = new java.util.concurrent.atomic.AtomicInteger();
-        return DOCUMENT.villagerRows().stream().filter(row -> row.kind() == SpiritKind.ARCANE)
-                .map(row -> new VillagerRow("tempo", row.level(), row.cost(),
-                        new StackSpec(results[index.getAndIncrement()], row.result().count()), row.maxUses(), row.xp())).toList();
-    }
-    private static List<WanderingRow> tempoWanderingRows() {
-        String[] results = {"minecraft:clock", "minecraft:repeater", "minecraft:comparator", "minecraft:observer", "minecraft:slime_ball", "minecraft:ender_pearl", "minecraft:chorus_fruit", "minecraft:firework_rocket", "minecraft:rail", "minecraft:powered_rail", "minecraft:lead", "minecraft:saddle", "minecraft:spyglass"};
-        java.util.concurrent.atomic.AtomicInteger index = new java.util.concurrent.atomic.AtomicInteger();
-        return DOCUMENT.wanderingRows().stream().filter(row -> row.kind() == SpiritKind.ARCANE)
-                .map(row -> new WanderingRow("tempo", row.cost(),
-                        new StackSpec(results[index.getAndIncrement()], row.result().count()), row.maxUses(), row.xp())).toList();
-    }
-    private static List<PlagueDoctorRow> tempoDoctorRows() {
-        String[] results = {"minecraft:rabbit_foot", "minecraft:chorus_fruit", "minecraft:ender_pearl", "minecraft:echo_shard", "minecraft:recovery_compass", "minecraft:clock"};
-        java.util.concurrent.atomic.AtomicInteger index = new java.util.concurrent.atomic.AtomicInteger();
-        return DOCUMENT.plagueDoctorRows().stream().filter(row -> row.kind() == SpiritKind.ARCANE)
-                .map(row -> new PlagueDoctorRow("tempo", row.cost(),
-                        new StackSpec(results[index.getAndIncrement()], 1), row.maxUses(), row.xp())).toList();
     }
 
     private interface TradeRow {
@@ -177,7 +142,7 @@ public final class EconomyPolicy {
             implements TradeRow {}
     public record PlagueDoctorRow(String spirit, int cost, StackSpec result, int maxUses, int xp)
             implements TradeRow {}
-    private record Document(String schema, Map<String, String> legacyCurrencyMapping, Acquisition acquisition, List<String> retiredItems,
+    private record Document(String schema, Acquisition acquisition, List<String> retiredItems,
                             List<VillagerRow> villagerRows, List<WanderingRow> wanderingRows,
                             List<PlagueDoctorRow> plagueDoctorRows) {}
 }

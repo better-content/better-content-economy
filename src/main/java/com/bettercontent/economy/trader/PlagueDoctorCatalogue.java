@@ -2,8 +2,6 @@ package com.bettercontent.economy.trader;
 
 import com.bettercontent.economy.config.EconomyPolicy;
 import com.bettercontent.economy.spirit.SpiritKind;
-import com.bettercontent.economy.spirit.CurrencyIdentity;
-import com.bettercontent.economy.registry.CurrencyItems;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -50,7 +48,7 @@ public final class PlagueDoctorCatalogue {
                 id -> item(id) != Items.AIR);
         offers.clear();
         for (EconomyPolicy.PlagueDoctorRow row : selected) {
-            Item payment = CurrencyItems.item(row.kind().currencyIdentity()).get();
+            Item payment = item(row.kind().itemId());
             Item result = item(new ResourceLocation(row.result().id()));
             if (payment == Items.AIR || result == Items.AIR) continue;
             offers.add(new MerchantOffer(new ItemStack(payment, row.cost()),
@@ -65,8 +63,7 @@ public final class PlagueDoctorCatalogue {
         List<EconomyPolicy.PlagueDoctorRow> candidates = new ArrayList<>();
         for (EconomyPolicy.PlagueDoctorRow row : EconomyPolicy.plagueDoctorRows()) {
             ResourceLocation result = new ResourceLocation(row.result().id());
-            CurrencyIdentity currency = row.kind().currencyIdentity();
-            if (currency != null && available.test(currency.itemId()) && available.test(result)) candidates.add(row);
+            if (available.test(row.kind().itemId()) && available.test(result)) candidates.add(row);
         }
         long seed = doctorId.getMostSignificantBits()
                 ^ Long.rotateLeft(doctorId.getLeastSignificantBits(), 17)

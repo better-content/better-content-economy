@@ -3,7 +3,6 @@ package com.bettercontent.economy.trader;
 import com.bettercontent.economy.BetterContentEconomy;
 import com.bettercontent.economy.mixin.FloatingEntityAccessor;
 import com.bettercontent.economy.registry.SpiritProfessions;
-import com.bettercontent.economy.registry.CurrencyItems;
 import com.mojang.authlib.GameProfile;
 import com.sammy.malum.common.entity.spirit.SpiritItemEntity;
 import java.util.UUID;
@@ -48,7 +47,7 @@ public final class WanderingTraderGameTests {
             long eggs = offers.stream().map(MerchantOffer::getResult)
                     .filter(stack -> stack.is(Items.VILLAGER_SPAWN_EGG)).count();
             boolean matchingPayment = offers.stream().allMatch(offer ->
-                    offer.getBaseCostA().is(CurrencyItems.item(theme.currencyIdentity()).get()));
+                    offer.getBaseCostA().is(net.minecraftforge.registries.ForgeRegistries.ITEMS.getValue(theme.spirit().itemId())));
             MerchantOffer eggOffer = offers.stream().filter(offer -> offer.getResult().is(Items.VILLAGER_SPAWN_EGG))
                     .findFirst().orElse(null);
             String profession = eggOffer == null ? "" : eggOffer.getResult().getOrCreateTagElement("EntityTag")
@@ -126,7 +125,7 @@ public final class WanderingTraderGameTests {
         MerchantOffers offers = doctor.getOffers();
         boolean spiritPayments = offers.stream().allMatch(offer -> {
             var id = ForgeRegistries.ITEMS.getKey(offer.getBaseCostA().getItem());
-            return id != null && com.bettercontent.economy.spirit.CurrencyIdentity.fromItemId(id) != null;
+            return id != null && "malum".equals(id.getNamespace()) && id.getPath().endsWith("_spirit");
         });
         long uniqueResults = offers.stream().map(offer -> ForgeRegistries.ITEMS.getKey(offer.getResult().getItem()))
                 .distinct().count();

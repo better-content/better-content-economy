@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 final class VillagerCatalogueTest {
     @Test void catalogueHasThirtyFiveRowsForEverySpiritProfession() {
-        assertEquals(280, VillagerCatalogue.rowCount());
+        assertEquals(245, VillagerCatalogue.rowCount());
         assertTrue(VillagerCatalogue.allRowsUseExactlyOneSpiritSide());
     }
 }

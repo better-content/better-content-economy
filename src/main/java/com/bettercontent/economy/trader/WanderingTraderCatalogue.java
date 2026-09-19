@@ -2,7 +2,6 @@ package com.bettercontent.economy.trader;
 
 import com.bettercontent.economy.config.EconomyPolicy;
 import com.bettercontent.economy.spirit.SpiritKind;
-import com.bettercontent.economy.registry.CurrencyItems;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.npc.VillagerTrades;
@@ -35,7 +34,7 @@ public final class WanderingTraderCatalogue {
         if (offers.size() == 14 && offers.stream().anyMatch(offer -> offer.getResult().is(net.minecraft.world.item.Items.VILLAGER_SPAWN_EGG))) return;
         offers.clear();
         SpiritKind spirit = SpiritKind.fromId(theme.id());
-        Item payment = CurrencyItems.item(theme.currencyIdentity()).get();
+        Item payment = item(spirit.itemId().toString());
         for (EconomyPolicy.WanderingRow row : EconomyPolicy.wanderingRows(spirit)) {
             Item result = item(row.result().id());
             if (payment != null && result != null) offers.add(new MerchantOffer(
@@ -54,7 +53,7 @@ public final class WanderingTraderCatalogue {
                     ? WanderingTraderTheme.fromId(trader.getPersistentData().getString(WanderingTraderVisits.THEME_TAG)) : null;
             if (theme == null && entity != null) theme = WanderingTraderTheme.forUuid(entity.getUUID());
             if (theme == null) theme = WanderingTraderTheme.SACRED;
-            Item payment = CurrencyItems.item(theme.currencyIdentity()).get();
+            Item payment = item(theme.spirit().itemId().toString());
             return payment == null ? null : new MerchantOffer(new ItemStack(payment),
                     new ItemStack(net.minecraft.world.item.Items.BREAD), 1, 0, 0.0F);
         }

@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.UUID;
-import com.bettercontent.economy.spirit.CurrencyIdentity;
 import net.minecraft.nbt.CompoundTag;
 import org.junit.jupiter.api.Test;
 
@@ -19,14 +18,12 @@ final class WanderingTraderScheduleDataTest {
         assertFalse(schedule.isVisitDue(48_099L));
         assertTrue(schedule.isVisitDue(48_100L));
         assertEquals(WanderingTraderTheme.SACRED, schedule.nextTheme());
-        assertEquals(CurrencyIdentity.RENEWAL, schedule.nextCurrencyIdentity());
 
         final UUID traderId = UUID.fromString("00000000-0000-0000-0000-000000000019");
         schedule.completeVisit(48_100L, 120_000, traderId);
         assertEquals(168_100L, schedule.nextAttemptGameTime());
         assertEquals(traderId, schedule.activeTraderId());
         assertEquals(WanderingTraderTheme.WICKED, schedule.nextTheme());
-        assertEquals(CurrencyIdentity.CONTROL, schedule.nextCurrencyIdentity());
     }
 
     @Test
@@ -38,7 +35,6 @@ final class WanderingTraderScheduleDataTest {
         final WanderingTraderScheduleData loaded = WanderingTraderScheduleData.load(schedule.save(new CompoundTag()));
         assertEquals(49_200L, loaded.nextAttemptGameTime());
         assertEquals(WanderingTraderTheme.SACRED, loaded.nextTheme());
-        assertEquals(CurrencyIdentity.RENEWAL, loaded.nextCurrencyIdentity());
         assertNull(loaded.activeTraderId());
     }
 
@@ -47,20 +43,6 @@ final class WanderingTraderScheduleDataTest {
         assertEquals(WanderingTraderTheme.WICKED, WanderingTraderTheme.SACRED.next());
         assertEquals(WanderingTraderTheme.ARCANE, WanderingTraderTheme.WICKED.next());
         assertEquals(WanderingTraderTheme.AERIAL, WanderingTraderTheme.ARCANE.next());
-        assertEquals(WanderingTraderTheme.TEMPO, WanderingTraderTheme.INFERNAL.next());
-        assertEquals(WanderingTraderTheme.SACRED, WanderingTraderTheme.TEMPO.next());
-    }
-
-    @Test
-    void schemaOneScheduleDerivesItsCurrencyIdentityWithoutChangingLegacyThemeOrder() {
-        final CompoundTag legacy = new CompoundTag();
-        legacy.putInt("SchemaVersion", 1);
-        legacy.putInt("NextThemeIndex", 2);
-
-        final WanderingTraderScheduleData migrated = WanderingTraderScheduleData.load(legacy);
-
-        assertEquals(WanderingTraderTheme.ARCANE, migrated.nextTheme());
-        assertEquals(CurrencyIdentity.WORK, migrated.nextCurrencyIdentity());
-        assertEquals("work", migrated.save(new CompoundTag()).getString("NextCurrencyIdentity"));
+        assertEquals(WanderingTraderTheme.SACRED, WanderingTraderTheme.INFERNAL.next());
     }
 }

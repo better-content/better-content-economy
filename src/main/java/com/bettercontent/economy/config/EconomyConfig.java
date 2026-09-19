@@ -9,7 +9,6 @@ public final class EconomyConfig {
     private static final ForgeConfigSpec.IntValue VISIT_INTERVAL;
     private static final ForgeConfigSpec.IntValue RETRY_DELAY;
     private static final ForgeConfigSpec.BooleanValue ANNOUNCE_ARRIVAL;
-    private static final ForgeConfigSpec.IntValue SPIRIT_RELEASE_CADENCE;
 
     static {
         var builder = new ForgeConfigSpec.Builder();
@@ -20,9 +19,6 @@ public final class EconomyConfig {
         RETRY_DELAY = builder.defineInRange("retryDelay", 1_200, 20, 24_000);
         ANNOUNCE_ARRIVAL = builder.define("announceArrival", true);
         builder.pop();
-        builder.push("spiritRelease");
-        SPIRIT_RELEASE_CADENCE = builder.defineInRange("cadenceTicks", 100, 20, 1_200);
-        builder.pop();
         SPEC = builder.build();
     }
 
@@ -32,6 +28,4 @@ public final class EconomyConfig {
     public static int wanderingTraderVisitInterval() { return VISIT_INTERVAL.get(); }
     public static int wanderingTraderRetryDelay() { return RETRY_DELAY.get(); }
     public static boolean wanderingTraderAnnounceArrival() { return ANNOUNCE_ARRIVAL.get(); }
-    /** Ticks between owned physical spirit releases; accumulated credit is never discarded. */
-    public static int spiritReleaseCadenceTicks() { return SPIRIT_RELEASE_CADENCE.get(); }
 }

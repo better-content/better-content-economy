@@ -24,7 +24,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-/** Registry boundary for the eight spirit professions and their distinct job sites. */
+/** Registry boundary for the seven spirit professions and their distinct job sites. */
 public final class SpiritProfessions {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, BetterContentEconomy.MOD_ID);
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, BetterContentEconomy.MOD_ID);
@@ -41,7 +41,6 @@ public final class SpiritProfessions {
         define(SpiritKind.AQUEOUS, "aqueous_font", "aqueous_tidekeeper", "Aqueous Tidekeeper", SoundEvents.VILLAGER_WORK_FISHERMAN);
         define(SpiritKind.EARTHEN, "earthen_workbench", "earthen_stonewarden", "Earthen Stonewarden", SoundEvents.VILLAGER_WORK_MASON);
         define(SpiritKind.INFERNAL, "infernal_kiln", "infernal_stoker", "Infernal Stoker", SoundEvents.VILLAGER_WORK_ARMORER);
-        define(SpiritKind.TEMPO, "tempo_metronome", "tempo_clocksmith", "Tempo Clocksmith", SoundEvents.VILLAGER_WORK_TOOLSMITH);
     }
 
     private SpiritProfessions() {}
