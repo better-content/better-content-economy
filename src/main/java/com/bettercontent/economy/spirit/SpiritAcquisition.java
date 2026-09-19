@@ -43,7 +43,7 @@ public final class SpiritAcquisition {
         LivingEntity victim = event.getEntity();
         Level level = victim.level();
         if (event.isCanceled() || level.isClientSide || victim instanceof ServerPlayer || isEconomyActor(victim)) return;
-        ServerPlayer recipient = creditedPlayer(event.getSource().getEntity(), victim.getKillCredit());
+        ServerPlayer recipient = creditedPlayer(event.getSource().getEntity());
         if (recipient == null) return;
 
         var capability = MalumLivingEntityDataCapability.getCapability(victim);
@@ -84,13 +84,30 @@ public final class SpiritAcquisition {
         for (ServerPlayer player : event.getServer().getPlayerList().getPlayers()) {
             SpiritCreditLedger ledger = data.ledger(player.getUUID());
             SpiritCreditLedger.Delivery delivery = ledger.retryDelivery();
-            if (delivery == null) delivery = ledger.beginDueDelivery(gameTime);
+            if (delivery == null) {
+                delivery = ledger.beginDueDelivery(gameTime);
+                // Persist the reservation before any physical stacks are created. A later retry
+                // has the identical receipt rather than creating a second debit.
+                if (delivery != null) {
+                    data.setDirty();
+                    overworld.getDataStorage().save();
+                }
+            }
             if (delivery == null) continue;
             try {
+                // A restart between entity insertion and acknowledgement leaves the same receipt
+                // on the owned physical stack. Recognize it before any retry can create another.
+                if (hasDeliveryReceipt(player, delivery.id())) {
+                    ledger.acknowledge(delivery.id(), gameTime + cadence);
+                    data.setDirty();
+                    overworld.getDataStorage().save();
+                    continue;
+                }
                 List<ItemStack> stacks = currencyStacks(delivery.credits(), delivery.id());
                 if (!stacks.isEmpty()) SpiritHarvestHandler.spawnItemsAsSpirits(stacks, player, player);
                 ledger.acknowledge(delivery.id(), gameTime + cadence);
                 data.setDirty();
+                overworld.getDataStorage().save();
             } catch (RuntimeException exception) {
                 ledger.failDelivery(delivery.id());
                 data.setDirty();
@@ -112,14 +129,25 @@ public final class SpiritAcquisition {
         return stacks;
     }
 
+    private static boolean hasDeliveryReceipt(final ServerPlayer player, final java.util.UUID deliveryId) {
+        if (player.getInventory().items.stream().anyMatch(stack -> deliveryId.equals(receipt(stack)))) return true;
+        if (player.getInventory().offhand.stream().anyMatch(stack -> deliveryId.equals(receipt(stack)))) return true;
+        return player.level().getEntitiesOfClass(com.sammy.malum.common.entity.spirit.SpiritItemEntity.class,
+                        player.getBoundingBox().inflate(24.0D))
+                .stream().map(com.sammy.malum.common.entity.spirit.SpiritItemEntity::getItem)
+                .anyMatch(stack -> deliveryId.equals(receipt(stack)));
+    }
+
+    private static java.util.UUID receipt(final ItemStack stack) {
+        return stack.hasTag() && stack.getTag().hasUUID("better_content_economy_delivery")
+                ? stack.getTag().getUUID("better_content_economy_delivery") : null;
+    }
+
     private static boolean isEconomyActor(final LivingEntity entity) {
         return entity instanceof AbstractVillager || entity instanceof IronGolem || entity.getType().is(SPIRITLESS_ACTORS);
     }
 
-    private static ServerPlayer creditedPlayer(final Entity source, final LivingEntity killCredit) {
-        ServerPlayer player = playerSource(source);
-        return player != null ? player : playerSource(killCredit);
-    }
+    private static ServerPlayer creditedPlayer(final Entity source) { return playerSource(source); }
 
     // Accept direct, projectile, and spell-projectile kills while excluding OwnableEntity mobs.
     private static ServerPlayer playerSource(final Entity entity) {

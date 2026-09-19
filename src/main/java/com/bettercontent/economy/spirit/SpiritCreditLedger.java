@@ -75,7 +75,9 @@ public final class SpiritCreditLedger {
     }
     private static void merge(final EnumMap<CurrencyIdentity, Integer> target, final Map<CurrencyIdentity, Integer> credits) {
         credits.forEach((identity, count) -> {
-            if (identity != null && count != null && count > 0) target.merge(identity, count, Integer::sum);
+            if (identity != null && count != null && count > 0) {
+                target.merge(identity, count, Math::addExact);
+            }
         });
     }
 
