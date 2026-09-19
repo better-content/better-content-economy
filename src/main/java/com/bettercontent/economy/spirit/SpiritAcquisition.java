@@ -2,30 +2,35 @@ package com.bettercontent.economy.spirit;
 
 import com.bettercontent.economy.BetterContentEconomy;
 import com.bettercontent.economy.config.EconomyPolicy;
+import com.bettercontent.economy.config.EconomyConfig;
+import com.bettercontent.economy.registry.CurrencyItems;
+import com.mojang.logging.LogUtils;
 import com.sammy.malum.common.capability.MalumLivingEntityDataCapability;
 import com.sammy.malum.core.handlers.SpiritHarvestHandler;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.slf4j.Logger;
-import com.mojang.logging.LogUtils;
 
-/** Makes native Malum spirit release a reward for credited player kills, independent of equipment. */
+/** Sole authority for credited-kill currency. Native drops are evaluated before any release. */
 public final class SpiritAcquisition {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final TagKey<net.minecraft.world.entity.EntityType<?>> SPIRITLESS_ACTORS =
@@ -38,35 +43,73 @@ public final class SpiritAcquisition {
         LivingEntity victim = event.getEntity();
         Level level = victim.level();
         if (event.isCanceled() || level.isClientSide || victim instanceof ServerPlayer || isEconomyActor(victim)) return;
-
         ServerPlayer recipient = creditedPlayer(event.getSource().getEntity(), victim.getKillCredit());
         if (recipient == null) return;
 
         var capability = MalumLivingEntityDataCapability.getCapability(victim);
         if (capability.soulData.spawnerSpawned || capability.soulData.soulless) return;
 
-        var bounds = victim.getBoundingBox().inflate(8);
-        var before = level.getEntitiesOfClass(com.sammy.malum.common.entity.spirit.SpiritItemEntity.class, bounds)
-                .stream().map(Entity::getUUID).collect(java.util.stream.Collectors.toSet());
-        if (SpiritHarvestHandler.getSpiritData(victim).isPresent()) {
-            SpiritHarvestHandler.spawnSpirits(victim, recipient, ItemStack.EMPTY);
-        } else if (victim instanceof Enemy || victim.getType().getCategory() == net.minecraft.world.entity.MobCategory.MONSTER) {
+        // Malum remains the source of the vector. The seven ordinary identities are replaced;
+        // exotic drops stay native Malum items.
+        List<ItemStack> nativeDrops = SpiritHarvestHandler.getSpawnedSpirits(victim, recipient, ItemStack.EMPTY);
+        if (nativeDrops.isEmpty() && (victim instanceof Enemy || victim.getType().getCategory() == net.minecraft.world.entity.MobCategory.MONSTER)) {
             ResourceLocation id = ForgeRegistries.ENTITY_TYPES.getKey(victim.getType());
             int seed = id == null ? victim.getType().hashCode() : id.toString().hashCode();
-            List<ItemStack> fallback = java.util.stream.IntStream.range(0,
-                            EconomyPolicy.acquisition().unmappedHostileSpiritCount())
-                    .mapToObj(offset -> spirit(SpiritKind.fromIndex(seed + offset * 3))).toList();
+            nativeDrops = java.util.stream.IntStream.range(0, EconomyPolicy.acquisition().unmappedHostileSpiritCount())
+                    .mapToObj(offset -> spirit(SpiritKind.fromIndex(seed + offset * 3))).filter(stack -> !stack.isEmpty()).toList();
             LOGGER.error("Hostile entity {} has no Malum spirit mapping; using deterministic two-spirit fallback", id);
-            SpiritHarvestHandler.spawnItemsAsSpirits(fallback, victim, recipient);
+        }
+
+        Map<CurrencyIdentity, Integer> credits = SpiritCreditAllocation.fromNative(nativeDrops, victim.getUUID(), recipient.getUUID());
+        List<ItemStack> exotic = nativeDrops.stream().filter(stack -> {
+            ResourceLocation id = ForgeRegistries.ITEMS.getKey(stack.getItem());
+            return id == null || CurrencyIdentity.fromLegacyNativeSpirit(id) == null;
+        }).toList();
+        if (!exotic.isEmpty()) SpiritHarvestHandler.spawnItemsAsSpirits(exotic, victim, recipient);
+        if (!credits.isEmpty()) {
+            SpiritCreditData data = SpiritCreditData.get(recipient.server.overworld());
+            data.ledger(recipient.getUUID()).credit(credits, recipient.server.overworld().getGameTime() + EconomyConfig.spiritReleaseCadenceTicks());
+            data.setDirty();
         }
         capability.soulData.soulless = true;
-        for (var released : level.getEntitiesOfClass(com.sammy.malum.common.entity.spirit.SpiritItemEntity.class, bounds)) {
-            if (before.contains(released.getUUID())) continue;
-            var stack = released.getItem();
-            var id = ForgeRegistries.ITEMS.getKey(stack.getItem());
-            if (id != null && !stack.isEmpty()) net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(
-                    new com.bettercontent.economy.api.event.SpiritReleasedEvent(recipient, id, stack.getCount(), released.getUUID()));
+    }
+
+    @SubscribeEvent
+    public static void onServerTick(final TickEvent.ServerTickEvent event) {
+        int cadence = EconomyConfig.spiritReleaseCadenceTicks();
+        if (event.phase != TickEvent.Phase.END || event.getServer().getTickCount() % cadence != 0) return;
+        var overworld = event.getServer().overworld();
+        SpiritCreditData data = SpiritCreditData.get(overworld);
+        long gameTime = overworld.getGameTime();
+        for (ServerPlayer player : event.getServer().getPlayerList().getPlayers()) {
+            SpiritCreditLedger ledger = data.ledger(player.getUUID());
+            SpiritCreditLedger.Delivery delivery = ledger.retryDelivery();
+            if (delivery == null) delivery = ledger.beginDueDelivery(gameTime);
+            if (delivery == null) continue;
+            try {
+                List<ItemStack> stacks = currencyStacks(delivery.credits(), delivery.id());
+                if (!stacks.isEmpty()) SpiritHarvestHandler.spawnItemsAsSpirits(stacks, player, player);
+                ledger.acknowledge(delivery.id(), gameTime + cadence);
+                data.setDirty();
+            } catch (RuntimeException exception) {
+                ledger.failDelivery(delivery.id());
+                data.setDirty();
+                LOGGER.warn("Will retry spirit credit delivery {} for {}", delivery.id(), player.getGameProfile().getName(), exception);
+            }
         }
+    }
+
+    private static List<ItemStack> currencyStacks(final Map<CurrencyIdentity, Integer> credits, final java.util.UUID deliveryId) {
+        List<ItemStack> stacks = new ArrayList<>();
+        credits.forEach((identity, total) -> {
+            Item item = CurrencyItems.item(identity).get();
+            for (int count = total; count > 0; count -= item.getMaxStackSize()) {
+                ItemStack stack = new ItemStack(item, Math.min(count, item.getMaxStackSize()));
+                stack.getOrCreateTag().putUUID("better_content_economy_delivery", deliveryId);
+                stacks.add(stack);
+            }
+        });
+        return stacks;
     }
 
     private static boolean isEconomyActor(final LivingEntity entity) {
@@ -74,13 +117,14 @@ public final class SpiritAcquisition {
     }
 
     private static ServerPlayer creditedPlayer(final Entity source, final LivingEntity killCredit) {
-        ServerPlayer player = owner(source);
-        return player != null ? player : owner(killCredit);
+        ServerPlayer player = playerSource(source);
+        return player != null ? player : playerSource(killCredit);
     }
 
-    private static ServerPlayer owner(final Entity entity) {
+    // Accept direct, projectile, and spell-projectile kills while excluding OwnableEntity mobs.
+    private static ServerPlayer playerSource(final Entity entity) {
         if (entity instanceof ServerPlayer player) return player;
-        if (entity instanceof OwnableEntity ownable && ownable.getOwner() instanceof ServerPlayer player) return player;
+        if (entity instanceof Projectile projectile && projectile.getOwner() instanceof ServerPlayer player) return player;
         return null;
     }
 
