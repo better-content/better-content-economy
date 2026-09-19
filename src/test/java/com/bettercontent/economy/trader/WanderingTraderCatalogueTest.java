@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 final class WanderingTraderCatalogueTest {
-    @Test void catalogueOwnsSevenThemesAndThirteenRowsEach() {
-        assertEquals(7, WanderingTraderCatalogue.themeCount());
-        assertEquals(91, WanderingTraderCatalogue.authoredRowCount());
+    @Test void catalogueOwnsEightThemesAndThirteenRowsEach() {
+        assertEquals(8, WanderingTraderCatalogue.themeCount());
+        assertEquals(104, WanderingTraderCatalogue.authoredRowCount());
     }
 }
