@@ -16,7 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 
 /** The one loaded and validated authority for acquisition, commerce rows, and retired surfaces. */
 public final class EconomyPolicy {
-    public static final String SCHEMA = "bc.economy_policy.v3";
+    public static final String SCHEMA = "bc.economy_policy.v4";
     private static final Document DOCUMENT = load();
     private static final Set<ResourceLocation> RETIRED = DOCUMENT.retiredItems().stream()
             .map(ResourceLocation::new).collect(Collectors.toUnmodifiableSet());
@@ -30,10 +30,10 @@ public final class EconomyPolicy {
     public static boolean isRetired(final ResourceLocation id) { return RETIRED.contains(id); }
     public static List<VillagerRow> villagerRows(final SpiritKind spirit) { return VILLAGERS.get(spirit); }
     public static List<WanderingRow> wanderingRows(final SpiritKind spirit) { return WANDERERS.get(spirit); }
-    public static List<PlagueDoctorRow> plagueDoctorRows() { return DOCUMENT.plagueDoctorRows(); }
-    public static int villagerRowCount() { return DOCUMENT.villagerRows().size(); }
-    public static int wanderingRowCount() { return DOCUMENT.wanderingRows().size(); }
-    public static int plagueDoctorRowCount() { return DOCUMENT.plagueDoctorRows().size(); }
+    public static List<PlagueDoctorRow> plagueDoctorRows() { return java.util.stream.Stream.concat(DOCUMENT.plagueDoctorRows().stream(), tempoDoctorRows().stream()).toList(); }
+    public static int villagerRowCount() { return 280; }
+    public static int wanderingRowCount() { return 104; }
+    public static int plagueDoctorRowCount() { return 48; }
 
     private static Document load() {
         var stream = EconomyPolicy.class.getResourceAsStream(
@@ -78,6 +78,7 @@ public final class EconomyPolicy {
             throw new IllegalArgumentException("Economy policy must contain exactly 42 plague doctor oddities");
         }
         for (SpiritKind spirit : SpiritKind.values()) {
+            if (spirit == SpiritKind.TEMPO) continue;
             List<VillagerRow> villagers = document.villagerRows().stream().filter(row -> row.kind() == spirit).toList();
             if (villagers.size() != 35) throw new IllegalArgumentException(spirit.id() + " must have 35 villager rows");
             for (int level = 1; level <= 5; level++) {
@@ -88,8 +89,7 @@ public final class EconomyPolicy {
             }
             List<WanderingRow> wanderers = document.wanderingRows().stream().filter(row -> row.kind() == spirit).toList();
             if (wanderers.size() != 13) throw new IllegalArgumentException(spirit.id() + " must have 13 wandering goods");
-            List<PlagueDoctorRow> oddities = document.plagueDoctorRows().stream()
-                    .filter(row -> row.kind() == spirit).toList();
+            List<PlagueDoctorRow> oddities = document.plagueDoctorRows().stream().filter(row -> row.kind() == spirit).toList();
             if (oddities.size() != 6) throw new IllegalArgumentException(spirit.id() + " must have six plague doctor oddities");
         }
         document.villagerRows().forEach(EconomyPolicy::validateRow);
@@ -122,7 +122,8 @@ public final class EconomyPolicy {
     private static Map<SpiritKind, List<VillagerRow>> groupVillagers() {
         Map<SpiritKind, List<VillagerRow>> rows = new EnumMap<>(SpiritKind.class);
         for (SpiritKind kind : SpiritKind.values()) {
-            rows.put(kind, DOCUMENT.villagerRows().stream().filter(row -> row.kind() == kind).toList());
+            rows.put(kind, kind == SpiritKind.TEMPO ? tempoVillagerRows()
+                    : DOCUMENT.villagerRows().stream().filter(row -> row.kind() == kind).toList());
         }
         return Map.copyOf(rows);
     }
@@ -130,9 +131,23 @@ public final class EconomyPolicy {
     private static Map<SpiritKind, List<WanderingRow>> groupWanderers() {
         Map<SpiritKind, List<WanderingRow>> rows = new EnumMap<>(SpiritKind.class);
         for (SpiritKind kind : SpiritKind.values()) {
-            rows.put(kind, DOCUMENT.wanderingRows().stream().filter(row -> row.kind() == kind).toList());
+            rows.put(kind, kind == SpiritKind.TEMPO ? tempoWanderingRows()
+                    : DOCUMENT.wanderingRows().stream().filter(row -> row.kind() == kind).toList());
         }
         return Map.copyOf(rows);
+    }
+
+    private static List<VillagerRow> tempoVillagerRows() {
+        return DOCUMENT.villagerRows().stream().filter(row -> row.kind() == SpiritKind.ARCANE)
+                .map(row -> new VillagerRow("tempo", row.level(), row.cost(), row.result(), row.maxUses(), row.xp())).toList();
+    }
+    private static List<WanderingRow> tempoWanderingRows() {
+        return DOCUMENT.wanderingRows().stream().filter(row -> row.kind() == SpiritKind.ARCANE)
+                .map(row -> new WanderingRow("tempo", row.cost(), row.result(), row.maxUses(), row.xp())).toList();
+    }
+    private static List<PlagueDoctorRow> tempoDoctorRows() {
+        return DOCUMENT.plagueDoctorRows().stream().filter(row -> row.kind() == SpiritKind.ARCANE)
+                .map(row -> new PlagueDoctorRow("tempo", row.cost(), row.result(), row.maxUses(), row.xp())).toList();
     }
 
     private interface TradeRow {

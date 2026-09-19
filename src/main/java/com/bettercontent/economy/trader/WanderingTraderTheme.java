@@ -13,7 +13,8 @@ public enum WanderingTraderTheme {
     AERIAL,
     AQUEOUS,
     EARTHEN,
-    INFERNAL;
+    INFERNAL,
+    TEMPO;
 
     private static final WanderingTraderTheme[] VALUES = values();
 
@@ -52,6 +53,6 @@ public enum WanderingTraderTheme {
 
     /** The durable currency identity for this legacy themed trader. */
     public CurrencyIdentity currencyIdentity() {
-        return CurrencyIdentity.fromLegacyNativeSpirit(spirit().itemId());
+        return spirit().currencyIdentity();
     }
 }

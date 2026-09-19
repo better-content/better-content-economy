@@ -11,13 +11,13 @@ import org.junit.jupiter.api.Test;
 
 final class EconomyPolicyTest {
     @Test void centralPolicyOwnsAllCommerceRowsAndRetiredItems() {
-        assertEquals(245, EconomyPolicy.villagerRowCount());
-        assertEquals(91, EconomyPolicy.wanderingRowCount());
-        assertEquals(42, EconomyPolicy.plagueDoctorRowCount());
+        assertEquals(280, EconomyPolicy.villagerRowCount());
+        assertEquals(104, EconomyPolicy.wanderingRowCount());
+        assertEquals(48, EconomyPolicy.plagueDoctorRowCount());
         assertEquals(24, EconomyPolicy.retiredItems().size());
         assertTrue(EconomyPolicy.isRetired(new ResourceLocation("createdeco:copper_coin")));
         assertFalse(EconomyPolicy.isRetired(new ResourceLocation("malum:eldritch_spirit")));
-        assertEquals("bc.economy_policy.v3", EconomyPolicy.SCHEMA);
+        assertEquals("bc.economy_policy.v4", EconomyPolicy.SCHEMA);
         assertEquals(CurrencyIdentity.RENEWAL,
                 CurrencyIdentity.fromLegacyNativeSpirit(new ResourceLocation("malum:sacred_spirit")));
         for (SpiritKind kind : SpiritKind.values()) {

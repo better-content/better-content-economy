@@ -47,7 +47,8 @@ final class WanderingTraderScheduleDataTest {
         assertEquals(WanderingTraderTheme.WICKED, WanderingTraderTheme.SACRED.next());
         assertEquals(WanderingTraderTheme.ARCANE, WanderingTraderTheme.WICKED.next());
         assertEquals(WanderingTraderTheme.AERIAL, WanderingTraderTheme.ARCANE.next());
-        assertEquals(WanderingTraderTheme.SACRED, WanderingTraderTheme.INFERNAL.next());
+        assertEquals(WanderingTraderTheme.TEMPO, WanderingTraderTheme.INFERNAL.next());
+        assertEquals(WanderingTraderTheme.SACRED, WanderingTraderTheme.TEMPO.next());
     }
 
     @Test

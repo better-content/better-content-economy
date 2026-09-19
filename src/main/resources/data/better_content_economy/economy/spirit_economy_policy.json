@@ -1,5 +1,5 @@
 {
-  "schema": "bc.economy_policy.v3",
+  "schema": "bc.economy_policy.v4",
   "legacyCurrencyMapping": {
     "malum:sacred_spirit": "renewal",
     "malum:wicked_spirit": "control",
