@@ -1,17 +1,19 @@
 package com.bettercontent.economy.trader;
 
 import java.util.UUID;
+import com.bettercontent.economy.spirit.CurrencyIdentity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 
 public final class WanderingTraderScheduleData extends SavedData {
     private static final String DATA_NAME = "better_content_economy_wandering_trader";
-    private static final int SCHEMA_VERSION = 1;
+    private static final int SCHEMA_VERSION = 2;
 
     private boolean initialized;
     private long nextAttemptGameTime;
     private int nextThemeIndex;
+    private String nextCurrencyIdentity = CurrencyIdentity.RENEWAL.id();
     private UUID activeTraderId;
 
     public static WanderingTraderScheduleData get(final ServerLevel level) {
@@ -26,6 +28,11 @@ public final class WanderingTraderScheduleData extends SavedData {
         data.initialized = tag.getBoolean("Initialized");
         data.nextAttemptGameTime = tag.getLong("NextAttemptGameTime");
         data.nextThemeIndex = tag.getInt("NextThemeIndex");
+        if (tag.getInt("SchemaVersion") >= SCHEMA_VERSION) {
+            data.nextCurrencyIdentity = tag.getString("NextCurrencyIdentity");
+        } else {
+            data.nextCurrencyIdentity = WanderingTraderTheme.fromIndex(data.nextThemeIndex).currencyIdentity().id();
+        }
         if (tag.hasUUID("ActiveTrader")) {
             data.activeTraderId = tag.getUUID("ActiveTrader");
         }
@@ -38,6 +45,7 @@ public final class WanderingTraderScheduleData extends SavedData {
         tag.putBoolean("Initialized", initialized);
         tag.putLong("NextAttemptGameTime", nextAttemptGameTime);
         tag.putInt("NextThemeIndex", nextThemeIndex);
+        tag.putString("NextCurrencyIdentity", nextCurrencyIdentity);
         if (activeTraderId != null) {
             tag.putUUID("ActiveTrader", activeTraderId);
         }
@@ -61,6 +69,13 @@ public final class WanderingTraderScheduleData extends SavedData {
         return WanderingTraderTheme.fromIndex(nextThemeIndex);
     }
 
+    public CurrencyIdentity nextCurrencyIdentity() {
+        for (CurrencyIdentity identity : CurrencyIdentity.values()) {
+            if (identity.id().equals(nextCurrencyIdentity)) return identity;
+        }
+        return nextTheme().currencyIdentity();
+    }
+
     public UUID activeTraderId() {
         return activeTraderId;
     }
@@ -78,6 +93,7 @@ public final class WanderingTraderScheduleData extends SavedData {
         activeTraderId = traderId;
         nextAttemptGameTime = gameTime + visitInterval;
         nextThemeIndex = Math.floorMod(nextThemeIndex + 1, WanderingTraderTheme.values().length);
+        nextCurrencyIdentity = nextTheme().currencyIdentity().id();
         setDirty();
     }
 

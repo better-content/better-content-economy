@@ -1,6 +1,7 @@
 package com.bettercontent.economy.config;
 
 import com.bettercontent.economy.spirit.SpiritKind;
+import com.bettercontent.economy.spirit.CurrencyIdentity;
 import com.google.gson.Gson;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -15,7 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 
 /** The one loaded and validated authority for acquisition, commerce rows, and retired surfaces. */
 public final class EconomyPolicy {
-    public static final String SCHEMA = "bc.economy_policy.v2";
+    public static final String SCHEMA = "bc.economy_policy.v3";
     private static final Document DOCUMENT = load();
     private static final Set<ResourceLocation> RETIRED = DOCUMENT.retiredItems().stream()
             .map(ResourceLocation::new).collect(Collectors.toUnmodifiableSet());
@@ -48,6 +49,16 @@ public final class EconomyPolicy {
 
     private static void validate(final Document document) {
         if (document == null || !SCHEMA.equals(document.schema())) throw new IllegalArgumentException("Unsupported economy policy schema");
+        if (document.legacyCurrencyMapping() == null || document.legacyCurrencyMapping().size() != 7) {
+            throw new IllegalArgumentException("Economy policy must map the seven legacy native spirits once");
+        }
+        for (CurrencyIdentity identity : CurrencyIdentity.values()) {
+            if (identity.legacyNativeSpirit() == null) continue;
+            String mapped = document.legacyCurrencyMapping().get(identity.legacyNativeSpirit().toString());
+            if (!identity.id().equals(mapped)) {
+                throw new IllegalArgumentException("Incorrect legacy currency mapping for " + identity.legacyNativeSpirit());
+            }
+        }
         if (document.acquisition() == null || !document.acquisition().creditedPlayerKillsOnly()
                 || !document.acquisition().excludeSpawnerOrigin() || !document.acquisition().excludeEconomyActors()
                 || document.acquisition().unmappedHostileSpiritCount() != 2) {
@@ -142,7 +153,7 @@ public final class EconomyPolicy {
             implements TradeRow {}
     public record PlagueDoctorRow(String spirit, int cost, StackSpec result, int maxUses, int xp)
             implements TradeRow {}
-    private record Document(String schema, Acquisition acquisition, List<String> retiredItems,
+    private record Document(String schema, Map<String, String> legacyCurrencyMapping, Acquisition acquisition, List<String> retiredItems,
                             List<VillagerRow> villagerRows, List<WanderingRow> wanderingRows,
                             List<PlagueDoctorRow> plagueDoctorRows) {}
 }
