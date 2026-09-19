@@ -2,6 +2,8 @@ package com.bettercontent.economy.trader;
 
 import com.bettercontent.economy.registry.SpiritProfessions;
 import com.bettercontent.economy.spirit.SpiritKind;
+import com.bettercontent.economy.spirit.CurrencyIdentity;
+import com.bettercontent.economy.registry.CurrencyItems;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.item.Item;
@@ -23,8 +25,7 @@ public final class VillageStarterOffer {
         WanderingTraderTheme theme = WanderingTraderTheme.fromId(trader.getPersistentData().getString(WanderingTraderVisits.THEME_TAG));
         if (theme == null) return;
         SpiritKind kind = theme.spirit();
-        Item spirit = ForgeRegistries.ITEMS.getValue(kind.itemId());
-        if (spirit == null) return;
+        Item spirit = CurrencyItems.item(CurrencyIdentity.fromLegacyNativeSpirit(kind.itemId())).get();
         ItemStack eggs = new ItemStack(Items.VILLAGER_SPAWN_EGG, VILLAGER_COUNT);
         CompoundTag entity = eggs.getOrCreateTagElement("EntityTag");
         CompoundTag data = new CompoundTag();

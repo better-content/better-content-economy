@@ -130,12 +130,23 @@ public final class SpiritAcquisition {
     }
 
     private static boolean hasDeliveryReceipt(final ServerPlayer player, final java.util.UUID deliveryId) {
-        if (player.getInventory().items.stream().anyMatch(stack -> deliveryId.equals(receipt(stack)))) return true;
-        if (player.getInventory().offhand.stream().anyMatch(stack -> deliveryId.equals(receipt(stack)))) return true;
-        return player.level().getEntitiesOfClass(com.sammy.malum.common.entity.spirit.SpiritItemEntity.class,
-                        player.getBoundingBox().inflate(24.0D))
-                .stream().map(com.sammy.malum.common.entity.spirit.SpiritItemEntity::getItem)
-                .anyMatch(stack -> deliveryId.equals(receipt(stack)));
+        // Ownership can transfer before an interruption, including when the recipient changes
+        // dimension. Loaded entities and every online inventory are therefore authoritative
+        // receipt witnesses. Offline or unloaded third-party custody remains intentionally
+        // unresolved rather than being guessed and duplicated.
+        for (ServerPlayer online : player.server.getPlayerList().getPlayers()) {
+            if (online.getInventory().items.stream().anyMatch(stack -> deliveryId.equals(receipt(stack)))) return true;
+            if (online.getInventory().offhand.stream().anyMatch(stack -> deliveryId.equals(receipt(stack)))) return true;
+        }
+        for (var level : player.server.getAllLevels()) {
+            if (level.getEntitiesOfClass(com.sammy.malum.common.entity.spirit.SpiritItemEntity.class,
+                    new net.minecraft.world.phys.AABB(level.getWorldBorder().getMinX(), level.getMinBuildHeight(),
+                            level.getWorldBorder().getMinZ(), level.getWorldBorder().getMaxX(), level.getMaxBuildHeight(),
+                            level.getWorldBorder().getMaxZ())).stream()
+                    .map(com.sammy.malum.common.entity.spirit.SpiritItemEntity::getItem)
+                    .anyMatch(stack -> deliveryId.equals(receipt(stack)))) return true;
+        }
+        return false;
     }
 
     private static java.util.UUID receipt(final ItemStack stack) {

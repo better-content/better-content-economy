@@ -2,6 +2,8 @@ package com.bettercontent.economy.trader;
 
 import com.bettercontent.economy.config.EconomyPolicy;
 import com.bettercontent.economy.registry.SpiritProfessions;
+import com.bettercontent.economy.registry.CurrencyItems;
+import com.bettercontent.economy.spirit.CurrencyIdentity;
 import com.bettercontent.economy.spirit.SpiritKind;
 import java.util.ArrayList;
 import net.minecraft.resources.ResourceLocation;
@@ -36,7 +38,7 @@ public final class VillagerCatalogue {
     public static boolean allRowsUseExactlyOneSpiritSide() { return true; }
     private record SpiritListing(SpiritKind kind, EconomyPolicy.VillagerRow row) implements VillagerTrades.ItemListing {
         @Override public MerchantOffer getOffer(final Entity entity, final RandomSource random) {
-            Item spirit = item(kind.itemId().toString());
+            Item spirit = CurrencyItems.item(CurrencyIdentity.fromLegacyNativeSpirit(kind.itemId())).get();
             Item result = item(row.result().id());
             if (spirit == Items.AIR || result == Items.AIR) return null;
             return new MerchantOffer(new ItemStack(spirit, row.cost()),
