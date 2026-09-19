@@ -12,6 +12,6 @@ final class CurrencyItem extends Item {
     CurrencyItem(CurrencyIdentity identity) { super(new Item.Properties()); this.identity = identity; }
     @Override public void appendHoverText(ItemStack stack, net.minecraft.world.level.Level level,
                                            List<Component> tooltip, net.minecraft.world.item.TooltipFlag flag) {
-        tooltip.add(Component.translatable("tooltip.better_content_economy.currency_identity", identity.id()));
+        tooltip.add(Component.translatable("tooltip.better_content_economy." + identity.id()));
     }
 }
