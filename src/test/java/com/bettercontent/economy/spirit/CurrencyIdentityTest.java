@@ -20,4 +20,13 @@ final class CurrencyIdentityTest {
         assertNull(CurrencyIdentity.fromLegacyNativeSpirit(new ResourceLocation("malum:eldritch_spirit")));
         assertNull(CurrencyIdentity.fromLegacyNativeSpirit(new ResourceLocation("malum:umbral_spirit")));
     }
+
+    @Test
+    void onlyTheEightEconomyItemIdsQualifyForPouchCompatibility() {
+        for (CurrencyIdentity identity : CurrencyIdentity.values()) {
+            assertEquals(identity, CurrencyIdentity.fromItemId(identity.itemId()));
+        }
+        assertNull(CurrencyIdentity.fromItemId(new ResourceLocation("malum:sacred_spirit")));
+        assertNull(CurrencyIdentity.fromItemId(new ResourceLocation("better_content_economy:not_currency")));
+    }
 }
