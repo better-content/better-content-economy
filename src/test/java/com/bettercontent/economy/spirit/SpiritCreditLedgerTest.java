@@ -95,6 +95,21 @@ final class SpiritCreditLedgerTest {
         assertNull(restored.retryDelivery());
     }
 
+    @Test
+    void quietWindowAccumulatesManyKillsIntoOneRegularDelivery() {
+        SpiritCreditLedger ledger = new SpiritCreditLedger();
+        for (int kill = 0; kill < 40; kill++) {
+            ledger.credit(Map.of(CurrencyIdentity.WORK, 2, CurrencyIdentity.TEMPO, 1), 100);
+        }
+        assertNull(ledger.beginDueDelivery(99));
+        SpiritCreditLedger.Delivery delivery = ledger.beginDueDelivery(100);
+        assertNotNull(delivery);
+        assertEquals(120, total(delivery.credits()));
+        ledger.acknowledge(delivery.id(), 200);
+        assertEquals(120, total(ledger.issued()));
+        assertEquals(0, total(ledger.pending()) + total(ledger.inFlight()));
+    }
+
     private static int total(Map<CurrencyIdentity, Integer> values) {
         return values.values().stream().mapToInt(Integer::intValue).sum();
     }
