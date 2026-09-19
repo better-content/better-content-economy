@@ -1,6 +1,7 @@
 package com.bettercontent.economy.trader;
 
 import com.bettercontent.economy.config.EconomyPolicy;
+import com.bettercontent.economy.spirit.CurrencyIdentity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -25,7 +26,8 @@ public final class MerchantCurrencyPolicy {
 
     private static boolean isRetiredCurrency(final ItemStack stack) {
         ResourceLocation id = ForgeRegistries.ITEMS.getKey(stack.getItem());
-        return EMERALD.equals(id) || (id != null && EconomyPolicy.isRetired(id));
+        return EMERALD.equals(id) || (id != null && (EconomyPolicy.isRetired(id)
+                || CurrencyIdentity.fromLegacyNativeSpirit(id) != null));
     }
 
     public static boolean isExternalMerchantType(final Entity entity) {
