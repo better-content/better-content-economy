@@ -14,7 +14,7 @@ import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 import top.theillusivec4.curios.api.CuriosApi;
 
-/** Opens Malum's existing pouch inventory only for the caller's equipped belt pouch. */
+/** Opens Malum's existing pouch inventory from Curios or the ordinary inventory stack. */
 public final class SpiritPouchAccess {
     private static final ResourceLocation SPIRIT_POUCH = new ResourceLocation("malum", "spirit_pouch");
 
@@ -34,11 +34,12 @@ public final class SpiritPouchAccess {
                 .filter(result -> "belt".equals(result.slotContext().identifier())
                         && !result.slotContext().cosmetic() && result.slotContext().entity() == player)
                 .findFirst();
-        if (equipped.isEmpty()) {
+        final ItemStack stack = equipped.map(result -> result.stack())
+                .orElseGet(() -> player.getInventory().items.stream().filter(item -> item.is(pouch)).findFirst().orElse(ItemStack.EMPTY));
+        if (stack.isEmpty()) {
             player.sendSystemMessage(Component.translatable("command.better_content_economy.spiritpouch.required"));
             return 0;
         }
-        final ItemStack stack = equipped.get().stack();
         NetworkHooks.openScreen(player, new SimpleMenuProvider(
                 (containerId, inventory, ignored) -> new SpiritPouchContainer(containerId, inventory, stack),
                 stack.getHoverName()), buffer -> buffer.writeItem(stack));
