@@ -69,6 +69,32 @@ final class SpiritCreditLedgerTest {
         assertEquals(2, total(restored.pending()));
     }
 
+    @Test
+    void acceptedDeliveryIsIdempotentAndCannotBeAcknowledgedTwice() {
+        SpiritCreditLedger ledger = new SpiritCreditLedger();
+        ledger.credit(Map.of(CurrencyIdentity.MOBILITY, 5), 10);
+        SpiritCreditLedger.Delivery delivery = ledger.beginDueDelivery(10);
+        ledger.acknowledge(delivery.id(), 20);
+        ledger.acknowledge(delivery.id(), 30);
+        assertEquals(5, total(ledger.issued()));
+        assertEquals(0, total(ledger.pending()) + total(ledger.inFlight()));
+    }
+
+    @Test
+    void interruptionAfterReservationReloadsAsTheSameRetryReceipt() {
+        SpiritCreditLedger ledger = new SpiritCreditLedger();
+        ledger.credit(Map.of(CurrencyIdentity.ENDURANCE, 7), 50);
+        SpiritCreditLedger.Delivery reserved = ledger.beginDueDelivery(50);
+        SpiritCreditLedger restored = new SpiritCreditLedger();
+        restored.restore(ledger.pending(), ledger.issued(), ledger.inFlightId(), ledger.inFlight(), ledger.nextReleaseAt());
+        SpiritCreditLedger.Delivery retry = restored.retryDelivery();
+        assertEquals(reserved.id(), retry.id());
+        assertEquals(reserved.credits(), retry.credits());
+        restored.acknowledge(retry.id(), 100);
+        assertEquals(7, total(restored.issued()));
+        assertNull(restored.retryDelivery());
+    }
+
     private static int total(Map<CurrencyIdentity, Integer> values) {
         return values.values().stream().mapToInt(Integer::intValue).sum();
     }

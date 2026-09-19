@@ -44,15 +44,17 @@ public final class SpiritCreditAllocation {
                 // One eighth remains a global timing currency; the rest follows the native
                 // aspect with a region dependent adjacent shift for visible scarcity.
                 CurrencyIdentity identity = Math.floorMod(state, 8) == 0
-                        ? CurrencyIdentity.TEMPO : regional(mapped, state);
+                        ? CurrencyIdentity.TEMPO : regional(mapped, state, regionSeed);
                 result.merge(identity, 1, Integer::sum);
         }
         return Map.copyOf(result);
     }
 
-    private static CurrencyIdentity regional(final CurrencyIdentity mapped, final long state) {
+    private static CurrencyIdentity regional(final CurrencyIdentity mapped, final long state, final long regionSeed) {
         CurrencyIdentity[] values = CurrencyIdentity.values();
-        int shift = Math.floorMod((int) (state >>> 32), 3) - 1;
+        int regionShift = Math.floorMod((int) mix(regionSeed), 3) - 1;
+        int variation = Math.floorMod((int) (state >>> 32), 5) == 0 ? 1 : 0;
+        int shift = regionShift + variation;
         return values[Math.floorMod(mapped.ordinal() + shift, values.length)];
     }
 

@@ -18,4 +18,12 @@ final class SpiritCreditAllocationTest {
         assertEquals(128, b.values().stream().mapToInt(Integer::intValue).sum());
         assertNotEquals(a, b);
     }
+    @Test void manyKillsKeepAStableRegionalBiasAndConserveEveryUnit() {
+        var units = java.util.Collections.nCopies(800, CurrencyIdentity.WORK);
+        var regionA = SpiritCreditAllocation.fromUnits(units, UUID.randomUUID(), UUID.randomUUID(), 101L);
+        var regionB = SpiritCreditAllocation.fromUnits(units, UUID.randomUUID(), UUID.randomUUID(), 202L);
+        assertEquals(800, regionA.values().stream().mapToInt(Integer::intValue).sum());
+        assertEquals(800, regionB.values().stream().mapToInt(Integer::intValue).sum());
+        assertNotEquals(regionA, regionB);
+    }
 }
