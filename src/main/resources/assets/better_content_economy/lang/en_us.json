@@ -1,4 +1,6 @@
 {
+  "command.better_content_economy.spiritpouch.required": "Equip a Spirit Pouch in a Curios belt slot first.",
+  "command.better_content_economy.spiritpouch.missing": "The Malum Spirit Pouch is unavailable.",
   "block.better_content_economy.sacred_reliquary": "Sacred Reliquary",
   "block.better_content_economy.wicked_effigy": "Wicked Effigy",
   "block.better_content_economy.arcane_scriptorium": "Arcane Scriptorium",
