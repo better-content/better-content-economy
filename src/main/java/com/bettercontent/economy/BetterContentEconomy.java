@@ -2,6 +2,7 @@ package com.bettercontent.economy;
 
 import com.bettercontent.economy.config.EconomyConfig;
 import com.bettercontent.economy.registry.SpiritProfessions;
+import com.bettercontent.economy.registry.CurrencyItems;
 import com.bettercontent.economy.spirit.SpiritAcquisition;
 import com.bettercontent.economy.trader.ProfessionBehaviors;
 import com.bettercontent.economy.trader.AuthoredTradeSignals;
@@ -24,6 +25,7 @@ public final class BetterContentEconomy {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, EconomyConfig.SPEC);
         modBus.addListener(this::registerGameTests);
         SpiritProfessions.register(modBus);
+        CurrencyItems.register(modBus);
         MinecraftForge.EVENT_BUS.register(WanderingTraderVisits.class);
         MinecraftForge.EVENT_BUS.register(WanderingTraderCatalogue.class);
         MinecraftForge.EVENT_BUS.register(VillagerCatalogue.class);

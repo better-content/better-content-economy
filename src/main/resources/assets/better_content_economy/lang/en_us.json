@@ -1,4 +1,12 @@
 {
+  "item.better_content_economy.impact_spirit": "Impact",
+  "item.better_content_economy.tempo_spirit": "Tempo",
+  "item.better_content_economy.work_spirit": "Work",
+  "item.better_content_economy.mobility_spirit": "Mobility",
+  "item.better_content_economy.endurance_spirit": "Endurance",
+  "item.better_content_economy.robustness_spirit": "Robustness",
+  "item.better_content_economy.renewal_spirit": "Renewal",
+  "item.better_content_economy.control_spirit": "Control",
   "block.better_content_economy.sacred_reliquary": "Sacred Reliquary",
   "block.better_content_economy.wicked_effigy": "Wicked Effigy",
   "block.better_content_economy.arcane_scriptorium": "Arcane Scriptorium",

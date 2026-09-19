@@ -1,5 +1,14 @@
 {
-  "schema": "bc.economy_policy.v2",
+  "schema": "bc.economy_policy.v3",
+  "legacyCurrencyMapping": {
+    "malum:sacred_spirit": "renewal",
+    "malum:wicked_spirit": "control",
+    "malum:arcane_spirit": "work",
+    "malum:aerial_spirit": "mobility",
+    "malum:aqueous_spirit": "endurance",
+    "malum:earthen_spirit": "robustness",
+    "malum:infernal_spirit": "impact"
+  },
   "acquisition": {
     "creditedPlayerKillsOnly": true,
     "unmappedHostileSpiritCount": 2,

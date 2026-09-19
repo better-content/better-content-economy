@@ -4,6 +4,7 @@ import java.util.Locale;
 import java.util.UUID;
 import net.minecraft.network.chat.Component;
 import com.bettercontent.economy.spirit.SpiritKind;
+import com.bettercontent.economy.spirit.CurrencyIdentity;
 
 public enum WanderingTraderTheme {
     SACRED,
@@ -47,5 +48,10 @@ public enum WanderingTraderTheme {
 
     public SpiritKind spirit() {
         return SpiritKind.fromId(id());
+    }
+
+    /** The durable currency identity for this legacy themed trader. */
+    public CurrencyIdentity currencyIdentity() {
+        return CurrencyIdentity.fromLegacyNativeSpirit(spirit().itemId());
     }
 }
