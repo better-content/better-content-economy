@@ -3,7 +3,7 @@ package com.bettercontent.economy.spirit;
 import java.util.Locale;
 import net.minecraft.resources.ResourceLocation;
 
-/** The seven ordinary Malum spirits that participate in village commerce. */
+/** Commerce themes. Tempo is the eighth economy identity and has no legacy Malum item. */
 public enum SpiritKind {
     SACRED,
     WICKED,
@@ -11,16 +11,23 @@ public enum SpiritKind {
     AERIAL,
     AQUEOUS,
     EARTHEN,
-    INFERNAL;
+    INFERNAL,
+    TEMPO;
 
     private static final SpiritKind[] VALUES = values();
+    private static final SpiritKind[] NATIVE_VALUES = {SACRED, WICKED, ARCANE, AERIAL, AQUEOUS, EARTHEN, INFERNAL};
 
     public String id() {
         return name().toLowerCase(Locale.ROOT);
     }
 
     public ResourceLocation itemId() {
+        if (this == TEMPO) return CurrencyIdentity.TEMPO.itemId();
         return new ResourceLocation("malum", id() + "_spirit");
+    }
+
+    public CurrencyIdentity currencyIdentity() {
+        return this == TEMPO ? CurrencyIdentity.TEMPO : CurrencyIdentity.fromLegacyNativeSpirit(itemId());
     }
 
     public static SpiritKind fromId(final String id) {
@@ -32,6 +39,6 @@ public enum SpiritKind {
     }
 
     public static SpiritKind fromIndex(final int index) {
-        return VALUES[Math.floorMod(index, VALUES.length)];
+        return NATIVE_VALUES[Math.floorMod(index, NATIVE_VALUES.length)];
     }
 }

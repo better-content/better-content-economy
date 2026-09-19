@@ -25,7 +25,7 @@ public final class VillageStarterOffer {
         WanderingTraderTheme theme = WanderingTraderTheme.fromId(trader.getPersistentData().getString(WanderingTraderVisits.THEME_TAG));
         if (theme == null) return;
         SpiritKind kind = theme.spirit();
-        Item spirit = CurrencyItems.item(CurrencyIdentity.fromLegacyNativeSpirit(kind.itemId())).get();
+        Item spirit = CurrencyItems.item(kind.currencyIdentity()).get();
         ItemStack eggs = new ItemStack(Items.VILLAGER_SPAWN_EGG, VILLAGER_COUNT);
         CompoundTag entity = eggs.getOrCreateTagElement("EntityTag");
         CompoundTag data = new CompoundTag();
