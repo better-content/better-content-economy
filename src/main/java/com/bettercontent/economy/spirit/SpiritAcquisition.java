@@ -64,6 +64,7 @@ public final class SpiritAcquisition {
         Map<CurrencyIdentity, Integer> credits = SpiritCreditAllocation.fromNative(nativeDrops, victim.getUUID(),
                 recipient.getUUID(), regionSeed(victim));
         ObservationalEconomyData.get(recipient.server.overworld()).recordRegion(regionKey(victim), credits);
+        if (!credits.isEmpty()) ObservationalEconomyData.get(recipient.server.overworld()).recordActivity();
         List<ItemStack> exotic = nativeDrops.stream().filter(stack -> {
             ResourceLocation id = ForgeRegistries.ITEMS.getKey(stack.getItem());
             return id == null || CurrencyIdentity.fromLegacyNativeSpirit(id) == null;

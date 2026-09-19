@@ -61,10 +61,16 @@ public final class ObservationalSpiritExport {
     public static String json(boolean enabled, int permission, List<CreditSnapshot> credits,
                               List<Exchange> exchanges, Map<String, Map<CurrencyIdentity,Integer>> regional,
                               Map<CurrencyIdentity,Integer> purchases) {
+        return json(enabled, permission, credits, exchanges, 0L, regional, purchases);
+    }
+    public static String json(boolean enabled, int permission, List<CreditSnapshot> credits,
+                              List<Exchange> exchanges, long activity,
+                              Map<String, Map<CurrencyIdentity,Integer>> regional,
+                              Map<CurrencyIdentity,Integer> purchases) {
         if (!allowed(enabled, permission) || !bounded(credits, exchanges)) return "";
         long issued = credits.stream().mapToLong(c -> total(c.issued())).sum();
         long pending = credits.stream().mapToLong(c -> total(c.pending())).sum();
-        StringBuilder out = new StringBuilder("{\"activity\":").append(credits.size())
+        StringBuilder out = new StringBuilder("{\"activity\":").append(Math.max(0, activity))
                 .append(",\"issued\":").append(issued)
                 .append(",\"pending\":").append(pending)
                 .append(",\"regionalMix\":");
