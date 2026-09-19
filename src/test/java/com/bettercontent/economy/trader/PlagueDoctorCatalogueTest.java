@@ -28,7 +28,7 @@ final class PlagueDoctorCatalogueTest {
         Set<ResourceLocation> availableResults = EconomyPolicy.plagueDoctorRows().stream().limit(3)
                 .map(row -> new ResourceLocation(row.result().id())).collect(Collectors.toSet());
         var selected = PlagueDoctorCatalogue.selectRows(DOCTOR, 7L,
-                id -> "malum".equals(id.getNamespace()) || availableResults.contains(id));
+                id -> "better_content_economy".equals(id.getNamespace()) || availableResults.contains(id));
         assertEquals(3, selected.size());
         assertTrue(selected.stream().allMatch(row -> availableResults.contains(new ResourceLocation(row.result().id()))));
     }
