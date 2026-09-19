@@ -60,7 +60,8 @@ public final class SpiritAcquisition {
             LOGGER.error("Hostile entity {} has no Malum spirit mapping; using deterministic two-spirit fallback", id);
         }
 
-        Map<CurrencyIdentity, Integer> credits = SpiritCreditAllocation.fromNative(nativeDrops, victim.getUUID(), recipient.getUUID());
+        Map<CurrencyIdentity, Integer> credits = SpiritCreditAllocation.fromNative(nativeDrops, victim.getUUID(),
+                recipient.getUUID(), regionSeed(victim));
         List<ItemStack> exotic = nativeDrops.stream().filter(stack -> {
             ResourceLocation id = ForgeRegistries.ITEMS.getKey(stack.getItem());
             return id == null || CurrencyIdentity.fromLegacyNativeSpirit(id) == null;
@@ -159,6 +160,15 @@ public final class SpiritAcquisition {
     }
 
     private static ServerPlayer creditedPlayer(final Entity source) { return playerSource(source); }
+
+    private static long regionSeed(final LivingEntity victim) {
+        var pos = victim.blockPosition();
+        long seed = victim.level().dimension().location().hashCode();
+        seed = seed * 31L + pos.getX() / 16;
+        seed = seed * 31L + pos.getZ() / 16;
+        var biome = victim.level().getBiome(pos).unwrapKey();
+        return seed * 31L + (biome.isPresent() ? biome.get().location().hashCode() : 0L);
+    }
 
     // Accept direct, projectile, and spell-projectile kills while excluding OwnableEntity mobs.
     private static ServerPlayer playerSource(final Entity entity) {
