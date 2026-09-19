@@ -20,6 +20,7 @@ final class EconomyPolicyTest {
         assertEquals("bc.economy_policy.v4", EconomyPolicy.SCHEMA);
         assertEquals(CurrencyIdentity.RENEWAL,
                 CurrencyIdentity.fromLegacyNativeSpirit(new ResourceLocation("malum:sacred_spirit")));
+        assertEquals(8, SpiritKind.values().length);
         for (SpiritKind kind : SpiritKind.values()) {
             assertEquals(35, EconomyPolicy.villagerRows(kind).size());
             assertEquals(13, EconomyPolicy.wanderingRows(kind).size());

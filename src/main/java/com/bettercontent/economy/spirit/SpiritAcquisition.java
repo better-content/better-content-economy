@@ -49,7 +49,7 @@ public final class SpiritAcquisition {
         var capability = MalumLivingEntityDataCapability.getCapability(victim);
         if (capability.soulData.spawnerSpawned || capability.soulData.soulless) return;
 
-        // Malum remains the source of the vector. The seven ordinary identities are replaced;
+        // Malum remains the source of the vector. The ordinary identities are replaced;
         // exotic drops stay native Malum items.
         List<ItemStack> nativeDrops = SpiritHarvestHandler.getSpawnedSpirits(victim, recipient, ItemStack.EMPTY);
         if (nativeDrops.isEmpty() && (victim instanceof Enemy || victim.getType().getCategory() == net.minecraft.world.entity.MobCategory.MONSTER)) {

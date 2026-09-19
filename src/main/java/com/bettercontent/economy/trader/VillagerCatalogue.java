@@ -19,7 +19,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
-/** Exactly thirty-five matching-spirit offers for each of the seven economy professions. */
+/** Exactly thirty-five matching-spirit offers for each ordinary economy profession, plus Tempo's authored set. */
 public final class VillagerCatalogue {
     private VillagerCatalogue() {}
 
