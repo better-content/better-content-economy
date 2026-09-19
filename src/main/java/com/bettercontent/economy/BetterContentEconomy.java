@@ -11,6 +11,7 @@ import com.bettercontent.economy.trader.VillagerCatalogue;
 import com.bettercontent.economy.trader.WanderingTraderGameTests;
 import com.bettercontent.economy.trader.WanderingTraderCatalogue;
 import com.bettercontent.economy.trader.WanderingTraderVisits;
+import com.bettercontent.economy.ops.ObservationalExportCommand;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterGameTestsEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -34,7 +35,10 @@ public final class BetterContentEconomy {
         MinecraftForge.EVENT_BUS.register(SpiritAcquisition.class);
         MinecraftForge.EVENT_BUS.register(ProfessionBehaviors.class);
         MinecraftForge.EVENT_BUS.register(AuthoredTradeSignals.class);
-        MinecraftForge.EVENT_BUS.addListener((RegisterCommandsEvent event) -> SpiritPouchAccess.register(event.getDispatcher()));
+        MinecraftForge.EVENT_BUS.addListener((RegisterCommandsEvent event) -> {
+            SpiritPouchAccess.register(event.getDispatcher());
+            ObservationalExportCommand.register(event.getDispatcher());
+        });
     }
 
     private void registerGameTests(RegisterGameTestsEvent event) {

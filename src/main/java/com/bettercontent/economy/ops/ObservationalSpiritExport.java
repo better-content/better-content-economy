@@ -35,7 +35,10 @@ public final class ObservationalSpiritExport {
     public static String csv(boolean enabled, int permission, List<CreditSnapshot> credits,
                              List<Exchange> exchanges) {
         if (!allowed(enabled, permission) || !bounded(credits, exchanges)) return "";
-        StringBuilder out = new StringBuilder("kind,identity,value,merchant\n");
+        StringBuilder out = new StringBuilder("kind,identity,value,merchant\n")
+                .append("activity,aggregate,").append(credits.size()).append(",\n")
+                .append("regional_mix,unknown,,\n")
+                .append("purchases,unknown,,\n");
         for (CreditSnapshot snapshot : credits) {
             for (CurrencyIdentity identity : CurrencyIdentity.values()) {
                 int issued = snapshot.issued().getOrDefault(identity, 0);
@@ -56,8 +59,10 @@ public final class ObservationalSpiritExport {
         if (!allowed(enabled, permission) || !bounded(credits, exchanges)) return "";
         long issued = credits.stream().mapToLong(c -> total(c.issued())).sum();
         long pending = credits.stream().mapToLong(c -> total(c.pending())).sum();
-        StringBuilder out = new StringBuilder("{\"issued\":").append(issued)
-                .append(",\"pending\":").append(pending).append(",\"exchanges\":[");
+        StringBuilder out = new StringBuilder("{\"activity\":").append(credits.size())
+                .append(",\"issued\":").append(issued)
+                .append(",\"pending\":").append(pending)
+                .append(",\"regionalMix\":\"unknown\",\"purchases\":\"unknown\",\"exchanges\":[");
         for (int i = 0; i < exchanges.size(); i++) {
             if (i > 0) out.append(',');
             Exchange e = exchanges.get(i);
