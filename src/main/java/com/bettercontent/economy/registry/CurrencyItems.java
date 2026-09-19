@@ -17,7 +17,7 @@ public final class CurrencyItems {
 
     static {
         for (CurrencyIdentity identity : CurrencyIdentity.values()) {
-            ITEMS_BY_ID.put(identity, ITEMS.register(identity.id() + "_spirit", () -> new Item(new Item.Properties())));
+            ITEMS_BY_ID.put(identity, ITEMS.register(identity.id() + "_spirit", () -> new CurrencyItem(identity)));
         }
     }
 
