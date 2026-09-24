@@ -1,4 +1,4 @@
-package com.bettercontent.economy.mixin.client;
+package com.bettercontent.economy.client;
 
 import com.bettercontent.economy.BetterContentEconomy;
 import com.bettercontent.economy.trader.TraderCampPostRenderer;
