@@ -115,6 +115,8 @@ public final class WanderingTraderGameTests {
             MerchantOffers offers = trader.getOffers();
             long eggs = offers.stream().map(MerchantOffer::getResult)
                     .filter(stack -> stack.is(Items.VILLAGER_SPAWN_EGG)).count();
+            long fontMaps = offers.stream().filter(offer -> offer.getResult().getTag() != null
+                    && offer.getResult().getTag().contains("dimension_drink:font_definition_id")).count();
             boolean matchingPayment = offers.stream().allMatch(offer ->
                     offer.getBaseCostA().is(CurrencyItems.item(theme.currencyIdentity()).get()));
             MerchantOffer eggOffer = offers.stream().filter(offer -> offer.getResult().is(Items.VILLAGER_SPAWN_EGG))
@@ -122,9 +124,11 @@ public final class WanderingTraderGameTests {
             String profession = eggOffer == null ? "" : eggOffer.getResult().getOrCreateTagElement("EntityTag")
                     .getCompound("VillagerData").getString("profession");
             String expectedProfession = SpiritProfessions.definition(theme.spirit()).profession().getId().toString();
-            if (offers.size() != 14 || eggs != 1 || !matchingPayment || !expectedProfession.equals(profession)) {
+            if (offers.size() != 14 + fontMaps || fontMaps > 1 || eggs != 1
+                    || !matchingPayment || !expectedProfession.equals(profession)) {
                 helper.fail("Invalid " + theme.id() + " market: offers=" + offers.size()
-                        + " eggs=" + eggs + " payment=" + matchingPayment + " profession=" + profession);
+                        + " eggs=" + eggs + " fontMaps=" + fontMaps
+                        + " payment=" + matchingPayment + " profession=" + profession);
                 return;
             }
             trader.discard();
