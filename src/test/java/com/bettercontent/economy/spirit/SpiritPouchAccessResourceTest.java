@@ -20,4 +20,17 @@ final class SpiritPouchAccessResourceTest {
         assertTrue(source.contains("new SpiritPouchContainer"));
         assertTrue(source.contains("buffer.writeItem(stack)"));
     }
+
+    @Test
+    void currencySlotMixinIsRegisteredAndOnlyAcceptsEconomyCurrencies() throws Exception {
+        final String mixin = Files.readString(Path.of(
+                "src/main/java/com/bettercontent/economy/mixin/SpiritPouchCurrencySlotMixin.java"));
+        final String config = Files.readString(Path.of("src/main/resources/better_content_economy.mixins.json"));
+
+        assertTrue(config.contains("SpiritPouchCurrencySlotMixin"));
+        assertTrue(mixin.contains("@Mixin(targets = \"com.sammy.malum.common.container.SpiritPouchContainer$1\""));
+        assertTrue(mixin.contains("@Inject(method = \"mayPlace\""));
+        assertTrue(mixin.contains("CurrencyIdentity.fromItemId(ForgeRegistries.ITEMS.getKey(stack.getItem())) != null"));
+        assertTrue(mixin.contains("callback.setReturnValue(true)"));
+    }
 }

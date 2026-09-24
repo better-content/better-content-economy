@@ -1,0 +1,8 @@
+hideServerAddress:true
+lang:en_us
+pauseOnLostFocus:false
+renderDistance:12
+simulationDistance:8
+guiScale:3
+fullscreen:false
+soundCategory_master:0.0

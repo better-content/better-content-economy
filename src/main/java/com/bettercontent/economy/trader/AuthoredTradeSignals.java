@@ -13,6 +13,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.TradeWithVillagerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
+import com.bettercontent.economy.spirit.CurrencyIdentity;
 
 /** Emits learning evidence after a successful authored spirit payment. */
 public final class AuthoredTradeSignals {
@@ -23,9 +24,13 @@ public final class AuthoredTradeSignals {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         SpiritPayment payment = paidSpirit(event.getMerchantOffer());
         if (payment == null || !isAuthored(event.getAbstractVillager())) return;
-        ObservationalEconomyData.get(player.server.overworld()).recordPurchase(
-                com.bettercontent.economy.spirit.CurrencyIdentity.fromItemId(payment.spirit()), payment.count());
+        CurrencyIdentity identity = mappedCurrency(payment.spirit());
         ResourceLocation merchant = ForgeRegistries.ENTITY_TYPES.getKey(event.getAbstractVillager().getType());
+        if (identity != null && merchant != null) {
+            ObservationalEconomyData observations = ObservationalEconomyData.get(player.server.overworld());
+            observations.recordPurchase(identity, payment.count());
+            observations.recordExchange(identity, payment.count(), merchant.toString());
+        }
         MinecraftForge.EVENT_BUS.post(new AuthoredSpiritTradeEvent(
                 player, payment.spirit(), payment.count(), merchant));
     }
@@ -42,9 +47,15 @@ public final class AuthoredTradeSignals {
         return second == null ? null : new SpiritPayment(second, offer.getCostB().getCount());
     }
 
+    /** Maps only the eight authored currencies; the returned item id remains available to events. */
+    static CurrencyIdentity mappedCurrency(final ResourceLocation id) {
+        CurrencyIdentity current = CurrencyIdentity.fromItemId(id);
+        return current != null ? current : CurrencyIdentity.fromLegacyNativeSpirit(id);
+    }
+
     private static ResourceLocation spiritId(final ItemStack stack) {
         ResourceLocation id = ForgeRegistries.ITEMS.getKey(stack.getItem());
-        return id != null && "malum".equals(id.getNamespace()) && id.getPath().endsWith("_spirit") ? id : null;
+        return id != null && id.getPath().endsWith("_spirit") ? id : null;
     }
 
     record SpiritPayment(ResourceLocation spirit, int count) {}

@@ -34,7 +34,7 @@ public final class ObservationalExportCommand {
             SpiritCreditLedger ledger = data.ledger(player.getUUID());
             snapshots.add(new ObservationalSpiritExport.CreditSnapshot(ledger.issued(), ledger.pending()));
         }
-        String json = ObservationalSpiritExport.json(true, 2, snapshots, java.util.List.of(), observations.activity(), observations.regional(), observations.purchases());
+        String json = ObservationalSpiritExport.json(true, 2, snapshots, observations.exchanges(), observations.activity(), observations.regional(), observations.purchases());
         source.sendSuccess(() -> Component.literal(json), true);
         return snapshots.size();
     }

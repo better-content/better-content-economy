@@ -17,6 +17,13 @@ java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
+val visualHarness by sourceSets.creating {
+    compileClasspath += sourceSets.main.get().output
+    runtimeClasspath += sourceSets.main.get().output
+}
+configurations[visualHarness.implementationConfigurationName].extendsFrom(configurations.implementation.get())
+configurations[visualHarness.runtimeOnlyConfigurationName].extendsFrom(configurations.runtimeOnly.get())
+
 minecraft {
     mappings("official", property("minecraft_version") as String)
     copyIdeResources = true
@@ -34,14 +41,25 @@ minecraft {
                 }
             }
         }
-        create("client")
-        create("server") { arg("--nogui") }
+        val baseClient = create("client")
+        val baseServer = create("server") { arg("--nogui") }
         create("gameTestServer") {
             workingDirectory(project.file("run-gametest"))
             property("forge.enableGameTest", "true")
             property("forge.gameTestServer", "true")
             property("forge.enabledGameTestNamespaces", property("mod_id") as String)
             arg("--nogui")
+        }
+        create("visualServer") {
+            parent(baseServer)
+            workingDirectory(project.file("run-visual-server"))
+            mods { create("better_content_economy_visual_harness") { source(visualHarness) } }
+        }
+        create("visualClient") {
+            parent(baseClient)
+            workingDirectory(project.file("run-visual-client"))
+            args("--quickPlayMultiplayer", "127.0.0.1:25565", "--width", "1600", "--height", "900")
+            mods { create("better_content_economy_visual_harness") { source(visualHarness) } }
         }
     }
 }
@@ -59,6 +77,48 @@ repositories {
     mavenCentral()
 }
 
+// CI and release builds provide verified runtime JARs explicitly. Ordinary local builds
+// use the canonical sibling artifact produced by Dimension Drink's stageRuntimeJar task.
+val providerDirectory = providers.environmentVariable("BC_CUSTOM_MOD_JAR_DIR").orNull
+require(providerDirectory == null || providerDirectory.isNotBlank()) {
+    "BC_CUSTOM_MOD_JAR_DIR must not be blank"
+}
+val dimensionDrinkJar = if (providerDirectory == null) {
+    file("../dimension-drink/build/libs/dimension-drink-1.0.0.jar")
+} else {
+    file(providerDirectory).resolve("dimension-drink-1.0.0.jar")
+}
+require(dimensionDrinkJar.isFile) {
+    "Missing Better Content provider dimension-drink-1.0.0.jar at $dimensionDrinkJar; prepare BC_CUSTOM_MOD_JAR_DIR or build dimension-drink first"
+}
+val betterContentFixesJar = if (providerDirectory == null) {
+    file("../better-content-fixes/build/libs/better-content-fixes-0.1.8.jar")
+} else {
+    file(providerDirectory).resolve("better-content-fixes-0.1.8.jar")
+}
+require(betterContentFixesJar.isFile) {
+    "Missing Better Content provider better-content-fixes-0.1.8.jar at $betterContentFixesJar; prepare BC_CUSTOM_MOD_JAR_DIR or build better-content-fixes first"
+}
+
+// Resolve sibling reobfuscated mods through ForgeGradle so the GameTest dev
+// runtime remaps them into the same names as its Minecraft classes.
+repositories {
+    ivy {
+        name = "dimensionDrinkLocal"
+        url = uri(dimensionDrinkJar.parentFile)
+        patternLayout { artifact("[artifact]-[revision].[ext]") }
+        metadataSources { artifact() }
+        content { includeGroup("bettercontent.local.dimensiondrink") }
+    }
+    ivy {
+        name = "betterContentFixesLocal"
+        url = uri(betterContentFixesJar.parentFile)
+        patternLayout { artifact("[artifact]-[revision].[ext]") }
+        metadataSources { artifact() }
+        content { includeGroup("bettercontent.local.fixes") }
+    }
+}
+
 dependencies {
     minecraft("net.minecraftforge:forge:${property("minecraft_version")}-${property("forge_version")}")
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
@@ -68,6 +128,15 @@ dependencies {
     runtimeOnly(fg.deobf("dev.engine-room.flywheel:flywheel-forge-${property("minecraft_version")}:${property("flywheel_version")}"))
     implementation(fg.deobf("com.tterrag.registrate:Registrate:${property("registrate_version")}"))
     implementation(jarJar("io.github.llamalad7:mixinextras-forge:[0.5.0,0.6.0)")!!)
+    implementation(jarJar("net.java.dev.jna:jna:[5.14.0,5.14.0]")!!)
+    implementation(jarJar("net.java.dev.jna:jna-platform:[5.14.0,5.14.0]")!!)
+    compileOnly(fg.deobf("bettercontent.local.dimensiondrink:dimension-drink:1.0.0"))
+    // ForgeGradle's GameTest launch uses the main runtime classpath. Keep the
+    // provider mod available there as well as at compile time.
+    runtimeOnly(fg.deobf("bettercontent.local.dimensiondrink:dimension-drink:1.0.0"))
+    // Flat file dependencies do not carry Forge mod dependencies transitively.
+    runtimeOnly(fg.deobf("bettercontent.local.fixes:better-content-fixes:0.1.8"))
+    runtimeOnly(fg.deobf("curse.maven:kotlin-for-forge-351264:7291067"))
     compileOnly(fg.deobf("curse.maven:hyle-609850:7736352"))
     compileOnly(fg.deobf("curse.maven:thirst-was-taken-679270:6660408"))
     compileOnly(fg.deobf("curse.maven:cold-sweat-506194:7893262"))
@@ -126,6 +195,11 @@ tasks.withType<JavaCompile>().configureEach {
     options.release.set(17)
 }
 
+tasks.named("compileVisualHarnessJava") { dependsOn(tasks.named("classes")) }
+tasks.withType<JavaExec>().configureEach {
+    if (name == "runVisualServer") standardInput = System.`in`
+}
+
 tasks.test {
     useJUnitPlatform()
     finalizedBy(tasks.jacocoTestReport)
@@ -148,6 +222,21 @@ tasks.register("verifyFull") {
     description = "Runs the full verification lane including headless Forge game tests."
     dependsOn(tasks.named("verifyFast"))
     dependsOn(tasks.named("headlessGameTest"))
+}
+
+tasks.register("verifyVisualHarness") {
+    group = "verification"
+    description = "Checks that the trader camp visual harness produced its reviewed screenshot set."
+    doLast {
+        val root = layout.projectDirectory.dir("run-visual-client/screenshots").asFile
+        val captures = listOf("camps-overview.png", "awning-profile.png", "awning-detail.png")
+        captures.forEach { name ->
+            val image = root.resolve(name)
+            if (!image.isFile || image.length() == 0L) {
+                throw GradleException("Trader camp visual harness did not produce $name")
+            }
+        }
+    }
 }
 
 val resetGameTestMods = tasks.register<Delete>("resetGameTestMods") {

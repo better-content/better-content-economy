@@ -11,6 +11,8 @@ import com.bettercontent.economy.trader.VillagerCatalogue;
 import com.bettercontent.economy.trader.WanderingTraderGameTests;
 import com.bettercontent.economy.trader.WanderingTraderCatalogue;
 import com.bettercontent.economy.trader.WanderingTraderVisits;
+import com.bettercontent.economy.trader.LocalMarketNetwork;
+import com.bettercontent.economy.trader.TraderCampRegistries;
 import com.bettercontent.economy.ops.ObservationalExportCommand;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterGameTestsEvent;
@@ -27,6 +29,8 @@ public final class BetterContentEconomy {
         var modBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, EconomyConfig.SPEC);
         modBus.addListener(this::registerGameTests);
+        LocalMarketNetwork.register();
+        TraderCampRegistries.register(modBus);
         SpiritProfessions.register(modBus);
         CurrencyItems.register(modBus);
         MinecraftForge.EVENT_BUS.register(WanderingTraderVisits.class);

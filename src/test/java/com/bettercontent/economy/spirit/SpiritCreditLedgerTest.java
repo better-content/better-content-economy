@@ -1,12 +1,24 @@
 package com.bettercontent.economy.spirit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Comparator;
+import net.minecraft.SharedConstants;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtIo;
 import org.junit.jupiter.api.Test;
 
 final class SpiritCreditLedgerTest {
@@ -93,6 +105,151 @@ final class SpiritCreditLedgerTest {
         restored.acknowledge(retry.id(), 100);
         assertEquals(7, total(restored.issued()));
         assertNull(restored.retryDelivery());
+    }
+
+    @Test
+    void pickedUpStackReceiptSurvivesSavedDataReloadUntilDeliveryAcknowledgement() {
+        UUID player = UUID.randomUUID();
+        SpiritCreditData data = new SpiritCreditData();
+        SpiritCreditLedger ledger = data.ledger(player);
+        ledger.credit(Map.of(CurrencyIdentity.WORK, 40), 50);
+        SpiritCreditLedger.Delivery delivery = ledger.beginDueDelivery(50);
+
+        assertTrue(data.recordStackReceipt(delivery.id(), 3));
+        assertFalse(data.recordStackReceipt(UUID.randomUUID(), 4));
+        assertFalse(data.recordStackReceipt(delivery.id(), -1));
+
+        SpiritCreditData restoredData = SpiritCreditData.load(data.save(new CompoundTag()));
+        SpiritCreditLedger restored = restoredData.ledger(player);
+        assertEquals(Set.of(3), restoredData.inFlightStackReceipts(delivery.id()));
+        assertEquals(delivery.id(), restored.retryDelivery().id());
+        restored.acknowledge(delivery.id(), 100);
+        assertEquals(Set.of(), restoredData.inFlightStackReceipts(delivery.id()));
+    }
+
+    @Test
+    void failedInsertionIsNotAutomaticallyRetriedAfterItsClaimWasSaved() {
+        UUID player = UUID.randomUUID();
+        SpiritCreditData data = new SpiritCreditData();
+        SpiritCreditLedger ledger = data.ledger(player);
+        ledger.credit(Map.of(CurrencyIdentity.WORK, 12), 50);
+        SpiritCreditLedger.Delivery delivery = ledger.beginDueDelivery(50);
+
+        // Production records and saves this claim before calling the level insertion API.
+        assertTrue(data.recordStackReceipt(delivery.id(), 0));
+        SpiritCreditData restoredData = SpiritCreditData.load(data.save(new CompoundTag()));
+        SpiritCreditLedger restored = restoredData.ledger(player);
+        assertEquals(delivery.id(), restored.retryDelivery().id());
+        assertEquals(Set.of(0), restoredData.inFlightStackReceipts(delivery.id()));
+
+        // A false insertion result is ambiguous once the attempt boundary has been crossed.
+        // A retry must skip it and finish the delivery without another insertion attempt.
+        assertFalse(restoredData.recordStackReceipt(delivery.id(), 0));
+        assertTrue(SpiritDeliveryPlan.isComplete(
+                SpiritDeliveryPlan.plan(delivery.credits(), ignored -> 64),
+                restoredData.inFlightStackReceipts(delivery.id())));
+        restored.acknowledge(delivery.id(), 100);
+        assertEquals(12, total(restored.issued()));
+        assertNull(restored.retryDelivery());
+    }
+
+    @Test
+    void ambiguousCrashAfterInsertionCannotIssueTheSameStackAgain() {
+        UUID player = UUID.randomUUID();
+        SpiritCreditData data = new SpiritCreditData();
+        SpiritCreditLedger ledger = data.ledger(player);
+        ledger.credit(Map.of(CurrencyIdentity.TEMPO, 5), 50);
+        SpiritCreditLedger.Delivery delivery = ledger.beginDueDelivery(50);
+
+        // The durable claim precedes insertion. Simulate insertion succeeding followed by a
+        // crash before delivery acknowledgement or a later pickup receipt.
+        assertTrue(data.recordStackReceipt(delivery.id(), 0));
+        SpiritCreditData restoredData = SpiritCreditData.load(data.save(new CompoundTag()));
+        SpiritCreditLedger restored = restoredData.ledger(player);
+        assertFalse(restoredData.recordStackReceipt(delivery.id(), 0));
+        assertEquals(Set.of(0), restoredData.inFlightStackReceipts(delivery.id()));
+        restored.acknowledge(delivery.id(), 100);
+        assertEquals(5, total(restored.issued()));
+        assertNull(restored.retryDelivery());
+    }
+
+    @Test
+    void successfulStackReceiptAndAcknowledgementSurviveReloadExactlyOnce() {
+        UUID player = UUID.randomUUID();
+        SpiritCreditData data = new SpiritCreditData();
+        SpiritCreditLedger ledger = data.ledger(player);
+        ledger.credit(Map.of(CurrencyIdentity.IMPACT, 9), 50);
+        SpiritCreditLedger.Delivery delivery = ledger.beginDueDelivery(50);
+        assertTrue(data.recordStackReceipt(delivery.id(), 0));
+        ledger.acknowledge(delivery.id(), 100);
+
+        SpiritCreditData restoredData = SpiritCreditData.load(data.save(new CompoundTag()));
+        SpiritCreditLedger restored = restoredData.ledger(player);
+        assertEquals(9, total(restored.issued()));
+        assertEquals(0, total(restored.pending()) + total(restored.inFlight()));
+        assertNull(restored.retryDelivery());
+    }
+
+    @Test
+    void savedDataFileIsForcedAtomicallyAndWriteFailureRemainsDirty() throws IOException {
+        SharedConstants.tryDetectVersion();
+        Path root = Path.of(System.getProperty("user.home"), ".tmp", "spirit-credit-save-tests");
+        Files.createDirectories(root);
+        Path directory = Files.createDirectory(root.resolve(UUID.randomUUID().toString()));
+        try {
+            UUID player = UUID.randomUUID();
+            SpiritCreditData data = new SpiritCreditData();
+            SpiritCreditLedger ledger = data.ledger(player);
+            ledger.credit(Map.of(CurrencyIdentity.IMPACT, 8), 50);
+            SpiritCreditLedger.Delivery delivery = ledger.beginDueDelivery(50);
+            assertTrue(data.recordStackReceipt(delivery.id(), 0));
+            data.setDirty();
+
+            Path saveFile = directory.resolve("spirit-credits.dat");
+            data.save(saveFile.toFile());
+            assertFalse(data.isDirty());
+            SpiritCreditData restored = SpiritCreditData.load(NbtIo.readCompressed(saveFile.toFile()).getCompound("data"));
+            assertEquals(Set.of(0), restored.inFlightStackReceipts(delivery.id()));
+            assertEquals(delivery.id(), restored.ledger(player).retryDelivery().id());
+
+            Path blocker = directory.resolve("not-a-directory");
+            Files.writeString(blocker, "occupied");
+            data.setDirty();
+            assertThrows(UncheckedIOException.class,
+                    () -> data.save(blocker.resolve("spirit-credits.dat").toFile()));
+            assertTrue(data.isDirty(), "a failed durable write must not clear the SavedData dirty flag");
+        } finally {
+            try (var paths = Files.walk(directory)) {
+                for (Path path : paths.sorted(Comparator.reverseOrder()).toList()) Files.deleteIfExists(path);
+            }
+        }
+    }
+
+    @Test
+    void directorySyncPolicyAvoidsWindowsDirectoryHandlesButKeepsUnixSync() {
+        assertFalse(SpiritCreditData.supportsParentDirectoryForce("Windows 11"));
+        assertTrue(SpiritCreditData.supportsParentDirectoryForce("Linux"));
+        assertTrue(SpiritCreditData.supportsParentDirectoryForce("Mac OS X"));
+    }
+
+    @Test
+    void windowsReplacementUsesWriteThroughAndFailsClosedOnNativeFailure() {
+        Path source = Path.of("receipt.tmp");
+        Path target = Path.of("receipt.dat");
+        int requiredFlags = com.sun.jna.platform.win32.WinBase.MOVEFILE_REPLACE_EXISTING
+                | com.sun.jna.platform.win32.WinBase.MOVEFILE_WRITE_THROUGH;
+        int[] observedFlags = {-1};
+
+        assertDoesNotThrow(() -> SpiritCreditData.replaceSavedFile(source, target, "Windows 11",
+                (from, to, flags) -> {
+                    assertEquals(source.toString(), from);
+                    assertEquals(target.toString(), to);
+                    observedFlags[0] = flags;
+                    return true;
+                }));
+        assertEquals(requiredFlags, observedFlags[0]);
+        assertThrows(IOException.class, () -> SpiritCreditData.replaceSavedFile(source, target, "Windows 11",
+                (from, to, flags) -> false));
     }
 
     @Test

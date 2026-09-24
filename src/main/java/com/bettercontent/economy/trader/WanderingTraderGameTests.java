@@ -9,6 +9,7 @@ import com.mojang.authlib.GameProfile;
 import com.sammy.malum.common.entity.spirit.SpiritItemEntity;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,6 +19,7 @@ import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.phys.AABB;
@@ -35,6 +37,71 @@ public final class WanderingTraderGameTests {
         WanderingTraderVisits.applyTheme(trader, WanderingTraderTheme.INFERNAL, true);
         if (!"infernal".equals(trader.getPersistentData().getString(WanderingTraderVisits.THEME_TAG))) {
             helper.fail("Expected the spirit theme to persist");
+            return;
+        }
+        helper.succeed();
+    }
+
+    @GameTest(templateNamespace = BetterContentEconomy.MOD_ID, template = "empty", timeoutTicks = 100)
+    public static void scheduledTraderGetsMovableAwningPost(final GameTestHelper helper) {
+        for (int x = -1; x <= 12; x++) {
+            for (int z = -1; z <= 12; z++) helper.setBlock(new BlockPos(x, 1, z), Blocks.STONE);
+        }
+        WanderingTrader trader = helper.spawn(EntityType.WANDERING_TRADER, new BlockPos(2, 2, 2));
+        WanderingTraderVisits.applyTheme(trader, WanderingTraderTheme.AQUEOUS, true);
+        WanderingTraderScheduleData schedule = WanderingTraderScheduleData.get(helper.getLevel());
+        schedule.completeVisit(helper.getLevel().getGameTime(), 1000, trader.getUUID());
+        if (!TraderCampService.createForVisit(trader, WanderingTraderTheme.AQUEOUS)) {
+            helper.fail("Scheduled trader could not find a safe campsite");
+            return;
+        }
+        BlockPos original = BlockPos.of(trader.getPersistentData().getLong(TraderCampService.CAMP_POS_TAG));
+        if (!(helper.getLevel().getBlockEntity(original) instanceof TraderCampPostBlockEntity post)
+                || !trader.getUUID().equals(post.traderId()) || !"aqueous".equals(post.themeId())) {
+            helper.fail("Camp post did not retain the linked trader and theme");
+            return;
+        }
+
+        var stored = post.saveForItem();
+        BlockPos moved = original.offset(3, 0, 2);
+        helper.getLevel().setBlock(original, Blocks.AIR.defaultBlockState(), 3);
+        helper.getLevel().getChunkAt(moved);
+        // CampPosTag contains absolute world coordinates. GameTestHelper.setBlock
+        // interprets its positions relative to the structure, so mutate the level
+        // directly here to place the replacement at the recorded absolute position.
+        helper.getLevel().setBlockAndUpdate(moved.below(), Blocks.STONE.defaultBlockState());
+        helper.getLevel().setBlockAndUpdate(moved, TraderCampRegistries.POST.get().defaultBlockState()
+                .setValue(TraderCampPostBlock.FACING, Direction.EAST));
+        if (!(helper.getLevel().getBlockEntity(moved) instanceof TraderCampPostBlockEntity movedPost)) {
+            helper.fail("Re-placed camp post has no block entity at " + moved
+                    + " (state=" + helper.getLevel().getBlockState(moved)
+                    + ", support=" + helper.getLevel().getBlockState(moved.below()) + ")");
+            return;
+        }
+        movedPost.load(stored);
+        movedPost.retargetLinkedTrader();
+        TraderCampData.get(helper.getLevel()).setTarget(trader.getUUID(),
+                helper.getLevel().dimension().location().toString(), moved, Direction.EAST);
+        BlockPos destination = moved.relative(Direction.EAST);
+        if (trader.getPersistentData().getLong(TraderCampService.CAMP_POS_TAG) != moved.asLong()
+                || !TraderCampService.moveToCamp(trader)
+                || trader.distanceToSqr(net.minecraft.world.phys.Vec3.atCenterOf(destination)) > 2.25D) {
+            helper.fail("Moving the post did not retarget and move its trader");
+            return;
+        }
+
+        var offers = trader.getOffers();
+        for (MerchantOffer offer : offers) {
+            while (!offer.isOutOfStock()) offer.increaseUses();
+        }
+        if (!TraderCampService.stockEmpty(trader, helper.getLevel())) {
+            helper.fail("Trader stock was not recognized as empty");
+            return;
+        }
+        TraderCampService.depart(trader, helper.getLevel());
+        if (!trader.isRemoved() || !helper.getLevel().getBlockState(moved).isAir()
+                || schedule.activeTraderId() != null) {
+            helper.fail("Sold-out trader did not leave and remove its post");
             return;
         }
         helper.succeed();

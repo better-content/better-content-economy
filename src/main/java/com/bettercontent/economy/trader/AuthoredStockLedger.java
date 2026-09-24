@@ -39,4 +39,20 @@ public final class AuthoredStockLedger {
         for (String offer : tag.getAllKeys()) ledger.remaining.put(offer, Math.max(0, tag.getInt(offer)));
         return ledger;
     }
+
+    /** Coalesces the former payment/price/result keys into one physical output-item balance. */
+    static AuthoredStockLedger migrateOfferKeys(final CompoundTag tag) {
+        AuthoredStockLedger ledger = new AuthoredStockLedger();
+        for (String oldKey : tag.getAllKeys()) {
+            int output = oldKey.lastIndexOf("=>");
+            int count = oldKey.lastIndexOf('#');
+            if (output < 0 || count <= output + 2) continue;
+            String commodity = oldKey.substring(output + 2, count);
+            int units = Math.max(0, tag.getInt(oldKey));
+            if (!commodity.isBlank() && units > 0) {
+                ledger.remaining.merge(commodity, units, Math::addExact);
+            }
+        }
+        return ledger;
+    }
 }

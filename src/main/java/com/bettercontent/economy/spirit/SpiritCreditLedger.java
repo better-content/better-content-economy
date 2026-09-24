@@ -1,7 +1,9 @@
 package com.bettercontent.economy.spirit;
 
 import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -14,6 +16,7 @@ public final class SpiritCreditLedger {
     private final EnumMap<CurrencyIdentity, Integer> issued = empty();
     private UUID inFlightId;
     private EnumMap<CurrencyIdentity, Integer> inFlight;
+    private final Set<Integer> inFlightStackReceipts = new HashSet<>();
     private long nextReleaseAt;
 
     public void credit(final Map<CurrencyIdentity, Integer> credits, final long dueAt) {
@@ -25,6 +28,7 @@ public final class SpiritCreditLedger {
         if (inFlight != null || pending.isEmpty() || gameTime < nextReleaseAt) return null;
         inFlightId = UUID.randomUUID();
         inFlight = copy(pending);
+        inFlightStackReceipts.clear();
         pending.clear();
         return new Delivery(inFlightId, Map.copyOf(inFlight));
     }
@@ -38,7 +42,17 @@ public final class SpiritCreditLedger {
         merge(issued, inFlight);
         inFlightId = null;
         inFlight = null;
+        inFlightStackReceipts.clear();
         nextReleaseAt = pending.isEmpty() ? 0 : nextDueAt;
+    }
+
+    public boolean recordStackReceipt(final UUID deliveryId, final int stackIndex) {
+        if (stackIndex < 0 || inFlight == null || !deliveryId.equals(inFlightId)) return false;
+        return inFlightStackReceipts.add(stackIndex);
+    }
+
+    public Set<Integer> inFlightStackReceipts(final UUID deliveryId) {
+        return deliveryId.equals(inFlightId) ? Set.copyOf(inFlightStackReceipts) : Set.of();
     }
 
     /** Keeps the same durable delivery ID and amount for a later retry. */
@@ -57,10 +71,23 @@ public final class SpiritCreditLedger {
                         final UUID restoredInFlightId,
                         final Map<CurrencyIdentity, Integer> restoredInFlight,
                         final long restoredNextReleaseAt) {
+        restore(restoredPending, restoredIssued, restoredInFlightId, restoredInFlight, Set.of(), restoredNextReleaseAt);
+    }
+
+    public void restore(final Map<CurrencyIdentity, Integer> restoredPending,
+                        final Map<CurrencyIdentity, Integer> restoredIssued,
+                        final UUID restoredInFlightId,
+                        final Map<CurrencyIdentity, Integer> restoredInFlight,
+                        final Set<Integer> restoredStackReceipts,
+                        final long restoredNextReleaseAt) {
         pending.clear(); pending.putAll(positive(restoredPending));
         issued.clear(); issued.putAll(positive(restoredIssued));
         inFlightId = restoredInFlightId;
         inFlight = restoredInFlightId == null ? null : copy(restoredInFlight);
+        inFlightStackReceipts.clear();
+        if (inFlightId != null && restoredStackReceipts != null) {
+            restoredStackReceipts.stream().filter(index -> index != null && index >= 0).forEach(inFlightStackReceipts::add);
+        }
         nextReleaseAt = restoredNextReleaseAt;
     }
 

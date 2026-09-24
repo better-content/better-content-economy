@@ -34,4 +34,15 @@ final class AuthoredStockLedgerTest {
         assertEquals(0, reloaded.remaining("netherite"));
         assertFalse(reloaded.purchase("netherite", 1));
     }
+
+    @Test void repeatedCatalogueSeedingDoesNotReplenishSpentStock() {
+        AuthoredStockLedger ledger = new AuthoredStockLedger();
+        ledger.seed("stable-offer", 3);
+        assertTrue(ledger.purchase("stable-offer", 2));
+
+        ledger.seed("stable-offer", 3);
+        ledger.seed("stable-offer", 99);
+
+        assertEquals(1, ledger.remaining("stable-offer"));
+    }
 }

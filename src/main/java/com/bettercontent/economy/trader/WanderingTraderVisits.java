@@ -27,9 +27,10 @@ public final class WanderingTraderVisits {
         final WanderingTraderTheme storedTheme = WanderingTraderTheme.fromId(storedId);
         if (storedTheme != null) {
             applyTheme(trader, storedTheme, false);
-            return;
+        } else {
+            applyTheme(trader, WanderingTraderTheme.forUuid(trader.getUUID()), false);
         }
-        applyTheme(trader, WanderingTraderTheme.forUuid(trader.getUUID()), false);
+        TraderCampService.restoreOnJoin(trader);
     }
 
     public static int tickScheduledVisit(
@@ -80,6 +81,11 @@ public final class WanderingTraderVisits {
 
         final WanderingTraderTheme theme = schedule.nextTheme();
         applyTheme(trader, theme, true);
+        if (!TraderCampService.createForVisit(trader, theme)) {
+            trader.discard();
+            schedule.scheduleRetry(gameTime, EconomyConfig.wanderingTraderRetryDelay());
+            return 0;
+        }
         schedule.completeVisit(gameTime, EconomyConfig.wanderingTraderVisitInterval(), trader.getUUID());
         if (EconomyConfig.wanderingTraderAnnounceArrival()) {
             announceArrival(level, trader, theme);

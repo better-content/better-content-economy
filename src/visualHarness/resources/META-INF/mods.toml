@@ -1,0 +1,16 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="All Rights Reserved"
+
+[[mods]]
+modId="better_content_economy_visual_harness"
+version="1"
+displayName="Better Content Economy Visual Harness"
+description='''Non-shipping client/server screenshot harness for wandering trader camp posts.'''
+
+[[dependencies.better_content_economy_visual_harness]]
+modId="better_content_economy"
+mandatory=true
+versionRange="[1.0.0,)"
+ordering="AFTER"
+side="BOTH"

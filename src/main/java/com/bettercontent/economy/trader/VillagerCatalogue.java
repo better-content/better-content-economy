@@ -6,6 +6,8 @@ import com.bettercontent.economy.registry.CurrencyItems;
 import com.bettercontent.economy.spirit.CurrencyIdentity;
 import com.bettercontent.economy.spirit.SpiritKind;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -25,13 +27,20 @@ public final class VillagerCatalogue {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void register(final VillagerTradesEvent event) {
-        event.getTrades().clear();
         SpiritKind kind = SpiritProfessions.kindOf(event.getType());
-        if (kind == null) return;
+        replaceListings(kind, event.getTrades());
+    }
+
+    static boolean replaceListings(
+            final SpiritKind kind,
+            final Map<Integer, List<VillagerTrades.ItemListing>> trades) {
+        if (kind == null) return false;
+        trades.clear();
         for (EconomyPolicy.VillagerRow row : EconomyPolicy.villagerRows(kind)) {
-            event.getTrades().computeIfAbsent(row.level(), ignored -> new ArrayList<>())
+            trades.computeIfAbsent(row.level(), ignored -> new ArrayList<>())
                     .add(new SpiritListing(kind, row));
         }
+        return true;
     }
 
     public static int rowCount() { return EconomyPolicy.villagerRowCount(); }

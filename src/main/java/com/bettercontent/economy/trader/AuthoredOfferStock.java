@@ -1,18 +1,28 @@
 package com.bettercontent.economy.trader;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.trading.MerchantOffer;
 
-/** Stable offer identity shared by authored merchants across save/reload. */
+/** Shared inventory identity for a physical result commodity, independent of price or seller. */
 public final class AuthoredOfferStock {
     private AuthoredOfferStock() {}
 
     public static String key(final MerchantOffer offer) {
-        return id(offer.getBaseCostA()) + ":" + id(offer.getCostB()) + "=>" + id(offer.getResult());
+        return key(id(offer.getResult()));
     }
 
-    private static String id(final net.minecraft.world.item.ItemStack stack) {
-        var id = net.minecraftforge.registries.ForgeRegistries.ITEMS.getKey(stack.getItem());
-        return (id == null ? "unknown" : id.toString()) + "#" + stack.getCount();
+    static String key(final ResourceLocation commodity) {
+        return commodity == null ? "unknown" : commodity.toString();
     }
 
+    static String key(final ResourceLocation costA, final int costACount,
+                      final ResourceLocation costB, final int costBCount,
+                      final ResourceLocation result, final int resultCount) {
+        return key(result);
+    }
+
+    private static ResourceLocation id(final net.minecraft.world.item.ItemStack stack) {
+        if (stack.isEmpty()) return null;
+        return net.minecraftforge.registries.ForgeRegistries.ITEMS.getKey(stack.getItem());
+    }
 }
