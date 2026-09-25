@@ -1,7 +1,8 @@
 package com.bettercontent.economy.recipe;
 
 import com.bettercontent.economy.config.EconomyPolicy;
-import com.bettercontent.economy.spirit.SpiritKind;
+import com.bettercontent.economy.spirit.CurrencyIdentity;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.util.LinkedHashMap;
@@ -23,7 +24,10 @@ public final class CoinRecipeFilter {
     public static Map<ResourceLocation, JsonElement> filter(Map<ResourceLocation, JsonElement> recipes) {
         Map<ResourceLocation, JsonElement> filtered = new LinkedHashMap<>();
         recipes.forEach((id, json) -> {
-            if (!RETIRED_RECIPES.contains(id) && !hasCoinOutput(json)) filtered.put(id, json);
+            if (RETIRED_RECIPES.contains(id) || ("better_content_economy".equals(id.getNamespace())
+                    && id.getPath().startsWith("spirit_refinement/"))) return;
+            JsonElement replacement = replaceOrdinarySpirits(json);
+            if (!hasCoinOutput(replacement)) filtered.put(id, replacement);
         });
         return filtered;
     }
@@ -38,8 +42,7 @@ public final class CoinRecipeFilter {
         if (element == null || element.isJsonNull()) return false;
         if (element.isJsonPrimitive()) {
             ResourceLocation id = ResourceLocation.tryParse(element.getAsString());
-            return id != null && (EconomyPolicy.isRetired(id)
-                    || java.util.Arrays.stream(SpiritKind.values()).anyMatch(kind -> kind.itemId().equals(id)));
+            return id != null && EconomyPolicy.isRetired(id);
         }
         if (element.isJsonArray()) {
             for (JsonElement child : element.getAsJsonArray()) if (matchesOutput(child)) return true;
@@ -53,4 +56,26 @@ public final class CoinRecipeFilter {
     }
 
     private static ResourceLocation id(String value) { return new ResourceLocation(value); }
+
+    /** Changes exact ordinary Malum item IDs in loaded recipes, including third-party recipes. */
+    static JsonElement replaceOrdinarySpirits(JsonElement element) {
+        if (element == null || element.isJsonNull()) return element;
+        if (element.isJsonPrimitive()) {
+            if (element.getAsJsonPrimitive().isString()) {
+                ResourceLocation id = ResourceLocation.tryParse(element.getAsString());
+                CurrencyIdentity identity = CurrencyIdentity.fromLegacyNativeSpirit(id);
+                if (identity != null) return new com.google.gson.JsonPrimitive(identity.itemId().toString());
+            }
+            return element.deepCopy();
+        }
+        if (element.isJsonArray()) {
+            JsonArray result = new JsonArray();
+            element.getAsJsonArray().forEach(child -> result.add(replaceOrdinarySpirits(child)));
+            return result;
+        }
+        JsonObject result = new JsonObject();
+        element.getAsJsonObject().entrySet().forEach(entry ->
+                result.add(entry.getKey(), replaceOrdinarySpirits(entry.getValue())));
+        return result;
+    }
 }

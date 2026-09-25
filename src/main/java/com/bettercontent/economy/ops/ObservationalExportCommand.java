@@ -1,14 +1,10 @@
 package com.bettercontent.economy.ops;
 
 import com.bettercontent.economy.config.EconomyConfig;
-import com.bettercontent.economy.spirit.SpiritCreditData;
-import com.bettercontent.economy.spirit.SpiritCreditLedger;
 import com.mojang.brigadier.CommandDispatcher;
-import java.util.ArrayList;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 
 /** Permissioned server command for the owner observational export. */
 public final class ObservationalExportCommand {
@@ -27,15 +23,10 @@ public final class ObservationalExportCommand {
             return 0;
         }
         var server = source.getServer();
-        SpiritCreditData data = SpiritCreditData.get(server.overworld());
         var observations = ObservationalEconomyData.get(server.overworld());
-        var snapshots = new ArrayList<ObservationalSpiritExport.CreditSnapshot>();
-        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            SpiritCreditLedger ledger = data.ledger(player.getUUID());
-            snapshots.add(new ObservationalSpiritExport.CreditSnapshot(ledger.issued(), ledger.pending()));
-        }
-        String json = ObservationalSpiritExport.json(true, 2, snapshots, observations.exchanges(), observations.activity(), observations.regional(), observations.purchases());
+        String json = ObservationalSpiritExport.json(true, 2, observations.released(),
+                observations.exchanges(), observations.activity(), observations.regional(), observations.purchases());
         source.sendSuccess(() -> Component.literal(json), true);
-        return snapshots.size();
+        return observations.released().size();
     }
 }

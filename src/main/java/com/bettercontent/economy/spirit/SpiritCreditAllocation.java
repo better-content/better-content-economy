@@ -27,6 +27,7 @@ public final class SpiritCreditAllocation {
         for (ItemStack stack : nativeDrops) {
             ResourceLocation id = ForgeRegistries.ITEMS.getKey(stack.getItem());
             CurrencyIdentity mapped = id == null ? null : CurrencyIdentity.fromLegacyNativeSpirit(id);
+            if (mapped == null) mapped = CurrencyIdentity.fromItemId(id);
             if (mapped != null) for (int unit = 0; unit < stack.getCount(); unit++) units.add(mapped);
         }
         return fromUnits(units, victimId, recipientId, regionSeed);

@@ -92,12 +92,12 @@ require(dimensionDrinkJar.isFile) {
     "Missing Better Content provider dimension-drink-1.0.0.jar at $dimensionDrinkJar; prepare BC_CUSTOM_MOD_JAR_DIR or build dimension-drink first"
 }
 val betterContentFixesJar = if (providerDirectory == null) {
-    file("../better-content-fixes/build/libs/better-content-fixes-0.1.8.jar")
+    file("../better-content-fixes/build/libs/better-content-fixes-0.1.9.jar")
 } else {
-    file(providerDirectory).resolve("better-content-fixes-0.1.8.jar")
+    file(providerDirectory).resolve("better-content-fixes-0.1.9.jar")
 }
 require(betterContentFixesJar.isFile) {
-    "Missing Better Content provider better-content-fixes-0.1.8.jar at $betterContentFixesJar; prepare BC_CUSTOM_MOD_JAR_DIR or build better-content-fixes first"
+    "Missing Better Content provider better-content-fixes-0.1.9.jar at $betterContentFixesJar; prepare BC_CUSTOM_MOD_JAR_DIR or build better-content-fixes first"
 }
 
 // Resolve sibling reobfuscated mods through ForgeGradle so the GameTest dev
@@ -135,7 +135,7 @@ dependencies {
     // provider mod available there as well as at compile time.
     runtimeOnly(fg.deobf("bettercontent.local.dimensiondrink:dimension-drink:1.0.0"))
     // Flat file dependencies do not carry Forge mod dependencies transitively.
-    runtimeOnly(fg.deobf("bettercontent.local.fixes:better-content-fixes:0.1.8"))
+    runtimeOnly(fg.deobf("bettercontent.local.fixes:better-content-fixes:0.1.9"))
     runtimeOnly(fg.deobf("curse.maven:kotlin-for-forge-351264:7291067"))
     compileOnly(fg.deobf("curse.maven:hyle-609850:7736352"))
     compileOnly(fg.deobf("curse.maven:thirst-was-taken-679270:6660408"))

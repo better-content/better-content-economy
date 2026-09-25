@@ -9,7 +9,6 @@ public final class EconomyConfig {
     private static final ForgeConfigSpec.IntValue VISIT_INTERVAL;
     private static final ForgeConfigSpec.IntValue RETRY_DELAY;
     private static final ForgeConfigSpec.BooleanValue ANNOUNCE_ARRIVAL;
-    private static final ForgeConfigSpec.IntValue SPIRIT_RELEASE_CADENCE;
     private static final ForgeConfigSpec.BooleanValue OBSERVATIONAL_EXPORT;
 
     static {
@@ -20,9 +19,6 @@ public final class EconomyConfig {
         VISIT_INTERVAL = builder.defineInRange("visitInterval", 120_000, 1_200, Integer.MAX_VALUE);
         RETRY_DELAY = builder.defineInRange("retryDelay", 1_200, 20, 24_000);
         ANNOUNCE_ARRIVAL = builder.define("announceArrival", true);
-        builder.pop();
-        builder.push("spiritRelease");
-        SPIRIT_RELEASE_CADENCE = builder.defineInRange("cadenceTicks", 100, 20, 1_200);
         builder.pop();
         builder.push("observationalExport");
         OBSERVATIONAL_EXPORT = builder.define("enabled", false);
@@ -36,8 +32,6 @@ public final class EconomyConfig {
     public static int wanderingTraderVisitInterval() { return VISIT_INTERVAL.get(); }
     public static int wanderingTraderRetryDelay() { return RETRY_DELAY.get(); }
     public static boolean wanderingTraderAnnounceArrival() { return ANNOUNCE_ARRIVAL.get(); }
-    /** Ticks between owned physical spirit releases; accumulated credit is never discarded. */
-    public static int spiritReleaseCadenceTicks() { return SPIRIT_RELEASE_CADENCE.get(); }
     /** Owner export remains disabled until explicitly enabled in server configuration. */
     public static boolean observationalExportEnabled() { return OBSERVATIONAL_EXPORT.get(); }
 }

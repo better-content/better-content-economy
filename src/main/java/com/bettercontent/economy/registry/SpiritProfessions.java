@@ -3,6 +3,7 @@ package com.bettercontent.economy.registry;
 import com.bettercontent.economy.BetterContentEconomy;
 import com.bettercontent.economy.config.EconomyPolicy;
 import com.bettercontent.economy.spirit.SpiritKind;
+import com.bettercontent.economy.spirit.CurrencyIdentity;
 import com.google.common.collect.ImmutableSet;
 import java.util.EnumMap;
 import java.util.Map;
@@ -105,7 +106,8 @@ public final class SpiritProfessions {
         var iterator = event.getEntries().iterator();
         while (iterator.hasNext()) {
             var item = ForgeRegistries.ITEMS.getKey(iterator.next().getKey().getItem());
-            if (item != null && EconomyPolicy.isRetired(item)) iterator.remove();
+            if (item != null && (EconomyPolicy.isRetired(item)
+                    || CurrencyIdentity.fromLegacyNativeSpirit(item) != null)) iterator.remove();
         }
     }
 

@@ -1,1 +1,1 @@
-{"type":"minecraft:crafting_shaped","pattern":["PPP","PSP","PPP"],"key":{"P":{"item":"minecraft:prismarine"},"S":{"item":"malum:aqueous_spirit"}},"result":{"item":"better_content_economy:aqueous_font"}}
+{"type":"minecraft:crafting_shaped","pattern":["PPP","PSP","PPP"],"key":{"P":{"item":"minecraft:prismarine"},"S":{"item":"better_content_economy:endurance_spirit"}},"result":{"item":"better_content_economy:aqueous_font"}}

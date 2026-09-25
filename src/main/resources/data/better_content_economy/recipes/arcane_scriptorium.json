@@ -1,1 +1,1 @@
-{"type":"minecraft:crafting_shaped","pattern":["PPP","PSP","PPP"],"key":{"P":{"item":"minecraft:bookshelf"},"S":{"item":"malum:arcane_spirit"}},"result":{"item":"better_content_economy:arcane_scriptorium"}}
+{"type":"minecraft:crafting_shaped","pattern":["PPP","PSP","PPP"],"key":{"P":{"item":"minecraft:bookshelf"},"S":{"item":"better_content_economy:work_spirit"}},"result":{"item":"better_content_economy:arcane_scriptorium"}}

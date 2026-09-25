@@ -15,7 +15,7 @@ final class CurrencyModelResourceTest {
     void everyEconomyCurrencyHasARegisteredItemModelAndTempoHasABlockstate() throws Exception {
         Map<String, String> parents = Map.of(
                 "impact_spirit", "malum:item/infernal_spirit",
-                "tempo_spirit", "minecraft:item/clock",
+                "tempo_spirit", "malum:item/aerial_spirit",
                 "work_spirit", "malum:item/arcane_spirit",
                 "mobility_spirit", "malum:item/aerial_spirit",
                 "endurance_spirit", "malum:item/aqueous_spirit",

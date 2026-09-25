@@ -8,28 +8,28 @@ import org.junit.jupiter.api.Test;
 
 final class ObservationalSpiritExportTest {
     @Test void exportIsOptInAndPermissionGated() {
-        var snapshot = new ObservationalSpiritExport.CreditSnapshot(Map.of(CurrencyIdentity.IMPACT, 4), Map.of());
-        assertEquals("", ObservationalSpiritExport.csv(false, 4, List.of(snapshot), List.of()));
-        assertEquals("", ObservationalSpiritExport.json(true, 1, List.of(snapshot), List.of()));
+        var released = Map.of(CurrencyIdentity.IMPACT, 4);
+        assertEquals("", ObservationalSpiritExport.csv(false, 4, released, List.of()));
+        assertEquals("", ObservationalSpiritExport.json(true, 1, released, List.of()));
     }
 
-    @Test void exportConservesIssuedAndPendingTotals() {
-        var snapshot = new ObservationalSpiritExport.CreditSnapshot(Map.of(CurrencyIdentity.IMPACT, 4), Map.of(CurrencyIdentity.TEMPO, 3));
-        String json = ObservationalSpiritExport.json(true, 2, List.of(snapshot), List.of());
-        assertTrue(json.contains("\"issued\":4"));
-        assertTrue(json.contains("\"pending\":3"));
+    @Test void exportReportsImmediatePhysicalReleases() {
+        String json = ObservationalSpiritExport.json(true, 2,
+                Map.of(CurrencyIdentity.IMPACT, 4, CurrencyIdentity.TEMPO, 3), List.of());
+        assertTrue(json.contains("\"released\":{\"impact\":4,\"tempo\":3}"));
+        assertFalse(json.contains("\"pending\""));
     }
 
     @Test void exchangesContainOnlyExplicitSuccessfulObservations() {
         var exchange = new ObservationalSpiritExport.Exchange(CurrencyIdentity.WORK, 2, "minecraft:villager");
-        String csv = ObservationalSpiritExport.csv(true, 2, List.of(), List.of(exchange));
+        String csv = ObservationalSpiritExport.csv(true, 2, Map.of(), List.of(exchange));
         assertTrue(csv.contains("exchange,work,2,minecraft:villager"));
         assertFalse(csv.contains("motive"));
         assertFalse(csv.contains("private"));
     }
 
     @Test void nonemptyRegionalAndPurchaseDataIsValidJson() {
-        String json = ObservationalSpiritExport.json(true, 2, List.of(), List.of(),
+        String json = ObservationalSpiritExport.json(true, 2, Map.of(), List.of(), 0L,
                 Map.of("minecraft:plains", Map.of(CurrencyIdentity.IMPACT, 4)),
                 Map.of(CurrencyIdentity.WORK, 2));
         var parsed = com.google.gson.JsonParser.parseString(json).getAsJsonObject();

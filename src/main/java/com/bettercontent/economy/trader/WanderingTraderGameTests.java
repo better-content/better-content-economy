@@ -4,9 +4,12 @@ import com.bettercontent.economy.BetterContentEconomy;
 import com.bettercontent.economy.mixin.FloatingEntityAccessor;
 import com.bettercontent.economy.registry.SpiritProfessions;
 import com.bettercontent.economy.registry.CurrencyItems;
-import com.bettercontent.economy.spirit.SpiritCreditData;
+import com.bettercontent.economy.spirit.CurrencyIdentity;
 import com.mojang.authlib.GameProfile;
 import com.sammy.malum.common.entity.spirit.SpiritItemEntity;
+import com.sammy.malum.core.systems.recipe.SpiritWithCount;
+import com.sammy.malum.registry.common.SpiritTypeRegistry;
+import com.sammy.malum.registry.common.item.ItemRegistry;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,6 +22,7 @@ import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
@@ -30,6 +34,20 @@ import net.minecraftforge.registries.ForgeRegistries;
 @PrefixGameTestTemplate(false)
 public final class WanderingTraderGameTests {
     private WanderingTraderGameTests() {}
+
+    @GameTest(templateNamespace = BetterContentEconomy.MOD_ID, template = "empty")
+    public static void malumRecipesUseEconomySpirits(final GameTestHelper helper) {
+        var arcane = new SpiritWithCount(SpiritTypeRegistry.ARCANE_SPIRIT, 2);
+        helper.assertTrue(arcane.getItem() == CurrencyItems.item(com.bettercontent.economy.spirit.CurrencyIdentity.WORK).get(),
+                "Arcane-aspect recipes must display and require Work spirits");
+        helper.assertTrue(arcane.matches(new ItemStack(CurrencyItems.item(com.bettercontent.economy.spirit.CurrencyIdentity.WORK).get(), 2)),
+                "Work spirits must satisfy Malum's Arcane requirement");
+        helper.assertTrue(!arcane.matches(new ItemStack(ItemRegistry.ARCANE_SPIRIT.get(), 2)),
+                "Ordinary native Malum spirits must no longer satisfy the active recipe");
+        helper.assertTrue(new SpiritWithCount(SpiritTypeRegistry.ELDRITCH_SPIRIT, 1).getItem()
+                        == ItemRegistry.ELDRITCH_SPIRIT.get(), "Eldritch must stay native Malum");
+        helper.succeed();
+    }
 
     @GameTest(templateNamespace = BetterContentEconomy.MOD_ID, template = "empty", timeoutTicks = 100)
     public static void themedIdentityIsStored(final GameTestHelper helper) {
@@ -153,17 +171,23 @@ public final class WanderingTraderGameTests {
     }
 
     @GameTest(templateNamespace = BetterContentEconomy.MOD_ID, template = "empty", timeoutTicks = 100)
-    public static void creditedKillQueuesDurableCreditBeforeRelease(final GameTestHelper helper) {
+    public static void creditedKillDropsPhysicalSpiritsAtVictim(final GameTestHelper helper) {
         ServerPlayer player = FakePlayerFactory.get(helper.getLevel(),
                 new GameProfile(UUID.nameUUIDFromBytes("spirit-economy-gametest".getBytes()), "spirit-economy-test"));
         var zombie = helper.spawn(EntityType.ZOMBIE, new BlockPos(2, 2, 2));
+        com.sammy.malum.common.capability.MalumLivingEntityDataCapability.getCapability(zombie)
+                .soulData.exposedSoulDuration = 100.0F;
         zombie.hurt(helper.getLevel().damageSources().playerAttack(player), 1000.0F);
-        AABB bounds = zombie.getBoundingBox().inflate(6.0D);
+        AABB bounds = zombie.getBoundingBox().inflate(2.0D);
         helper.succeedWhen(() -> {
             var spirits = helper.getLevel().getEntitiesOfClass(SpiritItemEntity.class, bounds);
-            var pending = SpiritCreditData.get(helper.getLevel().getServer().overworld()).ledger(player.getUUID()).pending();
-            helper.assertTrue(!pending.isEmpty(), "Credited hostile kill did not persist pending currency credit");
-            helper.assertTrue(spirits.isEmpty(), "FakePlayer must not receive an early physical release outside online-player scheduling");
+            var currency = spirits.stream().filter(spirit -> CurrencyIdentity.fromItemId(
+                    ForgeRegistries.ITEMS.getKey(spirit.getItem().getItem())) != null).toList();
+            helper.assertTrue(!currency.isEmpty(), "Credited hostile kill did not release currency at its victim");
+            helper.assertTrue(currency.stream().allMatch(spirit -> !spirit.getItem().hasTag()),
+                    "Fresh spirit drops must carry no delivery receipts or other stack-blocking NBT");
+            helper.assertTrue(currency.stream().allMatch(spirit -> spirit.getItem().getMaxStackSize() == 64),
+                    "Economy spirits must stack like ordinary Malum spirits");
         });
     }
 
