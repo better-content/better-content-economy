@@ -5,6 +5,7 @@ import com.bettercontent.economy.registry.SpiritProfessions;
 import com.bettercontent.economy.registry.CurrencyItems;
 import com.bettercontent.economy.spirit.SpiritAcquisition;
 import com.bettercontent.economy.spirit.SpiritPouchAccess;
+import com.bettercontent.economy.spirit.SpiritPouchGameTests;
 import com.bettercontent.economy.spirit.EconomySpiritTypes;
 import com.bettercontent.economy.trader.ProfessionBehaviors;
 import com.bettercontent.economy.trader.AuthoredTradeSignals;
@@ -49,5 +50,6 @@ public final class BetterContentEconomy {
 
     private void registerGameTests(RegisterGameTestsEvent event) {
         event.register(WanderingTraderGameTests.class);
+        event.register(SpiritPouchGameTests.class);
     }
 }

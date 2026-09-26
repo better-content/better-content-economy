@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /** Adds only economy currencies to Malum's existing native-spirit Pouch slot predicate. */
 @Mixin(targets = "com.sammy.malum.common.container.SpiritPouchContainer$1", remap = false)
 abstract class SpiritPouchCurrencySlotMixin {
-    @Inject(method = "mayPlace", at = @At("HEAD"), cancellable = true, remap = false)
+    @Inject(method = {"mayPlace", "m_5857_"}, at = @At("HEAD"), cancellable = true, remap = false)
     private void betterContentEconomy$acceptCurrency(final ItemStack stack,
                                                      final CallbackInfoReturnable<Boolean> callback) {
         if (CurrencyIdentity.fromItemId(ForgeRegistries.ITEMS.getKey(stack.getItem())) != null) {

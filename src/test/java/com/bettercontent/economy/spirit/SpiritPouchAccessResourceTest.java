@@ -29,7 +29,7 @@ final class SpiritPouchAccessResourceTest {
 
         assertTrue(config.contains("SpiritPouchCurrencySlotMixin"));
         assertTrue(mixin.contains("@Mixin(targets = \"com.sammy.malum.common.container.SpiritPouchContainer$1\""));
-        assertTrue(mixin.contains("@Inject(method = \"mayPlace\""));
+        assertTrue(mixin.contains("@Inject(method = {\"mayPlace\", \"m_5857_\"}"));
         assertTrue(mixin.contains("CurrencyIdentity.fromItemId(ForgeRegistries.ITEMS.getKey(stack.getItem())) != null"));
         assertTrue(mixin.contains("callback.setReturnValue(true)"));
     }
