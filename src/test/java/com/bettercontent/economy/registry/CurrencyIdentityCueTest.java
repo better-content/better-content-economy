@@ -1,6 +1,7 @@
 package com.bettercontent.economy.registry;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.bettercontent.economy.spirit.CurrencyIdentity;
+import com.google.gson.JsonParser;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
@@ -13,9 +14,14 @@ final class CurrencyIdentityCueTest {
         assertTrue(source.contains("new CurrencyItem(identity)"));
         String item = Files.readString(Path.of("src/main/java/com/bettercontent/economy/registry/CurrencyItem.java"));
         assertTrue(item.contains("identity.id()"));
-        for (CurrencyIdentity identity : CurrencyIdentity.values()) assertTrue(lang.contains("tooltip.better_content_economy." + identity.id()));
+        var translations = JsonParser.parseString(lang).getAsJsonObject();
         var cues = new HashSet<String>();
-        for (String line : lang.lines().toList()) if (line.contains("tooltip.better_content_economy.")) cues.add(line.substring(line.indexOf(":") + 1).trim());
-        assertTrue(cues.size() >= CurrencyIdentity.values().length);
+        for (CurrencyIdentity identity : CurrencyIdentity.values()) {
+            String cue = translations.get("tooltip.better_content_economy." + identity.id()).getAsString();
+            assertTrue(cue.contains(identity.id().substring(0, 1).toUpperCase() + identity.id().substring(1)));
+            assertTrue(cue.contains("Trade"));
+            cues.add(cue);
+        }
+        assertTrue(cues.size() == CurrencyIdentity.values().length);
     }
 }
