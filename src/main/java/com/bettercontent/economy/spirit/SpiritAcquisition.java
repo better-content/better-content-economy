@@ -7,6 +7,8 @@ import com.bettercontent.economy.registry.CurrencyItems;
 import com.mojang.logging.LogUtils;
 import com.sammy.malum.common.capability.MalumLivingEntityDataCapability;
 import com.sammy.malum.core.handlers.SpiritHarvestHandler;
+import com.sammy.malum.common.entity.spirit.SpiritItemEntity;
+import com.sammy.malum.registry.common.SoundRegistry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +27,7 @@ import net.minecraft.world.entity.projectile.EvokerFangs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.sounds.SoundSource;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -33,6 +36,7 @@ import org.slf4j.Logger;
 
 /** Releases physical Better Content spirits from the credited victim at death. */
 public final class SpiritAcquisition {
+    public static final String GROUPED_PICKUP_MARKER = "BetterContentGroupedSpiritPickup";
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final TagKey<net.minecraft.world.entity.EntityType<?>> SPIRITLESS_ACTORS =
             TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(BetterContentEconomy.MOD_ID, "spiritless_economy_actors"));
@@ -75,9 +79,9 @@ public final class SpiritAcquisition {
             }
         }
         if (!physicalDrops.isEmpty()) {
-            // Malum emits one owned floating spirit per unit at the victim and honors its
-            // NO_FANCY_SPIRITS setting. Untagged items combine into ordinary 64-item stacks.
-            SpiritHarvestHandler.spawnItemsAsSpirits(physicalDrops, victim, recipient);
+            // Release each type as one Malum spirit carrying its full stack. Malum's
+            // per-unit helper makes the same kill arrive in a long train of pickups.
+            releaseGroupedSpirits(physicalDrops, victim, recipient);
         }
         if (!credits.isEmpty()) {
             ObservationalEconomyData observations = ObservationalEconomyData.get(recipient.server.overworld());
@@ -86,6 +90,33 @@ public final class SpiritAcquisition {
             observations.recordActivity();
         }
         capability.soulData.soulless = true;
+    }
+
+    static void releaseGroupedSpirits(final List<ItemStack> drops, final LivingEntity victim,
+                                      final ServerPlayer recipient) {
+        Level level = victim.level();
+        double x = victim.getX();
+        double y = victim.getY() + victim.getBbHeight() / 2.0;
+        double z = victim.getZ();
+        for (ItemStack stack : drops) {
+            if (stack.isEmpty()) continue;
+            double vx = (level.random.nextDouble() - 0.5) * 0.3;
+            double vz = (level.random.nextDouble() - 0.5) * 0.3;
+            ItemStack grouped = stack.copy();
+            // Malum represents an untagged native spirit as a single default item even when
+            // given a larger count. This marker forces its entity to retain the whole stack.
+            grouped.getOrCreateTag().putBoolean(GROUPED_PICKUP_MARKER, true);
+            level.addFreshEntity(new SpiritItemEntity(level, recipient.getUUID(), grouped,
+                    x, y, z, vx, 0.055, vz));
+        }
+        level.playSound(null, x, y, z, SoundRegistry.SOUL_SHATTER.get(), SoundSource.PLAYERS,
+                1.0F, 0.7F + level.random.nextFloat() * 0.4F);
+    }
+
+    public static void removeGroupedPickupMarker(ItemStack stack) {
+        if (stack.getTag() == null || !stack.getTag().getBoolean(GROUPED_PICKUP_MARKER)) return;
+        stack.getTag().remove(GROUPED_PICKUP_MARKER);
+        if (stack.getTag().isEmpty()) stack.setTag(null);
     }
 
     private static boolean isEconomyActor(final LivingEntity entity) {

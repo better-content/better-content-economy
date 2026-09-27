@@ -2,6 +2,7 @@ package com.bettercontent.economy.mixin;
 
 import com.bettercontent.economy.api.event.SpiritAcquiredEvent;
 import com.bettercontent.economy.spirit.CurrencyIdentity;
+import com.bettercontent.economy.spirit.SpiritAcquisition;
 import com.sammy.malum.common.entity.spirit.SpiritItemEntity;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -14,6 +15,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = SpiritItemEntity.class, remap = false)
 abstract class SpiritItemEntityMixin {
+    @Inject(method = "collect", at = @At("HEAD"), remap = false)
+    private void betterContentEconomy$cleanGroupedPickup(final CallbackInfo callback) {
+        SpiritAcquisition.removeGroupedPickupMarker(((SpiritItemEntity) (Object) this).getItem());
+    }
+
     @Inject(method = "collect", at = @At("TAIL"), remap = false)
     private void betterContentEconomy$signalCollection(final CallbackInfo callback) {
         SpiritItemEntity self = (SpiritItemEntity) (Object) this;

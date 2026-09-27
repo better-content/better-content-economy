@@ -5,6 +5,7 @@ import com.bettercontent.economy.mixin.FloatingEntityAccessor;
 import com.bettercontent.economy.registry.SpiritProfessions;
 import com.bettercontent.economy.registry.CurrencyItems;
 import com.bettercontent.economy.spirit.CurrencyIdentity;
+import com.bettercontent.economy.spirit.SpiritAcquisition;
 import com.mojang.authlib.GameProfile;
 import com.sammy.malum.common.entity.spirit.SpiritItemEntity;
 import com.sammy.malum.core.systems.recipe.SpiritWithCount;
@@ -184,8 +185,11 @@ public final class WanderingTraderGameTests {
             var currency = spirits.stream().filter(spirit -> CurrencyIdentity.fromItemId(
                     ForgeRegistries.ITEMS.getKey(spirit.getItem().getItem())) != null).toList();
             helper.assertTrue(!currency.isEmpty(), "Credited hostile kill did not release currency at its victim");
-            helper.assertTrue(currency.stream().allMatch(spirit -> !spirit.getItem().hasTag()),
-                    "Fresh spirit drops must carry no delivery receipts or other stack-blocking NBT");
+            helper.assertTrue(currency.stream().allMatch(spirit -> {
+                ItemStack delivered = spirit.getItem().copy();
+                SpiritAcquisition.removeGroupedPickupMarker(delivered);
+                return !delivered.hasTag();
+            }), "Collected spirits must carry no delivery receipts or other stack-blocking NBT");
             helper.assertTrue(currency.stream().allMatch(spirit -> spirit.getItem().getMaxStackSize() == 64),
                     "Economy spirits must stack like ordinary Malum spirits");
         });
