@@ -1,4 +1,4 @@
-package com.bettercontent.economy.trader;
+package com.bettercontent.economy.visualharness;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

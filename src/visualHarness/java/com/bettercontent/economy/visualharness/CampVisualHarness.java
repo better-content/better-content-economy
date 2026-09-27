@@ -1,4 +1,8 @@
-package com.bettercontent.economy.trader;
+package com.bettercontent.economy.visualharness;
+
+import com.bettercontent.economy.trader.TraderCampService;
+import com.bettercontent.economy.trader.WanderingTraderTheme;
+import com.bettercontent.economy.trader.WanderingTraderVisits;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import java.util.List;
@@ -39,10 +43,12 @@ public final class CampVisualHarness {
                 .encoder(CapturePacket::encode).decoder(CapturePacket::decode)
                 .consumerMainThread(CapturePacket::handle).add();
         MinecraftForge.EVENT_BUS.register(this);
+        MarketVisualHarness.register();
     }
 
     @SubscribeEvent
     public void registerCommands(final RegisterCommandsEvent event) {
+        MarketVisualHarness.registerCommands(event);
         event.getDispatcher().register(Commands.literal("campvisual").requires(source -> source.hasPermission(2))
                 .then(Commands.literal("prepare").then(Commands.argument("player", EntityArgument.player())
                         .executes(context -> prepare(EntityArgument.getPlayer(context, "player")))))
@@ -86,7 +92,7 @@ public final class CampVisualHarness {
             WanderingTraderVisits.applyTheme(trader, themes[index], true);
             if (TraderCampService.createForVisit(trader, themes[index])) {
                 BlockPos target = BlockPos.of(trader.getPersistentData()
-                        .getLong(TraderCampService.CAMP_POS_TAG)).relative(Direction.NORTH);
+                        .getLong("better_content_economy:camp_pos")).relative(Direction.NORTH);
                 trader.moveTo(target.getX() + 0.5D, target.getY(), target.getZ() + 0.5D, 180.0F, 0.0F);
             }
             trader.setNoAi(true);

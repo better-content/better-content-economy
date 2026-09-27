@@ -11,7 +11,9 @@ import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -24,7 +26,8 @@ public final class LocalMarket {
     private LocalMarket() {}
 
     public record Row(UUID merchant, int offerIndex, String merchantName, int x, int y, int z, String payment,
-                      String result, String identity, int usesRemaining) {}
+                      String result, String identity, int usesRemaining, ItemStack costA, ItemStack costB,
+                      ItemStack resultStack) {}
 
     public static List<Row> snapshot(ServerPlayer player) {
         List<Row> rows = new ArrayList<>();
@@ -33,7 +36,7 @@ public final class LocalMarket {
             if (merchant.isRemoved() || merchant.distanceToSqr(player) > RANGE * RANGE) continue;
             MerchantOffers offers = merchant.getOffers();
             for (int index = 0; index < offers.size(); index++) {
-                if (rows.size() == 256) return List.copyOf(rows);
+                if (rows.size() == 256) return sorted(rows);
                 MerchantOffer offer = offers.get(index);
                 if (offer.isOutOfStock() || offer.getUses() >= offer.getMaxUses()) continue;
                 int nativeRemaining = Math.max(0, offer.getMaxUses() - offer.getUses());
@@ -44,10 +47,24 @@ public final class LocalMarket {
                 rows.add(new Row(merchant.getUUID(), index, bounded(merchant.getDisplayName().getString(), 128),
                         pos.getX(), pos.getY(), pos.getZ(),
                         bounded(paymentLabel(offer), 256), bounded(itemLabel(offer.getResult()), 256), identity(offer),
-                        availableTrades));
+                        availableTrades, offer.getCostA().copy(), offer.getCostB().copy(), offer.getResult().copy()));
             }
         }
+        return sorted(rows);
+    }
+
+    static List<Row> sorted(List<Row> rows) {
+        rows.sort(Comparator.comparing(Row::result, String.CASE_INSENSITIVE_ORDER)
+                .thenComparing(Row::merchantName, String.CASE_INSENSITIVE_ORDER)
+                .thenComparing(Row::merchant).thenComparingInt(Row::offerIndex));
         return List.copyOf(rows);
+    }
+
+    static boolean matches(Row row, String query) {
+        String needle = query.strip().toLowerCase(Locale.ROOT);
+        return needle.isEmpty() || row.result().toLowerCase(Locale.ROOT).contains(needle)
+                || row.payment().toLowerCase(Locale.ROOT).contains(needle)
+                || row.merchantName().toLowerCase(Locale.ROOT).contains(needle);
     }
 
     public static boolean validSelection(ServerPlayer player, UUID merchantId, int offerIndex, String expectedIdentity) {
@@ -77,10 +94,15 @@ public final class LocalMarket {
     }
 
     public static void openSelected(ServerPlayer player, UUID merchantId, int offerIndex, String expectedIdentity) {
-        if (!validSelection(player, merchantId, offerIndex, expectedIdentity)) return;
+        if (!validSelection(player, merchantId, offerIndex, expectedIdentity)) {
+            LocalMarketNetwork.sendStale(player);
+            return;
+        }
         AbstractVillager merchant = (AbstractVillager) player.serverLevel().getEntity(merchantId);
         int level = merchant instanceof Villager villager ? villager.getVillagerData().getLevel() : 1;
+        merchant.setTradingPlayer(player);
         merchant.openTradingScreen(player, merchant.getDisplayName(), level);
+        LocalMarketNetwork.sendSelection(player, player.containerMenu.containerId, offerIndex);
     }
 
     static String identity(MerchantOffer offer) {

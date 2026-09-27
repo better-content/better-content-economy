@@ -6,7 +6,7 @@ license="All Rights Reserved"
 modId="better_content_economy_visual_harness"
 version="1"
 displayName="Better Content Economy Visual Harness"
-description='''Non-shipping client/server screenshot harness for wandering trader camp posts.'''
+description='''Non-shipping client/server screenshot harness for trader camps and the Local Market GUI.'''
 
 [[dependencies.better_content_economy_visual_harness]]
 modId="better_content_economy"

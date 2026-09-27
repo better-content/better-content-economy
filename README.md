@@ -17,7 +17,7 @@ Run `./gradlew verifyFull stageRuntimeJar` before committing or pushing.
 
 ## Trader camp screenshots
 
-The non-shipping visual harness runs a dedicated server and a real Forge client through the production block entity renderer. Start `./gradlew runVisualServer --no-daemon`, then start `./gradlew runVisualClient --no-daemon` under Xvfb. In the server console, run:
+The non-shipping visual harness runs a dedicated server and a real Forge client through the production block entity renderer. On first use, accept the Minecraft EULA in the generated `run-visual-server/eula.txt`, and set `online-mode=false` and `enforce-secure-profile=false` in its generated `server.properties` for the local offline `Dev` client. Start `./gradlew runVisualServer --no-daemon`, then start `./gradlew runVisualClient --no-daemon` under Xvfb. In the server console, run:
 
 ```text
 campvisual prepare <player>
@@ -29,3 +29,25 @@ campvisual capture <player> awning-detail
 ```
 
 Captures are written to `run-visual-client/screenshots/`. Run `./gradlew verifyVisualHarness` to check the expected files, then inspect the images for cloth shape, clipping, lighting, and theme colors. The harness does not use synthetic player input.
+
+## Local Market screenshots
+
+Use the same `runVisualServer` and Xvfb `runVisualClient` pair. From the server console, prepare two nearby fixture merchants and capture each production GUI state:
+
+```text
+marketvisual prepare <player>
+marketvisual show <player> populated
+marketvisual capture <player> market-populated
+marketvisual show <player> filtered
+marketvisual capture <player> market-filtered
+marketvisual show <player> empty
+marketvisual capture <player> market-empty
+marketvisual show <player> no_matches
+marketvisual capture <player> market-no-matches
+marketvisual show <player> narrow
+marketvisual capture <player> market-narrow
+marketvisual select <player> lantern
+marketvisual capture <player> market-selected
+```
+
+Run `./gradlew verifyMarketVisualHarness` and inspect the six images in `run-visual-client/screenshots/` for readable costs and results, visible merchant and stock context, usable search and navigation, distinct empty and no-match states, no clipped controls, and the selected Lantern offer in the vanilla merchant screen. The narrow scene uses a 960×720 window at GUI scale 3 (320×240 scaled); other scenes use 1600×900 at scale 2. This harness opens the real Local Market screen without simulated pointer input.

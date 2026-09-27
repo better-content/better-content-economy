@@ -239,6 +239,23 @@ tasks.register("verifyVisualHarness") {
     }
 }
 
+tasks.register("verifyMarketVisualHarness") {
+    group = "verification"
+    description = "Checks that the Local Market real-client screenshot set was captured."
+    doLast {
+        val root = layout.projectDirectory.dir("run-visual-client/screenshots").asFile
+        listOf("market-populated.png", "market-filtered.png", "market-empty.png",
+            "market-no-matches.png", "market-narrow.png",
+            "market-selected.png")
+            .forEach { name ->
+                val image = root.resolve(name)
+                if (!image.isFile || image.length() == 0L) {
+                    throw GradleException("Local Market visual harness did not produce $name")
+                }
+            }
+    }
+}
+
 val resetGameTestMods = tasks.register<Delete>("resetGameTestMods") {
     delete(layout.projectDirectory.dir("run-gametest/mods"))
     delete(layout.projectDirectory.dir("run-gametest/world"))

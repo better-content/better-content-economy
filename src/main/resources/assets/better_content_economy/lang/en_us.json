@@ -41,6 +41,13 @@
   "message.better_content_economy.wandering_trader.arrival": "%1$s has arrived in %2$s near %3$s, %4$s, %5$s.",
   "screen.better_content_economy.local_market": "Local Market",
   "screen.better_content_economy.local_market.empty": "No nearby merchants have available offers.",
+  "screen.better_content_economy.local_market.loading": "Checking nearby trades…",
+  "screen.better_content_economy.local_market.no_matches": "No trades match your search.",
+  "screen.better_content_economy.local_market.search": "Search items or merchants",
+  "screen.better_content_economy.local_market.count": "%s offers",
+  "screen.better_content_economy.local_market.stock": "%s left",
+  "screen.better_content_economy.local_market.trade": "Trade",
+  "screen.better_content_economy.local_market.stale": "Offer changed; list refreshed.",
   "block.better_content_economy.trader_camp_post": "Trader Camp Post",
   "item.better_content_economy.trader_camp_post": "Trader Camp Post",
   "tooltip.better_content_economy.trader_camp_post.linked": "Re-place this post to move its trader."
