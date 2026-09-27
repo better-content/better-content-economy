@@ -5,8 +5,10 @@ import com.bettercontent.economy.trader.PlagueDoctorCatalogue;
 import com.bettercontent.economy.trader.VillageStarterOffer;
 import com.bettercontent.economy.trader.WanderingTraderVisits;
 import com.bettercontent.economy.trader.WanderingTraderCatalogue;
+import com.bettercontent.economy.trader.VillagerCatalogue;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.WanderingTrader;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.item.trading.MerchantOffers;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -27,6 +29,9 @@ abstract class AbstractVillagerMixin {
                 && trader.getPersistentData().contains(WanderingTraderVisits.THEME_TAG)) {
             WanderingTraderCatalogue.ensureThemedOffers(trader, offers);
             VillageStarterOffer.ensurePresent(trader, offers);
+        }
+        if (merchant instanceof Villager villager) {
+            VillagerCatalogue.ensureFontOfferIfAvailable(villager, offers);
         }
     }
 }

@@ -39,7 +39,7 @@ final class VillagerCatalogueTest {
             assertTrue(VillagerCatalogue.replaceListings(kind, trades), kind.id());
 
             assertFalse(trades.values().stream().anyMatch(listings -> listings.contains(sentinel)), kind.id());
-            assertEquals(35, trades.values().stream().mapToInt(List::size).sum(), kind.id());
+            assertEquals(36, trades.values().stream().mapToInt(List::size).sum(), kind.id());
         }
     }
 }

@@ -42,7 +42,7 @@ public final class WanderingTraderCatalogue {
             offers.clear();
             appendBaseOffers(offers, spirit, payment);
         }
-        appendFontOfferIfAvailable(trader, offers, payment);
+        appendFontOfferIfAvailable(trader, offers, payment, spirit);
     }
 
     private static boolean hasAuthoredCatalogue(final MerchantOffers offers, final SpiritKind spirit, final Item payment) {
@@ -93,12 +93,14 @@ public final class WanderingTraderCatalogue {
 
     /** Adds one surveyed Font map without rebuilding or resetting an existing catalogue. */
     static boolean appendFontOfferIfAvailable(final WanderingTrader trader, final MerchantOffers offers,
-                                              final Item payment) {
+                                              final Item payment, final SpiritKind spirit) {
         if (payment == null || !(trader.level() instanceof ServerLevel level)) return false;
+        Set<String> allowed = FontTradeAffinity.destinations(spirit);
+        DimensionalFontMapTrades.setSellerDefinitionIds(trader.getPersistentData(), allowed);
         if (offers.stream().anyMatch(WanderingTraderCatalogue::isFontMapOffer)) return false;
         Set<String> soldTypes = DimensionalFontMapTrades.soldDefinitionIds(trader.getPersistentData());
         MerchantOffer mapOffer = DimensionalFontMapTrades.authoredSellerOffer(
-                level, trader.blockPosition(), 6, payment, soldTypes);
+                level, trader.blockPosition(), 6, payment, soldTypes, allowed);
         return appendFontOffer(offers, mapOffer);
     }
 
