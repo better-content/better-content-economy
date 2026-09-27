@@ -48,6 +48,9 @@ minecraft {
             property("forge.enableGameTest", "true")
             property("forge.gameTestServer", "true")
             property("forge.enabledGameTestNamespaces", property("mod_id") as String)
+            // The Mixin bootstrap runs before the exploded development mod is visible
+            // to its context loader; expose the config and mixin classes early.
+            jvmArgs("-Xbootclasspath/a:${layout.buildDirectory.get().asFile}/resources/main:${layout.buildDirectory.get().asFile}/classes/java/main")
             arg("--nogui")
         }
         create("visualServer") {
@@ -99,6 +102,14 @@ val betterContentFixesJar = if (providerDirectory == null) {
 require(betterContentFixesJar.isFile) {
     "Missing Better Content provider better-content-fixes-0.1.9.jar at $betterContentFixesJar; prepare BC_CUSTOM_MOD_JAR_DIR or build better-content-fixes first"
 }
+val notificationsJar = if (providerDirectory == null) {
+    file("../better-content-notifications/build/libs/better-content-notifications-1.0.0.jar")
+} else {
+    file(providerDirectory).resolve("better-content-notifications-1.0.0.jar")
+}
+require(notificationsJar.isFile) {
+    "Missing Better Content provider better-content-notifications-1.0.0.jar at $notificationsJar"
+}
 
 // Resolve sibling reobfuscated mods through ForgeGradle so the GameTest dev
 // runtime remaps them into the same names as its Minecraft classes.
@@ -136,6 +147,7 @@ dependencies {
     runtimeOnly(fg.deobf("bettercontent.local.dimensiondrink:dimension-drink:1.0.0"))
     // Flat file dependencies do not carry Forge mod dependencies transitively.
     runtimeOnly(fg.deobf("bettercontent.local.fixes:better-content-fixes:0.1.9"))
+    runtimeOnly(files(notificationsJar))
     runtimeOnly(fg.deobf("curse.maven:kotlin-for-forge-351264:7291067"))
     compileOnly(fg.deobf("curse.maven:hyle-609850:7736352"))
     compileOnly(fg.deobf("curse.maven:thirst-was-taken-679270:6660408"))
