@@ -6,6 +6,7 @@ import com.bettercontent.economy.trader.VillageStarterOffer;
 import com.bettercontent.economy.trader.WanderingTraderVisits;
 import com.bettercontent.economy.trader.WanderingTraderCatalogue;
 import com.bettercontent.economy.trader.VillagerCatalogue;
+import com.bettercontent.economy.resident.ResidentRules;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.npc.Villager;
@@ -21,6 +22,10 @@ abstract class AbstractVillagerMixin {
     private void betterContentEconomy$applyTradePolicy(final CallbackInfoReturnable<MerchantOffers> callback) {
         AbstractVillager merchant = (AbstractVillager) (Object) this;
         MerchantOffers offers = callback.getReturnValue();
+        if (merchant instanceof Villager && ResidentRules.isResident(merchant)) {
+            offers.clear();
+            return;
+        }
         MerchantCurrencyPolicy.normalize(offers);
         if (PlagueDoctorCatalogue.isPlagueDoctor(merchant)) {
             PlagueDoctorCatalogue.ensureOffers(merchant, offers);

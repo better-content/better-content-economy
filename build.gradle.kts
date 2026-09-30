@@ -50,17 +50,20 @@ minecraft {
             property("forge.enabledGameTestNamespaces", property("mod_id") as String)
             // The Mixin bootstrap runs before the exploded development mod is visible
             // to its context loader; expose the config and mixin classes early.
-            jvmArgs("-Xbootclasspath/a:${layout.buildDirectory.get().asFile}/resources/main:${layout.buildDirectory.get().asFile}/classes/java/main")
+            jvmArgs("-Xbootclasspath/a:${layout.buildDirectory.get().asFile}/resources/main")
             arg("--nogui")
         }
         create("visualServer") {
             parent(baseServer)
             workingDirectory(project.file("run-visual-server"))
+            jvmArgs("-Xbootclasspath/a:${layout.buildDirectory.get().asFile}/resources/main")
+            property("bettercontent.resident.debugSites", "true")
             mods { create("better_content_economy_visual_harness") { source(visualHarness) } }
         }
         create("visualClient") {
             parent(baseClient)
             workingDirectory(project.file("run-visual-client"))
+            jvmArgs("-Xbootclasspath/a:${layout.buildDirectory.get().asFile}/resources/main")
             args("--quickPlayMultiplayer", "127.0.0.1:25565", "--width", "1600", "--height", "900")
             mods { create("better_content_economy_visual_harness") { source(visualHarness) } }
         }
@@ -110,7 +113,6 @@ val notificationsJar = if (providerDirectory == null) {
 require(notificationsJar.isFile) {
     "Missing Better Content provider better-content-notifications-1.0.0.jar at $notificationsJar"
 }
-
 // Resolve sibling reobfuscated mods through ForgeGradle so the GameTest dev
 // runtime remaps them into the same names as its Minecraft classes.
 repositories {
@@ -127,6 +129,13 @@ repositories {
         patternLayout { artifact("[artifact]-[revision].[ext]") }
         metadataSources { artifact() }
         content { includeGroup("bettercontent.local.fixes") }
+    }
+    ivy {
+        name = "betterContentNotificationsLocal"
+        url = uri(notificationsJar.parentFile)
+        patternLayout { artifact("[artifact]-[revision].[ext]") }
+        metadataSources { artifact() }
+        content { includeGroup("bettercontent.local.notifications") }
     }
 }
 
@@ -147,7 +156,7 @@ dependencies {
     runtimeOnly(fg.deobf("bettercontent.local.dimensiondrink:dimension-drink:1.0.0"))
     // Flat file dependencies do not carry Forge mod dependencies transitively.
     runtimeOnly(fg.deobf("bettercontent.local.fixes:better-content-fixes:0.1.9"))
-    runtimeOnly(files(notificationsJar))
+    runtimeOnly(fg.deobf("bettercontent.local.notifications:better-content-notifications:1.0.0"))
     runtimeOnly(fg.deobf("curse.maven:kotlin-for-forge-351264:7291067"))
     compileOnly(fg.deobf("curse.maven:hyle-609850:7736352"))
     compileOnly(fg.deobf("curse.maven:thirst-was-taken-679270:6660408"))
@@ -163,6 +172,8 @@ dependencies {
     compileOnly(fg.deobf("curse.maven:curios-api-309927:6418456"))
     compileOnly(fg.deobf("curse.maven:mantle-74924:7563777"))
     compileOnly(fg.deobf("curse.maven:tinkers-construct-74072:7449219"))
+    compileOnly(fg.deobf("curse.maven:farmers-delight-398521:8007609"))
+    compileOnly(fg.deobf("curse.maven:hexerei-548599:6314111"))
     compileOnly(fg.deobf("curse.maven:polymorph-388800:6450982"))
     compileOnly(fg.deobf("curse.maven:architectury-api-419699:5137938"))
     compileOnly(fg.deobf("curse.maven:epic-fight-mod-405076:8049910"))

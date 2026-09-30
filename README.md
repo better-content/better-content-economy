@@ -5,7 +5,7 @@ Forge 1.20.1 mod making Malum spirits the pack's player-effort currency and vill
 - Commerce uses sacred, wicked, arcane, aerial, aqueous, earthen, and infernal spirits. Eldritch and umbral spirits retain their special Malum roles and never appear in trade.
 - A living entity releases spirits only when the kill is credited to a player, that player's projectile or spell, or an owned creature. Spawner-origin mobs, villagers, traders, guards, golems, and players release none.
 - Existing Malum mappings retain their authored drops. Any otherwise-unmapped hostile deterministically releases two ordinary spirits. Both paths spawn Malum's floating, homing `SpiritItemEntity`; no harvesting tool is required.
-- Seven villager professions each have a matching coloured workstation, robe, utility behaviour, and 35-offer catalogue paid only in the matching spirit at costs of 1–8.
+- Village residents barter from personal supplies and nearby recipes. Their stock, food, safe water, rest, current task, and recent exchanges persist with the entity. Existing spirit profession items remain for compatibility, but fixed spirit catalogues and profession conversion are disabled for village villagers.
 - Seven wandering trader identities each have a matching robe, 13 fixed goods, and one one-use offer of two matching spirits for two eggs already assigned to the corresponding profession.
 - Scheduled wandering traders pitch a theme-coloured cloth awning on a tall camp post, stay near their stall, and leave when no offers remain. Pick up and re-place the linked post to send its trader to a new camp.
 - Plague Doctors draw eight unique oddities from a 42-item mixed-spirit cabinet. Each doctor keeps its stock for one day, then rolls a fresh catalogue at dawn; missing optional-mod goods are skipped safely.
@@ -14,6 +14,24 @@ Forge 1.20.1 mod making Malum spirits the pack's player-effort currency and vill
 - Malum's native Spirit Pouch is the specialist storage surface. Its pack recipe costs exactly three leather and two string.
 
 Run `./gradlew verifyFull stageRuntimeJar` before committing or pushing.
+
+## Better Villagers
+
+Right-click a village villager or a settlement rat in Ratlantis to open the barter journal. Select one of their stocked or craftable goods, select a good from your inventory, and adjust the amount you give. The quote explains whether the resident needs more payment, ingredients, or a nearby workstation. Giving supplies directly is always available. Wandering traders and Plague Doctors keep their authored merchant inventories.
+
+Residents use a nearby crafting table, furnace, smoker, blast furnace, stonecutter, Farmer's Delight cutting board and heated cooking pot, Hexerei woodcutter, and Tinkers' Construct part builder and tinker station. Crafting runs when a trade commits. Recipe chains are bounded to three steps, and all ingredients and fuel come from the resident's supplies. Nearby residents can settle barter cycles, including goods crafted at exchange time. Starter workshops with food, water, a bed or rat hole, and basic surfaces appear near established Overworld villages and in generated Ratlantis settlements. Residents can harvest ripe crops, collect water, fell natural trees, and gather exposed surface stone and soil when short on supplies.
+
+The console API emits one `BCV1` JSON line per response. Use a resident UUID from `inspect` or the test fixture:
+
+```text
+bettervillagers inspect <uuid>
+bettervillagers offers <uuid>
+bettervillagers events <uuid>
+bettervillagers quote <uuid> <result_item_id> <result_count> <payment_item_id> <payment_count>
+bettervillagers execute <uuid> <result_item_id> <result_count> <payment_item_id> <payment_count>
+```
+
+`execute` requires a player command source with the goods in inventory within eight blocks. The `runVisualServer` / `runVisualClient` source set also provides `/residentvisual fixture <player>` to create two complementary residents and print their UUIDs, `/residentvisual prepare <player>` for payment goods, and `/residentvisual show` and `capture` for production-screen review. These fixture commands are absent from the shipping JAR.
 
 ## Trader camp screenshots
 

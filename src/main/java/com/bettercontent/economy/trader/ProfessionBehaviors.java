@@ -2,6 +2,7 @@ package com.bettercontent.economy.trader;
 
 import com.bettercontent.economy.registry.SpiritProfessions;
 import com.bettercontent.economy.spirit.SpiritKind;
+import com.bettercontent.economy.resident.ResidentRules;
 import java.util.Comparator;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -35,7 +36,7 @@ public final class ProfessionBehaviors {
     public static void onLivingTick(final LivingEvent.LivingTickEvent event) {
         if (!(event.getEntity() instanceof Villager villager)
                 || !(villager.level() instanceof ServerLevel level)
-                || villager.tickCount % INTERVAL != 0) return;
+                || villager.tickCount % INTERVAL != 0 || ResidentRules.isResident(villager)) return;
         SpiritKind kind = SpiritProfessions.kindOf(villager.getVillagerData().getProfession());
         if (kind == null || !isAtJobSite(villager, level)) return;
         replaceLegacyJobSite(villager, level, kind);
