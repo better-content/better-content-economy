@@ -292,7 +292,8 @@ public final class ResidentBarter {
                 || id.equals("tconstruct:item_part_builder") || id.equals("tconstruct:tool_building");
     }
     private static String recipeType(Recipe<?> recipe) {
-        return BuiltInRegistries.RECIPE_TYPE.getKey(recipe.getType()).toString();
+        ResourceLocation id = BuiltInRegistries.RECIPE_TYPE.getKey(recipe.getType());
+        return id == null ? "" : id.toString();
     }
     private static Set<String> stations(ServerLevel level, BlockPos center) {
         Set<String> found = new HashSet<>();
@@ -309,7 +310,7 @@ public final class ResidentBarter {
         return found;
     }
     private static boolean hasStation(Set<String> stations, Recipe<?> recipe) {
-        String type = BuiltInRegistries.RECIPE_TYPE.getKey(recipe.getType()).toString();
+        String type = recipeType(recipe);
         String station = switch (type) {
             case "minecraft:crafting" -> "minecraft:crafting_table";
             case "minecraft:stonecutting" -> "minecraft:stonecutter";
