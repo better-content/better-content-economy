@@ -135,7 +135,7 @@ public final class WanderingTraderGameTests {
             long eggs = offers.stream().map(MerchantOffer::getResult)
                     .filter(stack -> stack.is(Items.VILLAGER_SPAWN_EGG)).count();
             long fontMaps = offers.stream().filter(offer -> offer.getResult().getTag() != null
-                    && offer.getResult().getTag().contains("dimension_drink:font_definition_id")).count();
+                    && offer.getResult().getTag().contains("better_dimension_fonts:font_definition_id")).count();
             boolean matchingPayment = offers.stream().allMatch(offer ->
                     offer.getBaseCostA().is(CurrencyItems.item(theme.currencyIdentity()).get()));
             MerchantOffer eggOffer = offers.stream().filter(offer -> offer.getResult().is(Items.VILLAGER_SPAWN_EGG))

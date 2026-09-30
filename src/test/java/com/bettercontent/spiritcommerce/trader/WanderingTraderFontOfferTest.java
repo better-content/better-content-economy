@@ -37,7 +37,7 @@ final class WanderingTraderFontOfferTest {
     @Test void surveyedMapMarkerIsAddedOnlyOnce() {
         MerchantOffers offers = new MerchantOffers();
         ItemStack map = new ItemStack(Items.FILLED_MAP);
-        map.getOrCreateTag().putString("dimension_drink:font_definition_id", "nether");
+        map.getOrCreateTag().putString("better_dimension_fonts:font_definition_id", "nether");
         MerchantOffer mapOffer = new MerchantOffer(new ItemStack(Items.EMERALD, 8), map, 8, 6, 0);
 
         assertTrue(WanderingTraderCatalogue.appendFontOffer(offers, mapOffer));

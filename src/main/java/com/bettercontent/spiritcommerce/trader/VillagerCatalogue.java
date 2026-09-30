@@ -5,7 +5,7 @@ import com.bettercontent.spiritcommerce.registry.SpiritProfessions;
 import com.bettercontent.spiritcommerce.registry.CurrencyItems;
 import com.bettercontent.spiritcommerce.spirit.CurrencyIdentity;
 import com.bettercontent.spiritcommerce.spirit.SpiritKind;
-import com.bettercontent.dimensiondrink.trade.DimensionalFontMapTrades;
+import com.bettercontent.betterdimensionfonts.trade.DimensionalFontMapTrades;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +59,7 @@ public final class VillagerCatalogue {
         var allowed = FontTradeAffinity.destinations(kind);
         DimensionalFontMapTrades.setSellerDefinitionIds(villager.getPersistentData(), allowed);
         if (offers.stream().anyMatch(offer -> offer.getResult().getTag() != null
-                && offer.getResult().getTag().contains("dimension_drink:font_definition_id"))) return;
+                && offer.getResult().getTag().contains("better_dimension_fonts:font_definition_id"))) return;
         Item spirit = CurrencyItems.item(kind.currencyIdentity()).get();
         MerchantOffer map = DimensionalFontMapTrades.authoredSellerOffer(level, villager.blockPosition(),
                 5, spirit, DimensionalFontMapTrades.soldDefinitionIds(villager.getPersistentData()), allowed);

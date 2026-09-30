@@ -90,20 +90,20 @@ require(providerDirectory == null || providerDirectory.isNotBlank()) {
     "BC_CUSTOM_MOD_JAR_DIR must not be blank"
 }
 val dimensionDrinkJar = if (providerDirectory == null) {
-    file("../dimension-drink/build/libs/dimension-drink-1.0.0.jar")
+    file("../better-dimension-fonts/build/libs/better-dimension-fonts-1.0.0.jar")
 } else {
-    file(providerDirectory).resolve("dimension-drink-1.0.0.jar")
+    file(providerDirectory).resolve("better-dimension-fonts-1.0.0.jar")
 }
 require(dimensionDrinkJar.isFile) {
-    "Missing Better Content provider dimension-drink-1.0.0.jar at $dimensionDrinkJar; prepare BC_CUSTOM_MOD_JAR_DIR or build dimension-drink first"
+    "Missing Better Content provider better-dimension-fonts-1.0.0.jar at $dimensionDrinkJar; prepare BC_CUSTOM_MOD_JAR_DIR or build better-dimension-fonts first"
 }
 val betterContentFixesJar = if (providerDirectory == null) {
-    file("../better-content-fixes/build/libs/better-content-fixes-0.1.9.jar")
+    file("../better-compat-fixes/build/libs/better-compat-fixes-0.1.9.jar")
 } else {
-    file(providerDirectory).resolve("better-content-fixes-0.1.9.jar")
+    file(providerDirectory).resolve("better-compat-fixes-0.1.9.jar")
 }
 require(betterContentFixesJar.isFile) {
-    "Missing Better Content provider better-content-fixes-0.1.9.jar at $betterContentFixesJar; prepare BC_CUSTOM_MOD_JAR_DIR or build better-content-fixes first"
+    "Missing Better Content provider better-compat-fixes-0.1.9.jar at $betterContentFixesJar; prepare BC_CUSTOM_MOD_JAR_DIR or build better-compat-fixes first"
 }
 val notificationsJar = if (providerDirectory == null) {
     file("../better-gameplay-notices/build/libs/better-gameplay-notices-1.0.0.jar")
@@ -150,12 +150,12 @@ dependencies {
     implementation(jarJar("io.github.llamalad7:mixinextras-forge:[0.5.0,0.6.0)")!!)
     implementation(jarJar("net.java.dev.jna:jna:[5.14.0,5.14.0]")!!)
     implementation(jarJar("net.java.dev.jna:jna-platform:[5.14.0,5.14.0]")!!)
-    compileOnly(fg.deobf("bettercontent.local.dimensiondrink:dimension-drink:1.0.0"))
+    compileOnly(fg.deobf("bettercontent.local.dimensiondrink:better-dimension-fonts:1.0.0"))
     // ForgeGradle's GameTest launch uses the main runtime classpath. Keep the
     // provider mod available there as well as at compile time.
-    runtimeOnly(fg.deobf("bettercontent.local.dimensiondrink:dimension-drink:1.0.0"))
+    runtimeOnly(fg.deobf("bettercontent.local.dimensiondrink:better-dimension-fonts:1.0.0"))
     // Flat file dependencies do not carry Forge mod dependencies transitively.
-    runtimeOnly(fg.deobf("bettercontent.local.fixes:better-content-fixes:0.1.9"))
+    runtimeOnly(fg.deobf("bettercontent.local.fixes:better-compat-fixes:0.1.9"))
     runtimeOnly(fg.deobf("bettercontent.local.notifications:better-gameplay-notices:1.0.0"))
     runtimeOnly(fg.deobf("curse.maven:kotlin-for-forge-351264:7291067"))
     compileOnly(fg.deobf("curse.maven:hyle-609850:7736352"))

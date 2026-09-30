@@ -3,7 +3,7 @@ package com.bettercontent.spiritcommerce.trader;
 import com.bettercontent.spiritcommerce.config.EconomyPolicy;
 import com.bettercontent.spiritcommerce.spirit.SpiritKind;
 import com.bettercontent.spiritcommerce.registry.CurrencyItems;
-import com.bettercontent.dimensiondrink.trade.DimensionalFontMapTrades;
+import com.bettercontent.betterdimensionfonts.trade.DimensionalFontMapTrades;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.npc.WanderingTrader;
@@ -113,7 +113,7 @@ public final class WanderingTraderCatalogue {
 
     private static boolean isFontMapOffer(final MerchantOffer offer) {
         return offer.getResult().getTag() != null
-                && offer.getResult().getTag().contains("dimension_drink:font_definition_id");
+                && offer.getResult().getTag().contains("better_dimension_fonts:font_definition_id");
     }
 
     public static int themeCount() { return WanderingTraderTheme.values().length; }
