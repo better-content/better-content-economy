@@ -48,22 +48,17 @@ minecraft {
             property("forge.enableGameTest", "true")
             property("forge.gameTestServer", "true")
             property("forge.enabledGameTestNamespaces", property("mod_id") as String)
-            // The Mixin bootstrap runs before the exploded development mod is visible
-            // to its context loader; expose the config and mixin classes early.
-            jvmArgs("-Xbootclasspath/a:${layout.buildDirectory.get().asFile}/resources/main:${layout.buildDirectory.get().asFile}/classes/java/main")
             arg("--nogui")
         }
         create("visualServer") {
             parent(baseServer)
             workingDirectory(project.file("run-visual-server"))
-            jvmArgs("-Xbootclasspath/a:${layout.buildDirectory.get().asFile}/resources/main:${layout.buildDirectory.get().asFile}/classes/java/main")
             property("bettercontent.resident.debugSites", "true")
             mods { create("better_spirit_commerce_visual_harness") { source(visualHarness) } }
         }
         create("visualClient") {
             parent(baseClient)
             workingDirectory(project.file("run-visual-client"))
-            jvmArgs("-Xbootclasspath/a:${layout.buildDirectory.get().asFile}/resources/main:${layout.buildDirectory.get().asFile}/classes/java/main")
             args("--quickPlayMultiplayer", "127.0.0.1:25565", "--width", "1600", "--height", "900")
             mods { create("better_spirit_commerce_visual_harness") { source(visualHarness) } }
         }
@@ -232,6 +227,12 @@ tasks.register("headlessGameTest") {
     group = "verification"
     description = "Runs Forge game tests in a headless dedicated server."
     dependsOn(tasks.named("runGameTestServer"))
+    doLast {
+        val log = file("run-gametest/logs/latest.log")
+        check(log.isFile && Regex("All [0-9]+ required tests passed").containsMatchIn(log.readText())) {
+            "Forge GameTests did not pass; inspect ${log.absolutePath}"
+        }
+    }
 }
 
 tasks.register("verifyFast") {
