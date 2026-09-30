@@ -21,6 +21,14 @@ Right-click a village villager or a settlement rat in Ratlantis to open the bart
 
 Residents use a nearby crafting table, furnace, smoker, blast furnace, stonecutter, Farmer's Delight cutting board and heated cooking pot, Hexerei woodcutter, and Tinkers' Construct part builder and tinker station. Crafting runs when a trade commits. Recipe chains are bounded to three steps, and all ingredients and fuel come from the resident's supplies. Nearby residents can settle barter cycles, including goods crafted at exchange time. Starter workshops with food, water, a bed or rat hole, and basic surfaces appear near established Overworld villages and in generated Ratlantis settlements. Residents can harvest ripe crops, collect water, fell natural trees, and gather exposed surface stone and soil when short on supplies.
 
+### Player stalls
+
+Craft and place a Player Stall from a barrel, oak fences, oak planks, and white wool. Right-click it to edit up to six exact offers. Each offer names the item and amount you sell and the item and amount you receive. Deposit real goods in **Stock**; collect received goods from **Proceeds**. An offer can be enabled, disabled, or cleared without losing its stock. The owner can search the item registry or use a held item to set a template, including item tags. Other players can view the stall but cannot edit or withdraw. Breaking a stall drops its stored goods.
+
+Loaded village residents and Ratlantis resident rats within 24 blocks can walk to the front of an owned stall and buy useful goods. A buyer pays the exact listed amount from personal stock or by crafting it at trade time with nearby workstations. Buyers keep their basic survival reserves and decline prices above their demand limit. The base limit is the existing item value, with a 25% allowance for goods with a recipe and another 25% when food or safe water is urgently needed. The stall shows stock state, approaching customers, and its most recent completed trade. The owner may leave; the stall does not keep chunks loaded.
+
+The `BCV1` console API extends `/bettervillagers stall` with `inspect <pos>`, `quote <pos> <resident_uuid> <offer_0_to_5>`, `configure <pos> <offer> <sale_id> <sale_count> <payment_id> <payment_count>`, `clear <pos> <offer>`, `deposit <pos> <player_inventory_slot>`, `withdraw <pos> stock|proceeds <slot>`, and `execute <pos> <resident_uuid> <offer>`. Operator-only `seed <pos> <item_id> <count>` prepares an automation fixture. Server-side ownership, distance, stock, and buyer checks also apply to commands. The non-shipping visual harness has `/residentvisual stallfixture <player>` and `/residentvisual showstall <player>` for a live screen and arrival fixture.
+
 The console API emits one `BCV1` JSON line per response. Use a resident UUID from `inspect` or the test fixture:
 
 ```text

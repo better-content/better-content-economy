@@ -50,5 +50,7 @@
   "screen.better_spirit_commerce.local_market.stale": "Offer changed; list refreshed.",
   "block.better_spirit_commerce.trader_camp_post": "Trader Camp Post",
   "item.better_spirit_commerce.trader_camp_post": "Trader Camp Post",
-  "tooltip.better_spirit_commerce.trader_camp_post.linked": "Re-place this post to move its trader."
+  "tooltip.better_spirit_commerce.trader_camp_post.linked": "Re-place this post to move its trader.",
+  "block.better_spirit_commerce.player_stall": "Player Stall",
+  "item.better_spirit_commerce.player_stall": "Player Stall"
 }

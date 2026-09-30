@@ -3,6 +3,7 @@ package com.bettercontent.spiritcommerce.visualharness;
 import com.bettercontent.spiritcommerce.resident.ResidentBarter;
 import com.bettercontent.spiritcommerce.resident.ResidentNetwork;
 import com.bettercontent.spiritcommerce.resident.ResidentScreen;
+import com.bettercontent.spiritcommerce.resident.PlayerStallScreen;
 import java.util.List;
 import java.util.UUID;
 import net.minecraft.client.Minecraft;
@@ -64,6 +65,7 @@ final class ResidentVisualClient {
     public static void tick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.END || pending == null
                 || !pendingWorld && !(Minecraft.getInstance().screen instanceof ResidentScreen)
+                && !(Minecraft.getInstance().screen instanceof PlayerStallScreen)
                 || ++settleTicks < 30) return;
         Minecraft client = Minecraft.getInstance();
         String file = pending;

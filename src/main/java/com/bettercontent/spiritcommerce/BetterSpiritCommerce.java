@@ -23,6 +23,10 @@ import com.bettercontent.spiritcommerce.resident.ResidentNetwork;
 import com.bettercontent.spiritcommerce.resident.ResidentCommand;
 import com.bettercontent.spiritcommerce.resident.SettlementGeneration;
 import com.bettercontent.spiritcommerce.resident.ResidentTerrainData;
+import com.bettercontent.spiritcommerce.resident.PlayerStallRegistries;
+import com.bettercontent.spiritcommerce.resident.PlayerStallNetwork;
+import com.bettercontent.spiritcommerce.resident.PlayerStallCommand;
+import com.bettercontent.spiritcommerce.resident.PlayerStallGameTests;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterGameTestsEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -40,7 +44,9 @@ public final class BetterSpiritCommerce {
         modBus.addListener(this::registerGameTests);
         LocalMarketNetwork.register();
         ResidentNetwork.register();
+        PlayerStallNetwork.register();
         TraderCampRegistries.register(modBus);
+        PlayerStallRegistries.register(modBus);
         SpiritProfessions.register(modBus);
         EconomySpiritTypes.initialize();
         CurrencyItems.register(modBus);
@@ -57,6 +63,7 @@ public final class BetterSpiritCommerce {
             SpiritPouchAccess.register(event.getDispatcher());
             ObservationalExportCommand.register(event.getDispatcher());
             ResidentCommand.register(event.getDispatcher());
+            PlayerStallCommand.register(event.getDispatcher());
         });
     }
 
@@ -64,5 +71,6 @@ public final class BetterSpiritCommerce {
         event.register(WanderingTraderGameTests.class);
         event.register(SpiritPouchGameTests.class);
         event.register(ResidentGameTests.class);
+        event.register(PlayerStallGameTests.class);
     }
 }

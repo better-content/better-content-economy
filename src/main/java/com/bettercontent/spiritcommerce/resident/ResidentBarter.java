@@ -26,6 +26,7 @@ public final class ResidentBarter {
                         List<ItemStack> ingredients, String blocker) {
         public boolean available() { return blocker == null; }
     }
+    public record PaymentPlan(List<ItemStack> after, ResourceLocation recipe, int cost) {}
     private record Plan(List<ItemStack> after, ResourceLocation recipe, List<ItemStack> inputs, int cost) {}
     private record Context(ServerLevel level, Set<String> stations, Map<Item, List<Recipe<?>>> byOutput,
                            List<Recipe<?>> recipes) {}
@@ -120,6 +121,17 @@ public final class ResidentBarter {
     static List<ItemStack> preview(ServerLevel level, LivingEntity resident, ItemStack wanted) {
         Plan plan = prepare(context(level, ResidentRules.worksite(resident)), ResidentState.of(resident), wanted);
         return plan == null ? null : plan.after();
+    }
+
+    public static PaymentPlan paymentPlan(ServerLevel level, LivingEntity resident, ItemStack wanted) {
+        Plan plan = prepare(context(level, ResidentRules.worksite(resident)), ResidentState.of(resident), wanted);
+        return plan == null ? null : new PaymentPlan(plan.after(), plan.recipe(), plan.cost());
+    }
+
+    public static boolean wants(ServerLevel level, LivingEntity resident, ItemStack item) {
+        ResidentState state = ResidentState.of(resident);
+        if (ResidentRules.needs(item, state)) return true;
+        return usefulPayment(context(level, ResidentRules.worksite(resident)), state, item);
     }
 
     static boolean addTo(List<ItemStack> inventory, ItemStack item) { return add(inventory, item); }

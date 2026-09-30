@@ -2,6 +2,10 @@ package com.bettercontent.spiritcommerce.visualharness;
 
 import com.bettercontent.spiritcommerce.resident.ResidentRules;
 import com.bettercontent.spiritcommerce.resident.ResidentState;
+import com.bettercontent.spiritcommerce.resident.PlayerStallBlock;
+import com.bettercontent.spiritcommerce.resident.PlayerStallBlockEntity;
+import com.bettercontent.spiritcommerce.resident.PlayerStallNetwork;
+import com.bettercontent.spiritcommerce.resident.PlayerStallRegistries;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import java.util.List;
@@ -50,6 +54,10 @@ final class ResidentVisualHarness {
                         .executes(context -> prepare(EntityArgument.getPlayer(context, "player")))))
                 .then(Commands.literal("fixture").then(Commands.argument("player", EntityArgument.player())
                         .executes(context -> fixture(context.getSource(), EntityArgument.getPlayer(context, "player")))))
+                .then(Commands.literal("stallfixture").then(Commands.argument("player", EntityArgument.player())
+                        .executes(context -> stallFixture(context.getSource(), EntityArgument.getPlayer(context, "player")))))
+                .then(Commands.literal("showstall").then(Commands.argument("player", EntityArgument.player())
+                        .executes(context -> showStall(EntityArgument.getPlayer(context, "player")))))
                 .then(Commands.literal("show").then(Commands.argument("player", EntityArgument.player())
                         .then(Commands.argument("scene", StringArgumentType.word())
                                 .executes(context -> show(EntityArgument.getPlayer(context, "player"),
@@ -132,6 +140,46 @@ final class ResidentVisualHarness {
         json.addProperty("maker", maker.getUUID().toString());
         json.addProperty("dimension", level.dimension().location().toString());
         source.sendSuccess(() -> net.minecraft.network.chat.Component.literal("BCV1 " + json), false);
+        return 1;
+    }
+
+    private static final Map<UUID, BlockPos> STALL_FIXTURES = new java.util.HashMap<>();
+
+    private static int stallFixture(net.minecraft.commands.CommandSourceStack source, ServerPlayer player) {
+        var level = player.serverLevel();
+        BlockPos center = player.blockPosition().offset(5, 0, 1);
+        for (BlockPos pos : BlockPos.betweenClosed(center.offset(-2, -1, -4), center.offset(7, -1, 4)))
+            level.setBlockAndUpdate(pos, Blocks.GRASS_BLOCK.defaultBlockState());
+        for (BlockPos pos : BlockPos.betweenClosed(center.offset(-2, 0, -4), center.offset(7, 4, 4)))
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+        level.setBlockAndUpdate(center, PlayerStallRegistries.BLOCK.get().defaultBlockState()
+                .setValue(PlayerStallBlock.FACING, net.minecraft.core.Direction.EAST));
+        if (!(level.getBlockEntity(center) instanceof PlayerStallBlockEntity stall)) return 0;
+        stall.claim(player);
+        stall.seedStock(new ItemStack(Items.CARROT, 16));
+        stall.configure(0, new ItemStack(Items.CARROT, 2), new ItemStack(Items.OAK_LOG, 3), true);
+        stall.configure(1, new ItemStack(Items.CARROT, 2), new ItemStack(Items.CHARCOAL), true);
+        level.setBlockAndUpdate(center.offset(2, 0, 2), Blocks.FURNACE.defaultBlockState());
+        Villager buyer = EntityType.VILLAGER.create(level);
+        if (buyer == null) return 0;
+        buyer.moveTo(center.getX() + 7.5, center.getY(), center.getZ() + .5, 0, 0);
+        level.addFreshEntity(buyer);
+        ResidentState state = ResidentState.of(buyer);
+        state.setNeeds(5, 17, 16);
+        state.add(new ItemStack(Items.OAK_LOG, 8));
+        STALL_FIXTURES.put(player.getUUID(), center);
+        JsonObject json = new JsonObject();
+        json.addProperty("version", "bc.villagers.v1");
+        json.addProperty("stall", center.toShortString());
+        json.addProperty("buyer", buyer.getUUID().toString());
+        source.sendSuccess(() -> net.minecraft.network.chat.Component.literal("BCV1 " + json), false);
+        return 1;
+    }
+
+    private static int showStall(ServerPlayer player) {
+        BlockPos pos = STALL_FIXTURES.get(player.getUUID());
+        if (pos == null || !(player.serverLevel().getBlockEntity(pos) instanceof PlayerStallBlockEntity stall)) return 0;
+        PlayerStallNetwork.open(player, stall);
         return 1;
     }
 
