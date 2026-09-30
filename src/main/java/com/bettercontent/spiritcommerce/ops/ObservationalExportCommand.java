@@ -1,0 +1,32 @@
+package com.bettercontent.spiritcommerce.ops;
+
+import com.bettercontent.spiritcommerce.config.EconomyConfig;
+import com.mojang.brigadier.CommandDispatcher;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.Component;
+
+/** Permissioned server command for the owner observational export. */
+public final class ObservationalExportCommand {
+    private ObservationalExportCommand() {}
+
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(Commands.literal("better_spirit_commerce")
+                .then(Commands.literal("export")
+                        .requires(source -> source.hasPermission(2))
+                        .executes(context -> export(context.getSource()))));
+    }
+
+    private static int export(CommandSourceStack source) {
+        if (!EconomyConfig.observationalExportEnabled()) {
+            source.sendFailure(Component.literal("Observational export is disabled by server config."));
+            return 0;
+        }
+        var server = source.getServer();
+        var observations = ObservationalEconomyData.get(server.overworld());
+        String json = ObservationalSpiritExport.json(true, 2, observations.released(),
+                observations.exchanges(), observations.activity(), observations.regional(), observations.purchases());
+        source.sendSuccess(() -> Component.literal(json), true);
+        return observations.released().size();
+    }
+}

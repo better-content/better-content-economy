@@ -1,4 +1,4 @@
-# Better Content Economy
+# Better Spirit Commerce
 
 Forge 1.20.1 mod making Malum spirits the pack's player-effort currency and village identity system.
 
@@ -9,7 +9,7 @@ Forge 1.20.1 mod making Malum spirits the pack's player-effort currency and vill
 - Seven wandering trader identities each have a matching robe, 13 fixed goods, and one one-use offer of two matching spirits for two eggs already assigned to the corresponding profession.
 - Scheduled wandering traders pitch a theme-coloured cloth awning on a tall camp post, stay near their stall, and leave when no offers remain. Pick up and re-place the linked post to send its trader to a new camp.
 - Plague Doctors draw eight unique oddities from a 42-item mixed-spirit cabinet. Each doctor keeps its stock for one day, then rolls a fresh catalogue at dawn; missing optional-mod goods are skipped safely.
-- `data/better_content_economy/economy/spirit_economy_policy.json` is the single loaded and validated authority for acquisition rules, 245 villager rows, 91 wandering goods, 42 Plague Doctor oddities, and retired item IDs.
+- `data/better_spirit_commerce/economy/spirit_economy_policy.json` is the single loaded and validated authority for acquisition rules, 245 villager rows, 91 wandering goods, 42 Plague Doctor oddities, and retired item IDs.
 - Create Deco coins and coin stacks, emerald-priced merchant offers, the old purse/wallet, and superseded Malum harvesting equipment are removed, inert, or hidden. Recipe reload also rejects non-kill recipes whose output is one of the seven commerce spirits.
 - Malum's native Spirit Pouch is the specialist storage surface. Its pack recipe costs exactly three leather and two string.
 
