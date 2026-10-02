@@ -7,6 +7,8 @@
 /run-server/
 /run-data/
 /run-gametest/
+/run-visual-server/
+/run-visual-client/
 /logs/
 /out/
 /bin/

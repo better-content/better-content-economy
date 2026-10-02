@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: better-content/better-content-modpack
-          ref: 7daccf81465d0803824831f014d695419c6e7696
+          ref: aacd172ab87ee00a47ddf15bc02a3ddb25e9cdd4
           path: build/ci-pack-baseline
           sparse-checkout: |
             .github/scripts
@@ -32,7 +32,7 @@ jobs:
         run: >-
           python3 build/ci-pack-baseline/.github/scripts/prepare-provider-jars.py
           --pack-root build/ci-pack-baseline
-          --repository better-content-economy
+          --repository better-spirit-commerce
           --output "$BC_CUSTOM_MOD_JAR_DIR"
       - uses: actions/setup-java@v4
         with:
