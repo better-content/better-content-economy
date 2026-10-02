@@ -18,4 +18,4 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "better-content-economy"
+rootProject.name = "better-spirit-commerce"

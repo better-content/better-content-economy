@@ -1,0 +1,16 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="All Rights Reserved"
+
+[[mods]]
+modId="better_spirit_commerce_visual_harness"
+version="1"
+displayName="Better Spirit Commerce Visual Harness"
+description='''Non-shipping client/server screenshot harness for trader camps and the Local Market GUI.'''
+
+[[dependencies.better_spirit_commerce_visual_harness]]
+modId="better_spirit_commerce"
+mandatory=true
+versionRange="[1.0.0,)"
+ordering="AFTER"
+side="BOTH"

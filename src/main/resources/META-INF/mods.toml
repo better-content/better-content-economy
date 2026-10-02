@@ -6,7 +6,7 @@ modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
 authors="gerald"
-description='''Player-earned Malum spirit commerce and seven themed village professions.'''
+description='''Player-earned Malum spirit commerce and eight themed village professions.'''
 [[dependencies.${mod_id}]]
 modId="forge"
 mandatory=true
