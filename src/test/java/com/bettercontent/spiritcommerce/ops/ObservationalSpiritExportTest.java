@@ -13,7 +13,7 @@ final class ObservationalSpiritExportTest {
         assertEquals("", ObservationalSpiritExport.json(true, 1, released, List.of()));
     }
 
-    @Test void exportReportsImmediatePhysicalReleases() {
+    @Test void exportReportsCompletedPhysicalReleases() {
         String json = ObservationalSpiritExport.json(true, 2,
                 Map.of(CurrencyIdentity.IMPACT, 4, CurrencyIdentity.TEMPO, 3), List.of());
         assertTrue(json.contains("\"released\":{\"impact\":4,\"tempo\":3}"));
