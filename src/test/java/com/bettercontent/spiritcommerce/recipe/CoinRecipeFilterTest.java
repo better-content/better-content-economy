@@ -26,4 +26,13 @@ final class CoinRecipeFilterTest {
         assertTrue(result.toString().contains("better_spirit_commerce:impact_spirit"));
         assertTrue(result.toString().contains("malum:eldritch_spirit"));
     }
+
+    @Test void authoredRefinementKeepsNativeMalumOutput() {
+        var id = new ResourceLocation("better_spirit_commerce", "spirit_refinement/work");
+        var recipe = JsonParser.parseString("{\"input\":{\"item\":\"better_spirit_commerce:work_spirit\"},"
+                + "\"output\":{\"item\":\"malum:arcane_spirit\"}}");
+        var filtered = CoinRecipeFilter.filter(Map.of(id, recipe));
+        assertTrue(filtered.containsKey(id));
+        assertTrue(filtered.get(id).toString().contains("malum:arcane_spirit"));
+    }
 }

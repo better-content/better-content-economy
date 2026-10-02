@@ -25,6 +25,12 @@ public final class CoinRecipeFilter {
         Map<ResourceLocation, JsonElement> filtered = new LinkedHashMap<>();
         recipes.forEach((id, json) -> {
             if (RETIRED_RECIPES.contains(id)) return;
+            // Refinement is deliberately one-way: authored currency becomes native Malum spirit.
+            if ("better_spirit_commerce".equals(id.getNamespace())
+                    && id.getPath().startsWith("spirit_refinement/")) {
+                filtered.put(id, json);
+                return;
+            }
             JsonElement replacement = replaceOrdinarySpirits(json);
             if (!hasCoinOutput(replacement)) filtered.put(id, replacement);
         });
